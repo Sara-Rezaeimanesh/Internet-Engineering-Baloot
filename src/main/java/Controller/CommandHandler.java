@@ -2,18 +2,11 @@ package Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import domain.Amazon.Amazon;
+import domain.Supplier.Supplier;
 import domain.User.User;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CommandHandler {
@@ -21,9 +14,11 @@ public class CommandHandler {
     private final int ARGS_IDX = 1;
 
     private static Amazon amazon;
+    public static ObjectMapper mapper;
 
     public CommandHandler() {
-//        this.amazon = amazon;
+        amazon = new Amazon();
+        mapper = new ObjectMapper();
     }
 
     interface Command {
@@ -34,11 +29,23 @@ public class CommandHandler {
         addUser {
             @Override
             public void execute(String json) throws JsonProcessingException {
-                ObjectMapper mapper = new ObjectMapper();
                 User user = mapper.readValue(json, User.class);
                 amazon.addUser(user);
             }
         },
+        addProvider {
+            @Override
+            public void execute(String json) throws JsonProcessingException {
+                Supplier supplier = mapper.readValue(json, Supplier.class);
+                amazon.addSupplier(supplier);
+            }
+        },
+        getCommoditiesList {
+            @Override
+            public void execute(String json) throws JsonProcessingException {
+                amazon.listCommodities();
+            }
+        }
     }
 
     public void run() throws IOException {

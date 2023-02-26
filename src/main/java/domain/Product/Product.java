@@ -1,5 +1,8 @@
 package domain.Product;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 public class Product {
     private int id;
     private String name;
