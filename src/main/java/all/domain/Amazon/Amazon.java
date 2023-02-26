@@ -1,14 +1,11 @@
-package domain.Amazon;
+package all.domain.Amazon;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import domain.Product.Product;
-import domain.Supplier.Supplier;
-import domain.User.User;
+import all.domain.Product.Product;
+import all.domain.Supplier.Supplier;
+import all.domain.User.User;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Amazon {

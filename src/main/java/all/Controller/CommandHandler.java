@@ -1,9 +1,10 @@
-package Controller;
+package all.Controller;
 
+import all.domain.Amazon.Amazon;
+import all.domain.Supplier.Supplier;
+import all.domain.User.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import domain.Amazon.Amazon;
-import domain.Supplier.Supplier;
-import domain.User.User;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,8 +17,8 @@ public class CommandHandler {
     private static Amazon amazon;
     public static ObjectMapper mapper;
 
-    public CommandHandler() {
-        amazon = new Amazon();
+    public CommandHandler(Amazon amazon) {
+        CommandHandler.amazon = amazon;
         mapper = new ObjectMapper();
     }
 

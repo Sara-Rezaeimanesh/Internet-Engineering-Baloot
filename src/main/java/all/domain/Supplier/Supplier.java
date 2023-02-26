@@ -1,6 +1,4 @@
-package domain.Supplier;
-
-import domain.Product.Product;
+package all.domain.Supplier;
 
 import java.util.ArrayList;
 

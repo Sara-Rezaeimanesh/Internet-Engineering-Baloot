@@ -1,4 +1,4 @@
-package domain.User;
+package all.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
