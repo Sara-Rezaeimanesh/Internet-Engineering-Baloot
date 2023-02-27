@@ -26,7 +26,7 @@ public class Product {
     }
 
     public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
-                   @JsonProperty("price") int price, @JsonProperty("category") String category, @JsonProperty("rating") int rating,
+                   @JsonProperty("price") int price, @JsonProperty("categories") String category, @JsonProperty("rating") int rating,
                    @JsonProperty("inStock") int inStock) {
         this.id = id;
         this.name = name;
@@ -55,5 +55,9 @@ public class Product {
 
     public boolean isInStock() {
         return inStock > 0;
+    }
+
+    public void updateStock(int i) {
+        this.inStock += i;
     }
 }

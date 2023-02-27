@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Amazon {
+    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exist\n";
+    private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist\n";
+    private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!\n";
+    private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!\n";
+
     private ArrayList<User> users = new ArrayList<>();
     ;
     private ArrayList<Supplier> suppliers = new ArrayList<>();
@@ -55,9 +60,9 @@ public class Amazon {
 
     public void addProduct(Product product) throws Exception {
         if (!isInSuppliers(product.getProviderId()))
-            throw new Exception("Supplier is not exist\n");
+            throw new Exception(SUPPLIER_DOES_NOT_EXIST_ERROR);
         if (findProductsById(product.getId()) != null)
-            throw new Exception("Product already exist\n");
+            throw new Exception(PRODUCT_ALREADY_EXIST_ERROR);
         products.add(product);
     }
 
@@ -71,21 +76,21 @@ public class Amazon {
         for (Product p : products)
             commodities.append(ow.writeValueAsString(p));
 
-        System.out.println(commodities);
+        System.out.println("\"data\": " + commodities);
     }
 
     public void rateCommodity(Rating rating) throws Exception {
         if (findUserById(rating.getUsername()) == null)
-            throw new Exception("User is not exist\n");
+            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         Product p = findProductsById(rating.getProductId());
         if(p != null) p.updateRating(rating);
-        else throw new Exception("Product does not exist!\n");
+        else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
     public void getCommodityById(Integer id) throws Exception {
         Product p = findProductsById(id);
         if(p != null) System.out.println(p.toString());
-        else throw new Exception("Product does not exist!\n");
+        else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
     public void getCommoditiesByCategory(String category) {
@@ -100,12 +105,30 @@ public class Amazon {
     public void addToBuyList(String username, int commodityId) throws Exception {
         Product p = findProductsById(commodityId);
         User u = findUserById(username);
-        if(p == null) throw new Exception("Product does not exist!\n");
-        if(u == null) throw new Exception("User does not exist!\n");
+        if(p == null) throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         if(u.hasBoughtProduct(commodityId))
             throw  new Exception("Product already added.");
         if(!p.isInStock()) throw new Exception("Product is not in stock!\n");
 
         u.addProduct(p);
+        p.updateStock(-1);
+    }
+
+    public void removeFromBuyList(String username, int commodityId) throws Exception {
+        Product p = findProductsById(commodityId);
+        User u = findUserById(username);
+        if(p == null) throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+        if(!u.hasBoughtProduct(commodityId))
+            throw  new Exception("Product does not exist in buyList!\n");
+
+        p.updateStock(1);
+    }
+
+    public void getUserBuyList(String name) throws Exception {
+        User u = findUserById(name);
+        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+        u.printBuyList();
     }
 }
