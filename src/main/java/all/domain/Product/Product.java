@@ -2,7 +2,11 @@ package all.domain.Product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Product {
     private int id;
     private String name;

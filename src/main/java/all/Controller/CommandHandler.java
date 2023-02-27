@@ -1,6 +1,8 @@
 package all.Controller;
 
 import all.domain.Amazon.Amazon;
+import all.domain.Product.Product;
+import all.domain.Rating.Rating;
 import all.domain.Supplier.Supplier;
 import all.domain.User.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,7 +25,7 @@ public class CommandHandler {
     }
 
     interface Command {
-        void execute(String json) throws JsonProcessingException;
+        void execute(String json) throws Exception;
     }
 
     enum CommandEnum implements Command {
@@ -41,15 +43,29 @@ public class CommandHandler {
                 amazon.addSupplier(supplier);
             }
         },
+        addProduct {
+            @Override
+            public void execute(String json) throws Exception {
+                Product product = mapper.readValue(json, Product.class);
+                amazon.addProduct(product);
+            }
+        },
         getCommoditiesList {
             @Override
             public void execute(String json) throws JsonProcessingException {
                 amazon.listCommodities();
             }
+        },
+        rateCommodity {
+            @Override
+            public void execute(String json) throws Exception {
+                Rating rating = mapper.readValue(json, Rating.class);
+                amazon.rateCommodity(rating);
+            }
         }
     }
 
-    public void run() throws IOException {
+    public void run() throws Exception {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(System.in));
         String line;
