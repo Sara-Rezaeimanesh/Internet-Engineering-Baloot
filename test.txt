@@ -1,0 +1,1 @@
+addProvider {"id": 1, "name": "Provider1", "registryDate": "2023-09-01"}

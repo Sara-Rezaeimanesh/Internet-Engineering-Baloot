@@ -13,6 +13,12 @@ public class Amazon {
     private ArrayList<Supplier> suppliers;
     private ArrayList<Product> products;
 
+    public Amazon() {
+        users = new ArrayList<>();
+        suppliers = new ArrayList<>();
+        products = new ArrayList<>();
+    }
+
     public void addUser(User user){
         users.add(user);
     }

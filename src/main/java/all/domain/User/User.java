@@ -1,11 +1,9 @@
 package all.domain.User;
-import lombok.Getter;
-import lombok.Setter;
+import all.domain.Product.Product;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-@Getter
-@Setter
 public class User {
     private String username;
     private String password;
@@ -13,6 +11,8 @@ public class User {
     private String BirthDate;
     private String address;
     private int credit;
+
+    private ArrayList<Product> products;
 
     public User(String username_, String password_, String email_,
                 String birthDate_, String address_, int credit_) throws Exception {
@@ -23,6 +23,8 @@ public class User {
         this.email = email_;
         this.address = address_;
         this.credit = credit_;
+        this.products = new ArrayList<>();
     }
 
+    public void addProduct(Product p) { products.add(p); }
 }
