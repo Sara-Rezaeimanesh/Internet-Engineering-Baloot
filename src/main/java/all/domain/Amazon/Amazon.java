@@ -24,17 +24,24 @@ public class Amazon {
     public Amazon() {
     }
 
-    public boolean isInSuppliers(int id) {
+    private boolean isInSuppliers(int id) {
         for (Supplier s : suppliers)
             if (id == s.getId())
                 return true;
         return false;
     }
 
-    public Product findProductsById(int id) {
+    private Product findProductsById(int id) {
         for (Product p : products)
             if (id == p.getId())
                 return p;
+        return null;
+    }
+
+    private User findUserById(String uid) {
+        for(User u : users)
+            if(u.userNameEquals(uid))
+                return u;
         return null;
     }
 
@@ -88,13 +95,6 @@ public class Amazon {
                 tempProducts.add(p);
         }
         System.out.println(tempProducts.toString());
-    }
-
-    private User findUserById(String uid) {
-        for(User u : users)
-            if(u.userNameEquals(uid))
-                return u;
-        return null;
     }
 
     public void addToBuyList(String username, int commodityId) throws Exception {
