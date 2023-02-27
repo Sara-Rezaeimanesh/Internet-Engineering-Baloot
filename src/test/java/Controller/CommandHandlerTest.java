@@ -3,9 +3,7 @@ package Controller;
 import all.Controller.CommandHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 class CommandHandlerTest {
 
     private CommandHandler ch;
@@ -13,19 +11,16 @@ class CommandHandlerTest {
     public CommandHandlerTest() {
     }
 
-    @org.junit.jupiter.api.BeforeEach
     void setUp() {
     }
 
     @Test
-    void addSupplierAddsSUppliertoArrayinAmazon() {
-        ch.
-
+    void addSupplierAddsSupplierToArrayInAmazon() throws Exception {
+        ch.run();
     }
 
 
 
-    @org.junit.jupiter.api.AfterEach
     void tearDown() {
     }
 }

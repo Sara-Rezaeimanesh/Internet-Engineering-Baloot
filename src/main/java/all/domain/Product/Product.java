@@ -1,16 +1,15 @@
 package all.domain.Product;
 
 import all.domain.Rating.Rating;
-import all.domain.User.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 
 @Getter
 @Setter
+@ToString
 public class Product {
     private int id;
     private String name;
@@ -20,6 +19,10 @@ public class Product {
     private int rating;
     private int inStock;
     private ArrayList<Rating> ratings;
+
+    public boolean isSameCategory(String category_){
+        return category.equals(category_);
+    }
 
     public Product(int id, String name, int providerId, int price, String category, int rating, int inStock) {
         this.id = id;
