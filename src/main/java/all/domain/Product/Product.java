@@ -1,6 +1,7 @@
 package all.domain.Product;
 
 import all.domain.Rating.Rating;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Product {
     private String category;
     private int rating;
     private int inStock;
+    @JsonIgnore
     private ArrayList<Rating> ratings;
 
     public boolean isSameCategory(String category_) {

@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Amazon {
-    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exist\n";
-    private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist\n";
-    private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!\n";
-    private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!\n";
+    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exista!";
+    private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
+    private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
+    private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
 
     private ArrayList<User> users = new ArrayList<>();
     ;
@@ -109,8 +109,7 @@ public class Amazon {
         if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         if(u.hasBoughtProduct(commodityId))
             throw  new Exception("Product already added.");
-        if(!p.isInStock()) throw new Exception("Product is not in stock!\n");
-
+        if(!p.isInStock()) throw new Exception("Product is not in stock!");
         u.addProduct(p);
         p.updateStock(-1);
     }
@@ -121,7 +120,7 @@ public class Amazon {
         if(p == null) throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
         if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         if(!u.hasBoughtProduct(commodityId))
-            throw  new Exception("Product does not exist in buyList!\n");
+            throw  new Exception("Product does not exist in buyList!");
 
         p.updateStock(1);
     }

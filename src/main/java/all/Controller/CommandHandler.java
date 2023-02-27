@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 
-
 public class CommandHandler {
     private final int COMMAND_IDX = 0;
     private final int ARGS_IDX = 1;
@@ -29,9 +28,11 @@ public class CommandHandler {
                 new InputStreamReader(System.in));
         String line;
         while((line = reader.readLine()) != null) {
+            String args = null;
             String []lineSplit = line.split(" ", 2);
             String command = lineSplit[COMMAND_IDX];
-            String args = lineSplit[ARGS_IDX];
+            if(lineSplit.length > 1)
+                args = lineSplit[ARGS_IDX];
 
             try {
                 CommandEnum.valueOf(command).execute(args);
