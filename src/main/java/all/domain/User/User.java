@@ -28,6 +28,10 @@ public class User {
         email = newUserInfo.email;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public User(String username_, String password_, String email_,
                 String birthDate_, String address_, int credit_) throws Exception {
         if(!Pattern.matches("^[._a-zA-Z0-9]+$", username_))

@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Rating {
-    private int username;
+    private String username;
     private int productId;
     private int rating;
 
-    public Rating(int username, int productId, int rating) throws Exception {
+    public Rating(String username, int productId, int rating) throws Exception {
         this.username = username;
         this.productId = productId;
         if(rating > 10 || rating < 1)

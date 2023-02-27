@@ -38,16 +38,9 @@ public class Amazon {
         return null;
     }
 
-    public boolean isInUsers(int id) {
-        for (User u : users)
-            if (id == u.getId())
-                return true;
-        return false;
-    }
-
     public void addUser(User user) {
         for (User user_ : this.users)
-            if (Objects.equals(user_.getId(), user.getId())) {
+            if (user_.userNameEquals(user.getUsername())) {
                 user_.updateUserInfo(user);
             }
         users.add(user);
@@ -75,7 +68,7 @@ public class Amazon {
     }
 
     public void rateCommodity(Rating rating) throws Exception {
-        if (!isInUsers(rating.getUsername()))
+        if (findUserById(rating.getUsername()) == null)
             throw new Exception("User is not exist\n");
         Product p = findProductsById(rating.getProductId());
         if(p != null) p.updateRating(rating);
