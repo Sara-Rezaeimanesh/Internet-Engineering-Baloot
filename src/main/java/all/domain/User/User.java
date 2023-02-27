@@ -1,6 +1,9 @@
 package all.domain.User;
 import all.domain.Product.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -58,6 +61,17 @@ public class User {
     public void addProduct(Product p) { buyList.add(p); }
 
     public boolean userNameEquals(String username) {
+        System.out.println(this.username+" "+username);
         return Objects.equals(this.username, username);
+    }
+
+    public void printBuyList() throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        StringBuilder commodities = new StringBuilder();
+        for (Product p : buyList)
+            commodities.append(ow.writeValueAsString(p));
+
+        System.out.println("\"data\": " + commodities);
+
     }
 }

@@ -17,7 +17,7 @@ public class Amazon {
     private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exist\n";
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist\n";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!\n";
-    private final String USER_DOES_NOT_EXIST_ERROR = "User is not exist\n";
+    private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!\n";
 
     private ArrayList<User> users = new ArrayList<>();
     ;
@@ -69,7 +69,7 @@ public class Amazon {
         for (Product p : products)
             commodities.append(ow.writeValueAsString(p));
 
-        System.out.println(commodities);
+        System.out.println("\"data\": " + commodities);
     }
 
     public void rateCommodity(Rating rating) throws Exception {
@@ -112,6 +112,7 @@ public class Amazon {
         if(!p.isInStock()) throw new Exception("Product is not in stock!\n");
 
         u.addProduct(p);
+        p.updateStock(-1);
     }
 
     public void removeFromBuyList(String username, int commodityId) throws Exception {
@@ -122,6 +123,12 @@ public class Amazon {
         if(!u.hasBoughtProduct(commodityId))
             throw  new Exception("Product does not exist in buyList!\n");
 
-        p.incStock(1);
+        p.updateStock(1);
+    }
+
+    public void getUserBuyList(String name) throws Exception {
+        User u = findUserById(name);
+        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+        u.printBuyList();
     }
 }

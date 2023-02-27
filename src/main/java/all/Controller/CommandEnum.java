@@ -13,6 +13,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 enum CommandEnum implements Command {
     addUser {
         @Override
@@ -28,7 +32,7 @@ enum CommandEnum implements Command {
             amazon.addSupplier(supplier);
         }
     },
-    addProduct {
+    addCommodity {
         @Override
         public void execute(String json) throws Exception {
             Product product = mapper.readValue(json, Product.class);
@@ -65,30 +69,25 @@ enum CommandEnum implements Command {
     addToBuyList {
         @Override
         public void execute(String json) throws Exception {
-            String username = null;
-            int commodityId = 0;
-            ObjectNode node = new ObjectMapper().readValue(json, ObjectNode.class);
-            if(node.has("username") && node.has("commodityId")) {
-                username = String.valueOf(node.get("username"));
-                commodityId = Integer.parseInt(String.valueOf(node.get("commodityId")));
-            }
-                
-            amazon.addToBuyList(username, commodityId);
+            ArrayList<String> args = extractArgs(json,
+                    new ArrayList<>(Arrays.asList("username", "commodityId")));
+            amazon.addToBuyList(args.get(0), Integer.parseInt(args.get(1)));
         }
     },
     removeFromBuyList {
         @Override
         public void execute(String json) throws Exception {
-            String username = null;
-            int commodityId = 0;
-            ObjectNode node = new ObjectMapper().readValue(json, ObjectNode.class);
-            if(node.has("username") && node.has("commodityId")) {
-                username = String.valueOf(node.get("username"));
-                commodityId = Integer.parseInt(String.valueOf(node.get("commodityId")));
-            }
-
-            amazon.removeFromBuyList(username, commodityId);
+            ArrayList<String> args = extractArgs(json,
+                    new ArrayList<>(Arrays.asList("username", "commodityId")));
+            amazon.removeFromBuyList(args.get(0), Integer.parseInt(args.get(1)));
+        }
+    },
+    getBuyList {
+        @Override
+        public void execute(String json) throws Exception {
+            ArrayList<String> args = extractArgs(json,
+                    new ArrayList<>(List.of("username")));
+            amazon.getUserBuyList(args.get(0));
         }
     }
-
 }

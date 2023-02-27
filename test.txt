@@ -1,4 +1,13 @@
 addProvider {"id": 1, "name": "Provider1", "registryDate": "2023-09-01"}
 
 addUser {"username": "user1", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
+addUser {"username": "user3", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
+addUser {"username": "user2", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
 addUser {"username": "user?1", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
+addCommodity {"id": 1, "name": "Headphone", "providerId": 1, "price": 35000, "categories": "Technology", "rating": 8.8, "inStock": 2}
+addToBuyList {"username": "user1", "commodityId": 1}
+addToBuyList {"username": "user1", "commodityId": 1}
+addToBuyList {"username": "user4", "commodityId": 1}
+addToBuyList {"username": "user2", "commodityId": 2}
+addToBuyList {"username": "user2", "commodityId": 1}
+addToBuyList {"username": "user3", "commodityId": 1}
