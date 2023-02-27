@@ -1,27 +1,23 @@
 package all.domain.User;
+import all.domain.Product.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
-@Entity
+
 @NoArgsConstructor
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String username;
     private String password;
     private String email;
     private String birthDate;
     private String address;
     private int credit;
-
-    public Long getId() {
-        return id;
-    }
+    private ArrayList<Product> buyList;
 
     public void updateUserInfo(User newUserInfo){
         username = newUserInfo.username;
@@ -43,4 +39,16 @@ public class User {
         this.credit = credit_;
     }
 
+    public boolean hasBoughtProduct(int commodityId) {
+        for(Product p : buyList)
+            if(p.getId() == commodityId)
+                return true;
+        return false;
+    }
+
+    public void addProduct(Product p) { buyList.add(p); }
+
+    public boolean userNameEquals(String username) {
+        return Objects.equals(this.username, username);
+    }
 }

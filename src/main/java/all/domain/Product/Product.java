@@ -50,4 +50,7 @@ public class Product {
         setRating(sumRating / ratings.size());
     }
 
+    public boolean isInStock() {
+        return inStock > 0;
+    }
 }
