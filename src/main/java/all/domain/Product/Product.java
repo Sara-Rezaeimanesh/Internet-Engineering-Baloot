@@ -1,6 +1,7 @@
 package all.domain.Product;
 
 import all.domain.Rating.Rating;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,11 +21,13 @@ public class Product {
     private int inStock;
     private ArrayList<Rating> ratings;
 
-    public boolean isSameCategory(String category_){
+    public boolean isSameCategory(String category_) {
         return category.equals(category_);
     }
 
-    public Product(int id, String name, int providerId, int price, String category, int rating, int inStock) {
+    public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
+                   @JsonProperty("price") int price, @JsonProperty("category") String category, @JsonProperty("rating") int rating,
+                   @JsonProperty("inStock") int inStock) {
         this.id = id;
         this.name = name;
         this.providerId = providerId;
@@ -34,16 +37,16 @@ public class Product {
         this.inStock = inStock;
     }
 
-    public void updateRating(Rating newRating){
+    public void updateRating(Rating newRating) {
         int sumRating = ratings.size() * rating;
         boolean alreadyRated = false;
-        for(Rating r : this.ratings)
-            if((newRating.getUsername()) == (r.getUsername())){
+        for (Rating r : this.ratings)
+            if ((newRating.getUsername()) == (r.getUsername())) {
                 int diff = newRating.getRating() - r.getRating();
                 sumRating = sumRating + diff;
                 alreadyRated = true;
             }
-        if(!alreadyRated) {
+        if (!alreadyRated) {
             sumRating = sumRating + newRating.getRating();
             ratings.add(newRating);
         }

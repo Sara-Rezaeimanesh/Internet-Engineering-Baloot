@@ -1,5 +1,6 @@
 package all.domain.Rating;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,11 +11,10 @@ public class Rating {
     private int productId;
     private int rating;
 
-    public Rating(String username, int productId, int rating) throws Exception {
+    public Rating(@JsonProperty("username") String username, @JsonProperty("productId") int productId, @JsonProperty("rating") int rating) throws Exception {
         this.username = username;
         this.productId = productId;
-        if(rating > 10 || rating < 1)
-            throw new Exception("Rating must be between 1 to 10\n");
+        if (rating > 10 || rating < 1) throw new Exception("Rating must be between 1 to 10\n");
         this.rating = rating;
     }
 }
