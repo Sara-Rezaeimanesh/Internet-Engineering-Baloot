@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.jpa.repository.query.EscapeCharacter;
 
 
 public class CommandHandler {
@@ -31,9 +32,12 @@ public class CommandHandler {
             String []lineSplit = line.split(" ", 2);
             String command = lineSplit[COMMAND_IDX];
             String args = lineSplit[ARGS_IDX];
-            CommandEnum.valueOf(command).execute(args);
+
+            try {
+                CommandEnum.valueOf(command).execute(args);
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
-
-
     }
 }

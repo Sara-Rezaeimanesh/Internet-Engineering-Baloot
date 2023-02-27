@@ -1,5 +1,7 @@
 package all.domain.Supplier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class Supplier {
@@ -13,7 +15,9 @@ public class Supplier {
         return id;
     }
 
-    public Supplier(int id, String name, String registeryDate) {
+    public Supplier(@JsonProperty("id") int id,
+                    @JsonProperty("name") String name,
+                    @JsonProperty("registryDate") String registeryDate) {
         this.id = id;
         this.name = name;
         this.registeryDate = registeryDate;

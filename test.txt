@@ -1,3 +1,4 @@
 addProvider {"id": 1, "name": "Provider1", "registryDate": "2023-09-01"}
 
 addUser {"username": "user1", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
+addUser {"username": "user?1", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}

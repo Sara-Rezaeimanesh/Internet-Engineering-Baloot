@@ -1,5 +1,6 @@
 package all.domain.User;
 import all.domain.Product.Product;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,8 +33,12 @@ public class User {
         return username;
     }
 
-    public User(String username_, String password_, String email_,
-                String birthDate_, String address_, int credit_) throws Exception {
+    public User(@JsonProperty("username") String username_,
+                @JsonProperty("password") String password_,
+                @JsonProperty("email") String email_,
+                @JsonProperty("birthDate") String birthDate_,
+                @JsonProperty("address") String address_,
+                @JsonProperty("credit")  int credit_) throws Exception {
         if(!Pattern.matches("^[._a-zA-Z0-9]+$", username_))
             throw new Exception("Username cannot contain especial characters.\n");
         this.username = username_;
