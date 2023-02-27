@@ -56,4 +56,8 @@ public class Product {
     public boolean isInStock() {
         return inStock > 0;
     }
+
+    public void incStock(int inc) {
+        this.inStock += inc;
+    }
 }

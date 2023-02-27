@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 enum CommandEnum implements Command {
-   addUser {
+    addUser {
         @Override
         public void execute(String json) throws JsonProcessingException {
             User user = mapper.readValue(json, User.class);
@@ -62,7 +62,7 @@ enum CommandEnum implements Command {
             amazon.getCommoditiesByCategory(category);
         }
     },
-    ddToBuyList {
+    addToBuyList {
         @Override
         public void execute(String json) throws Exception {
             String username = null;
@@ -75,5 +75,20 @@ enum CommandEnum implements Command {
                 
             amazon.addToBuyList(username, commodityId);
         }
+    },
+    removeFromBuyList {
+        @Override
+        public void execute(String json) throws Exception {
+            String username = null;
+            int commodityId = 0;
+            ObjectNode node = new ObjectMapper().readValue(json, ObjectNode.class);
+            if(node.has("username") && node.has("commodityId")) {
+                username = String.valueOf(node.get("username"));
+                commodityId = Integer.parseInt(String.valueOf(node.get("commodityId")));
+            }
+
+            amazon.removeFromBuyList(username, commodityId);
+        }
     }
+
 }
