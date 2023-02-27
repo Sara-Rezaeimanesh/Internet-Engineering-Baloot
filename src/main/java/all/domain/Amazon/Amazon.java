@@ -76,5 +76,7 @@ public class Amazon {
             throw new Exception("User is not exist\n");
         if(!isInProducts(rating.getProductId()))
             throw new Exception("Product is not exist\n");
+
+
     }
 }
