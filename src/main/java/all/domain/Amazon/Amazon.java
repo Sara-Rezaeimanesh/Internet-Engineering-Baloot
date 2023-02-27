@@ -39,12 +39,6 @@ public class Amazon {
         return false;
     }
 
-    public Amazon() {
-        users = new ArrayList<>();
-        suppliers = new ArrayList<>();
-        products = new ArrayList<>();
-    }
-
     public void addUser(User user){
         for(User user_ : this.users)
             if(Objects.equals(user_.getId(), user.getId())){

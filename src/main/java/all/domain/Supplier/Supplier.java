@@ -9,6 +9,10 @@ public class Supplier {
     private String registeryDate;
     private ArrayList<Integer> products;
 
+    public int getId() {
+        return id;
+    }
+
     public Supplier(int id, String name, String registeryDate) {
         this.id = id;
         this.name = name;
