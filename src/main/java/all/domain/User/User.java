@@ -15,9 +15,22 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private String BirthDate;
+    private String birthDate;
     private String address;
     private int credit;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void updateUserInfo(User newUserInfo){
+        username = newUserInfo.username;
+        password = newUserInfo.password;
+        address = newUserInfo.address;
+        birthDate = newUserInfo.birthDate;
+        credit = newUserInfo.credit;
+        email = newUserInfo.email;
+    }
 
     public User(String username_, String password_, String email_,
                 String birthDate_, String address_, int credit_) throws Exception {

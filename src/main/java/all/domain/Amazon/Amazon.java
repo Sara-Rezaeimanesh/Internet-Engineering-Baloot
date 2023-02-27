@@ -42,12 +42,7 @@ public class Amazon {
     public void addUser(User user){
         for(User user_ : this.users)
             if(Objects.equals(user_.getId(), user.getId())){
-                user_.setUsername(user.getUsername());
-                user_.setAddress(user.getAddress());
-                user_.setBirthDate(user.getBirthDate());
-                user_.setCredit(user.getCredit());
-                user_.setEmail(user.getEmail());
-                user_.setPassword(user.getPassword());
+                user_.updateUserInfo(user);
             }
         users.add(user);
     }
