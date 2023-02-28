@@ -17,24 +17,27 @@ public class Product {
     private String name;
     private int providerId;
     private int price;
-    private String category;
+    private ArrayList<String> categories;
     private int rating;
     private int inStock;
     @JsonIgnore
     private ArrayList<Rating> ratings;
 
-    public boolean isSameCategory(String category_) {
-        return category.equals(category_);
+    public boolean isSameCategory(ArrayList<String> categories_) {
+        for(String c_ : categories_)
+            for(String c : categories)
+                return c.equals(c_);
+        return false;
     }
 
     public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
-                   @JsonProperty("price") int price, @JsonProperty("categories") String category, @JsonProperty("rating") int rating,
+                   @JsonProperty("price") int price, @JsonProperty("categories") ArrayList<String> categories, @JsonProperty("rating") int rating,
                    @JsonProperty("inStock") int inStock) {
         this.id = id;
         this.name = name;
         this.providerId = providerId;
         this.price = price;
-        this.category = category;
+        this.categories = categories;
         this.rating = rating;
         this.inStock = inStock;
     }

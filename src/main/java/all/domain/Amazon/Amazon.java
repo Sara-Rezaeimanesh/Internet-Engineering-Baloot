@@ -93,11 +93,11 @@ public class Amazon {
         else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
-    public void getCommoditiesByCategory(String category) {
+    public void getCommoditiesByCategory(ArrayList<String> categories) {
         ArrayList<Product> tempProducts = new ArrayList<>();
         for (Product p : products) {
-            if (p.isSameCategory(category))
-                tempProducts.add(p);
+                if (p.isSameCategory(categories))
+                    tempProducts.add(p);
         }
         System.out.println(tempProducts.toString());
     }
