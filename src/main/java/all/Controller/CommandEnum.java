@@ -64,13 +64,9 @@ enum CommandEnum implements Command {
     getCommoditiesByCategory {
         @Override
         public void execute(String json) throws Exception{
-            ArrayList<JsonNode> categoryJson = extractArgs(json, new ArrayList<>(List.of("categories")));
-            ArrayList<String> categories = new ArrayList<>();
-            for(JsonNode j : categoryJson) {
-                categories.add(j.get(0).textValue());
-                System.out.println(categories.get(categories.size()-1));
-            }
-            amazon.getCommoditiesByCategory(categories);
+            ArrayList<JsonNode> args = extractArgs(json,
+                    new ArrayList<>(List.of("category")));
+            amazon.getCommoditiesByCategory(args.get(0).textValue());
         }
     },
     addToBuyList {

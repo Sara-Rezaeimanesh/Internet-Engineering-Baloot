@@ -24,10 +24,9 @@ public class Product {
     @ToString.Exclude
     private ArrayList<Rating> ratings;
 
-    public boolean isSameCategory(ArrayList<String> categories_) {
-        for(String c_ : categories_)
-            for(String c : categories)
-                return c.equals(c_);
+    public boolean isSameCategory(String category) {
+        for (String c : categories)
+            return c.equals(category);
         return false;
     }
 
