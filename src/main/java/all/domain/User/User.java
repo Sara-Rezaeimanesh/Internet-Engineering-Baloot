@@ -71,11 +71,9 @@ public class User {
         for (Product p : buyList)
             commodities.append(ow.writeValueAsString(p));
 
-        System.out.println("\"data\": " + commodities);
+        System.out.println("\"data\": {\"buyList\": [" + commodities + "]}");
 
     }
 
-    public void removeProduct(Product p) {
-
-    }
+    public void removeProduct(Product p) { buyList.remove(p); }
 }

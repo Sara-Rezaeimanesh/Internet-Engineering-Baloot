@@ -76,7 +76,7 @@ public class Amazon {
         for (Product p : products)
             commodities.append(ow.writeValueAsString(p));
 
-        System.out.println("\"data\": " + commodities);
+        System.out.println("\"data\": {\"commoditiesList\": [" + commodities + "]}");
     }
 
     public void rateCommodity(Rating rating) throws Exception {
@@ -99,7 +99,8 @@ public class Amazon {
                 if (p.isSameCategory(categories))
                     tempProducts.add(p);
         }
-        System.out.println(tempProducts.toString());
+        // "\"data\": {\"buyList\": [" + commodities + "]}"
+        System.out.println("\"data\": {\"commoditiesListByCategory\": " + tempProducts.toString() + "}");
     }
 
     public void addToBuyList(String username, int commodityId) throws Exception {
