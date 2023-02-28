@@ -45,6 +45,13 @@ class CommandHandlerTest {
     }
 
     @Test
+    void getCommodityByIdReturnNoError() throws Exception {
+        amazon.addProduct(product);
+        amazon.getCommodityById(PRODUCT_ID);
+
+    }
+
+    @Test
     void rateCommodityReturnUserNotFoundError() throws Exception {
         Rating rating = new Rating("user2", PRODUCT_ID,7);
         amazon.rateCommodity(rating);
