@@ -49,6 +49,7 @@ public class User {
         this.email = email_;
         this.address = address_;
         this.credit = credit_;
+        this.buyList = new ArrayList<>();
     }
 
     public boolean hasBoughtProduct(int commodityId) {
@@ -61,7 +62,6 @@ public class User {
     public void addProduct(Product p) { buyList.add(p); }
 
     public boolean userNameEquals(String username) {
-        System.out.println(this.username+" "+username);
         return Objects.equals(this.username, username);
     }
 
