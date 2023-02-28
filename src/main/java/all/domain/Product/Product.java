@@ -19,9 +19,8 @@ public class Product {
     private int providerId;
     private int price;
     private ArrayList<String> categories;
-    private float rating;
     private int inStock;
-    @JsonIgnore
+    private float rating;
     @ToString.Exclude
     private ArrayList<Rating> ratings;
 
@@ -42,7 +41,6 @@ public class Product {
         this.categories = categories;
         this.rating = rating;
         this.inStock = inStock;
-        this.ratings = new ArrayList<>();
     }
 
     public void updateRating(Rating newRating) {
