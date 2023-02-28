@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -18,9 +19,10 @@ public class Product {
     private int providerId;
     private int price;
     private ArrayList<String> categories;
-    private int rating;
+    private float rating;
     private int inStock;
     @JsonIgnore
+    @ToString.Exclude
     private ArrayList<Rating> ratings;
 
     public boolean isSameCategory(ArrayList<String> categories_) {
@@ -40,19 +42,20 @@ public class Product {
         this.categories = categories;
         this.rating = rating;
         this.inStock = inStock;
+        this.ratings = new ArrayList<>();
     }
 
     public void updateRating(Rating newRating) {
-        int sumRating = ratings.size() * rating;
+        float sumRating = ratings.size() * rating;
         boolean alreadyRated = false;
         for (Rating r : this.ratings)
-            if ((newRating.getUsername()) == (r.getUsername())) {
-                int diff = newRating.getRating() - r.getRating();
+            if (Objects.equals(newRating.getUsername(), r.getUsername())) {
+                float diff = newRating.getScore() - r.getScore();
                 sumRating = sumRating + diff;
                 alreadyRated = true;
             }
         if (!alreadyRated) {
-            sumRating = sumRating + newRating.getRating();
+            sumRating = sumRating + newRating.getScore();
             ratings.add(newRating);
         }
         setRating(sumRating / ratings.size());

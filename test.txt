@@ -3,9 +3,9 @@ addUser {"username": "user1", "password":"1234", "email":"user@gmail.com", "birt
 addUser {"username": "user3", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
 addUser {"username": "user2", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
 addUser {"username": "user?1", "password":"1234", "email":"user@gmail.com", "birthDate" : "1977-09-15", "address":"address", "credit":"1500"}
-addCommodity {"id": 1, "name": "Headphone", "providerId": 1, "price": 35000, "categories": "Technology", "rating": 8.8, "inStock": 2}
-addCommodity {"id": 2, "name": "goje", "providerId": 1, "price": 35000, "categories": "sabzi", "rating": 8.8, "inStock": 2}
-addCommodity {"id": 3, "name": "khiar", "providerId": 1, "price": 35000, "categories": "sabzi", "rating": 8.8, "inStock": 2}
+addCommodity {"id": 1, "name": "Headphone", "providerId": 1, "price": 35000, "categories": ["Technology", "art"], "rating": 8.8, "inStock": 2}
+addCommodity {"id": 2, "name": "goje", "providerId": 1, "price": 35000, "categories": ["sabzi"], "rating": 8.8, "inStock": 2}
+addCommodity {"id": 3, "name": "khiar", "providerId": 1, "price": 35000, "categories": ["sabzi"], "rating": 8.8, "inStock": 2}
 addToBuyList {"username": "user1", "commodityId": 1}
 addToBuyList {"username": "user1", "commodityId": 1}
 addToBuyList {"username": "user4", "commodityId": 1}
@@ -24,7 +24,7 @@ removeFromBuyList {"username": "user1", "commodityId": 1}
 removeFromBuyList {"username": "user3", "commodityId": 1}
 getCommodityById {"id": 1}
 getCommodityById {"id": 10}
-getCommodityByCategory {"category": "sabzi"}
+getCommoditiesByCategory {"category": "sabzi"}
 getCommodityByCategory {"category": "piaz"}
 getBuyList {"username": "user1"}
 getBuyList {"username": "user3"}

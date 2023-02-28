@@ -74,4 +74,8 @@ public class User {
         System.out.println("\"data\": " + commodities);
 
     }
+
+    public void removeProduct(Product p) {
+
+    }
 }

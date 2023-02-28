@@ -9,12 +9,12 @@ import lombok.Setter;
 public class Rating {
     private String username;
     private int productId;
-    private int rating;
+    private float score;
 
-    public Rating(@JsonProperty("username") String username, @JsonProperty("productId") int productId, @JsonProperty("rating") int rating) throws Exception {
+    public Rating(@JsonProperty("username") String username, @JsonProperty("commodityId") int productId, @JsonProperty("score") float rating) throws Exception {
         this.username = username;
         this.productId = productId;
         if (rating > 10 || rating < 1) throw new Exception("Rating must be between 1 to 10\n");
-        this.rating = rating;
+        this.score = rating;
     }
 }

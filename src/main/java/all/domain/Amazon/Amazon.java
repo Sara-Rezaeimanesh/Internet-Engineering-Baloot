@@ -122,6 +122,7 @@ public class Amazon {
         if(!u.hasBoughtProduct(commodityId))
             throw  new Exception("Product does not exist in buyList!");
 
+        u.removeProduct(p);
         p.updateStock(1);
     }
 

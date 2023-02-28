@@ -55,8 +55,9 @@ enum CommandEnum implements Command {
     getCommodityById {
         @Override
         public void execute(String json) throws Exception{
-            Integer id = mapper.readValue(json, Integer.class);
-            amazon.getCommodityById(id);
+            ArrayList<JsonNode> args = extractArgs(json,
+                    new ArrayList<>(List.of("id")));
+            amazon.getCommodityById(Integer.parseInt(String.valueOf(args.get(0))));
         }
     },
     getCommoditiesByCategory {
