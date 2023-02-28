@@ -48,6 +48,7 @@ enum CommandEnum implements Command {
     rateCommodity {
         @Override
         public void execute(String json) throws Exception{
+            System.out.println(json);
             Rating rating = mapper.readValue(json, Rating.class);
             amazon.rateCommodity(rating);
         }
