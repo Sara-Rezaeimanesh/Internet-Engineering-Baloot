@@ -86,7 +86,7 @@ public class Amazon {
     public void getCommodityById(Integer id) throws Exception {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         Product p = findProductsById(id);
-        if(p != null) System.out.println("\"data\": {" + ow.writeValueAsString(p) + "}");
+        if(p != null) System.out.println("\"data\": " + ow.writeValueAsString(p));
         else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 

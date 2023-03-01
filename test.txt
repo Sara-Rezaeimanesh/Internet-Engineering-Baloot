@@ -28,3 +28,4 @@ getCommoditiesByCategory {"category": "sabzi"}
 getCommoditiesByCategory {"category": "piaz"}
 getBuyList {"username": "user1"}
 getBuyList {"username": "user3"}
+getBuyList {"username": "user2"}

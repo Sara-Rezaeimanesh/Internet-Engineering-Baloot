@@ -11,7 +11,7 @@ public class Rating {
     private int productId;
     private float score;
 
-    public Rating(@JsonProperty("username") String username, @JsonProperty("productId") int productId,
+    public Rating(@JsonProperty("username") String username, @JsonProperty("commodityId") int productId,
                   @JsonProperty("score") float rating) throws Exception {
         this.username = username;
         this.productId = productId;
