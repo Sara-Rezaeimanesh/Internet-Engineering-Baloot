@@ -67,11 +67,7 @@ public class User {
 
     public void printBuyList() throws JsonProcessingException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        StringBuilder commodities = new StringBuilder();
-        for (Product p : buyList)
-            commodities.append(ow.writeValueAsString(p));
-
-        System.out.println("\"data\": {\"buyList\": [" + commodities + "]}");
+        System.out.println("\"data\": {\"buyList\": " + ow.writeValueAsString(buyList) + "}");
 
     }
 

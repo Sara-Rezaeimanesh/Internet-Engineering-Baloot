@@ -21,7 +21,7 @@ public class Product {
     private ArrayList<String> categories;
     private int inStock;
     private float rating;
-    @ToString.Exclude
+    @JsonIgnore
     private ArrayList<Rating> ratings;
 
     public boolean isSameCategory(String category) {

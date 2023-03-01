@@ -6,6 +6,8 @@ import all.domain.Product.Product;
 import all.domain.Rating.Rating;
 import all.domain.Supplier.Supplier;
 import all.domain.User.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,20 +38,21 @@ class CommandHandlerTest {
 
     private final PrintStream standardOut = System.out;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    private final ObjectWriter ow;
 
     private final int PRODUCT_ID = 1;
 
     public CommandHandlerTest() throws Exception {
+        ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+    }
+
+    @BeforeEach
+    void setUp() throws Exception {
         this.product = new Product(PRODUCT_ID, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");}}, 10, 50);//(Product) Mockito.mock(Product.class);
 //        this.user =  (User) Mockito.mock(User.class);
         this.supplier = (Supplier) Mockito.mock(Supplier.class);
         this.user1 = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
         this.user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 100);
-
-    }
-
-    @BeforeEach
-    void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         amazon = new Amazon();
     }
@@ -59,12 +64,12 @@ class CommandHandlerTest {
     }
 
     @Test
-    void getCommodityByIdReturnNoError() throws Exception {
+    void getCommodityByIdGivesCommodityJson() throws Exception {
         amazon.addSupplier(supplier);
         Mockito.when(this.supplier.getId()).thenReturn(1);
         amazon.addProduct(product);
         amazon.getCommodityById(PRODUCT_ID);
-        Assertions.assertEquals("Product(id=1, name=ice cream, providerId=1, price=20000, categories=[snack], inStock=50, rating=10.0)"
+        Assertions.assertEquals("\"data\": {" + ow.writeValueAsString(product) + "}"
                 , outputStreamCaptor.toString().trim());
     }
 
@@ -76,7 +81,6 @@ class CommandHandlerTest {
         catch (Exception e){
             Assertions.assertEquals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR);
         }
-
     }
 
     @Test
@@ -143,6 +147,58 @@ class CommandHandlerTest {
         amazon.getCommodityById(PRODUCT_ID);
         Assertions.assertEquals("Product(id=1, name=ice cream, providerId=1, price=20000, categories=[snack], inStock=50, rating=8.0)"
                 , outputStreamCaptor.toString().trim());
+    }
+
+    ArrayList<Product> addProductsWithSameCats(String cat) throws Exception {
+        amazon.addSupplier(supplier);
+        Mockito.when(this.supplier.getId()).thenReturn(1);
+        ArrayList<Product> ps = new ArrayList<>(Arrays.asList(
+                new Product(1, "piaz", 1, 3000,
+                        new ArrayList<String>(List.of(cat)), 10, 12),
+                new Product(2, "piaz", 1, 3000,
+                        new ArrayList<String>(List.of(cat)), 10, 12)));
+
+        amazon.addProduct(ps.get(0));
+        amazon.addProduct(ps.get(1));
+        return ps;
+    }
+
+    @Test
+    void getCOmmoditiesByCategoryReturnsProductsWithCategry() throws Exception {
+        ArrayList<Product> ps = addProductsWithSameCats("sabzi");
+
+        amazon.getCommoditiesByCategory("sabzi");
+        Assertions.assertEquals("\"data\": {\"commoditiesListByCategory\": "+ ow.writeValueAsString(ps) + "}"
+                                    , outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    void getCommoditiesByCategoryReturnsEmptyList() throws Exception {
+        ArrayList<Product> ps = addProductsWithSameCats("sabzi");
+
+        amazon.getCommoditiesByCategory("mashin");
+        Assertions.assertEquals("\"data\": {\"commoditiesListByCategory\": [ ]}"
+                , outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    void addProductToBuyListThrowsUserNotFoundExcpetion() throws Exception {
+
+    }
+
+    @Test
+    void addProductToBuyListThrowsProductNotFoundExcpetion() throws Exception {
+
+    }
+
+    @Test
+    void addProductToBuyListThrowsProductAlreadyAddedExcpetion() throws Exception {
+
+    }
+
+    @Test
+    void addProductToBuyListThrowsNotInStockExcpetion() throws Exception {
+
     }
 
     @AfterEach

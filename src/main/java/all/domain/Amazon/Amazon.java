@@ -72,11 +72,7 @@ public class Amazon {
 
     public void listCommodities() throws JsonProcessingException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        StringBuilder commodities = new StringBuilder();
-        for (Product p : products)
-            commodities.append(ow.writeValueAsString(p));
-
-        System.out.println("\"data\": {\"commoditiesList\": [" + commodities + "]}");
+        System.out.println("\"data\": {\"commoditiesList\": " + ow.writeValueAsString(products) + "}");
     }
 
     public void rateCommodity(Rating rating) throws Exception {
@@ -88,19 +84,20 @@ public class Amazon {
     }
 
     public void getCommodityById(Integer id) throws Exception {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         Product p = findProductsById(id);
-        if(p != null) System.out.println(p.toString());
+        if(p != null) System.out.println("\"data\": {" + ow.writeValueAsString(p) + "}");
         else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
     public void getCommoditiesByCategory(String category) throws JsonProcessingException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        StringBuilder commodities = new StringBuilder();
+        ArrayList<Product> sameCat = new ArrayList<>();
         for (Product p : products) {
                 if (p.isSameCategory(category))
-                    commodities.append(ow.writeValueAsString(p));
+                    sameCat.add(p);
         }
-        System.out.println("\"data\": {\"commoditiesListByCategory\": [" + commodities + "]}");
+        System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
     }
 
     public void addToBuyList(String username, int commodityId) throws Exception {
