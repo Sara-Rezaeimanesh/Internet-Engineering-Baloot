@@ -40,6 +40,7 @@ public class Product {
         this.categories = categories;
         this.rating = rating;
         this.inStock = inStock;
+        this.ratings = new ArrayList<>();
     }
 
     public void updateRating(Rating newRating) {
