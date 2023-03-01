@@ -166,9 +166,8 @@ class CommandHandlerTest {
     }
 
     @Test
-    void getCOmmoditiesByCategoryReturnsProductsWithCategry() throws Exception {
+    void getCommoditiesByCategoryReturnsProductsWithCategory() throws Exception {
         ArrayList<Product> ps = addProductsWithSameCats("sabzi");
-
         amazon.getCommoditiesByCategory("sabzi");
         Assertions.assertEquals("\"data\": {\"commoditiesListByCategory\": "+ ow.writeValueAsString(ps) + "}"
                                     , outputStreamCaptor.toString().trim());
@@ -190,7 +189,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    void addProductToBuyListThrowsUserNotFoundExcpetion() throws Exception {
+    void addProductToBuyListThrowsUserNotFoundException() throws Exception {
         addUser1AndProduct1AndSupplier1();
         try {
             amazon.addToBuyList("user2", 1);
@@ -200,7 +199,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    void addProductToBuyListThrowsProductNotFoundExcpetion() throws Exception {
+    void addProductToBuyListThrowsProductNotFoundException() throws Exception {
         addUser1AndProduct1AndSupplier1();
         try {
             amazon.addToBuyList("user2", 2);
@@ -210,7 +209,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    void addProductToBuyListThrowsProductAlreadyAddedExcpetion() throws Exception {
+    void addProductToBuyListThrowsProductAlreadyAddedException() throws Exception {
         addUser1AndProduct1AndSupplier1();
         amazon.addToBuyList("user1", 1);
         try {
@@ -221,7 +220,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    void addProductToBuyListThrowsNotInStockExcpetion() throws Exception {
+    void addProductToBuyListThrowsNotInStockException() throws Exception {
         addUser1AndProduct1AndSupplier1();
         amazon.addUser(user2);
         amazon.addToBuyList("user1", 1);
