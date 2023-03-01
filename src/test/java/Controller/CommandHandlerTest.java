@@ -48,13 +48,18 @@ class CommandHandlerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        this.product = new Product(PRODUCT_ID, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");}}, 10, 50);//(Product) Mockito.mock(Product.class);
+        this.product = new Product(PRODUCT_ID, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");}}, 10, 1);//(Product) Mockito.mock(Product.class);
 //        this.user =  (User) Mockito.mock(User.class);
         this.supplier = (Supplier) Mockito.mock(Supplier.class);
         this.user1 = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
         this.user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 100);
         System.setOut(new PrintStream(outputStreamCaptor));
         amazon = new Amazon();
+    }
+
+    private void setUpMockSupplier(int id) {
+        amazon.addSupplier(supplier);
+        Mockito.when(this.supplier.getId()).thenReturn(id);
     }
 
     @Test
@@ -65,8 +70,7 @@ class CommandHandlerTest {
 
     @Test
     void getCommodityByIdGivesCommodityJson() throws Exception {
-        amazon.addSupplier(supplier);
-        Mockito.when(this.supplier.getId()).thenReturn(1);
+        setUpMockSupplier(1);
         amazon.addProduct(product);
         amazon.getCommodityById(PRODUCT_ID);
         Assertions.assertEquals("\"data\": {" + ow.writeValueAsString(product) + "}"
@@ -108,8 +112,7 @@ class CommandHandlerTest {
     }
 
     private void prepareForTestingRateCommodity() throws Exception {
-        amazon.addSupplier(supplier);
-        Mockito.when(this.supplier.getId()).thenReturn(1);
+        setUpMockSupplier(1);
         amazon.addProduct(product);
         this.amazon.addUser(user1);
     }
@@ -120,7 +123,7 @@ class CommandHandlerTest {
         Rating rating = new Rating("user1", PRODUCT_ID,7);
         amazon.rateCommodity(rating);
         amazon.getCommodityById(PRODUCT_ID);
-        Assertions.assertEquals("Product(id=1, name=ice cream, providerId=1, price=20000, categories=[snack], inStock=50, rating=7.0)"
+        Assertions.assertEquals("\"data\": {" + ow.writeValueAsString(product) + "}"
                 , outputStreamCaptor.toString().trim());
     }
 
@@ -133,7 +136,7 @@ class CommandHandlerTest {
         amazon.rateCommodity(rating1);
         amazon.rateCommodity(rating2);
         amazon.getCommodityById(PRODUCT_ID);
-        Assertions.assertEquals("Product(id=1, name=ice cream, providerId=1, price=20000, categories=[snack], inStock=50, rating=7.5)"
+        Assertions.assertEquals("\"data\": {" + ow.writeValueAsString(product) + "}"
                 , outputStreamCaptor.toString().trim());
     }
 
@@ -145,13 +148,12 @@ class CommandHandlerTest {
         Rating rating2 = new Rating("user1", PRODUCT_ID,8);
         amazon.rateCommodity(rating2);
         amazon.getCommodityById(PRODUCT_ID);
-        Assertions.assertEquals("Product(id=1, name=ice cream, providerId=1, price=20000, categories=[snack], inStock=50, rating=8.0)"
+        Assertions.assertEquals("\"data\": {" + ow.writeValueAsString(product) + "}"
                 , outputStreamCaptor.toString().trim());
     }
 
-    ArrayList<Product> addProductsWithSameCats(String cat) throws Exception {
-        amazon.addSupplier(supplier);
-        Mockito.when(this.supplier.getId()).thenReturn(1);
+    private ArrayList<Product> addProductsWithSameCats(String cat) throws Exception {
+        setUpMockSupplier(1);
         ArrayList<Product> ps = new ArrayList<>(Arrays.asList(
                 new Product(1, "piaz", 1, 3000,
                         new ArrayList<String>(List.of(cat)), 10, 12),
@@ -181,24 +183,53 @@ class CommandHandlerTest {
                 , outputStreamCaptor.toString().trim());
     }
 
+    private void addUser1AndProduct1AndSupplier1() throws Exception {
+        setUpMockSupplier(1);
+        amazon.addUser(user1);
+        amazon.addProduct(product);
+    }
+
     @Test
     void addProductToBuyListThrowsUserNotFoundExcpetion() throws Exception {
-
+        addUser1AndProduct1AndSupplier1();
+        try {
+            amazon.addToBuyList("user2", 1);
+        } catch(Exception e) {
+            assertEquals(USER_DOES_NOT_EXIST_ERROR, e.getMessage());
+        }
     }
 
     @Test
     void addProductToBuyListThrowsProductNotFoundExcpetion() throws Exception {
-
+        addUser1AndProduct1AndSupplier1();
+        try {
+            amazon.addToBuyList("user2", 2);
+        } catch(Exception e) {
+            assertEquals(PRODUCT_DOES_NOT_EXIT_ERROR, e.getMessage());
+        }
     }
 
     @Test
     void addProductToBuyListThrowsProductAlreadyAddedExcpetion() throws Exception {
-
+        addUser1AndProduct1AndSupplier1();
+        amazon.addToBuyList("user1", 1);
+        try {
+            amazon.addToBuyList("user1", 1);
+        } catch(Exception e) {
+            assertEquals("Product already added.", e.getMessage());
+        }
     }
 
     @Test
     void addProductToBuyListThrowsNotInStockExcpetion() throws Exception {
-
+        addUser1AndProduct1AndSupplier1();
+        amazon.addUser(user2);
+        amazon.addToBuyList("user1", 1);
+        try {
+            amazon.addToBuyList("user2", 1);
+        } catch(Exception e) {
+            assertEquals("Product is not in stock!", e.getMessage());
+        }
     }
 
     @AfterEach

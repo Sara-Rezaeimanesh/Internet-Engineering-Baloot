@@ -25,6 +25,6 @@ removeFromBuyList {"username": "user3", "commodityId": 1}
 getCommodityById {"id": 1}
 getCommodityById {"id": 10}
 getCommoditiesByCategory {"category": "sabzi"}
-getCommodityByCategory {"category": "piaz"}
+getCommoditiesByCategory {"category": "piaz"}
 getBuyList {"username": "user1"}
 getBuyList {"username": "user3"}
