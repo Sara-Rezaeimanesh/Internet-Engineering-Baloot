@@ -1,5 +1,6 @@
 package all.domain.Product;
 
+import all.domain.Comment.Comment;
 import all.domain.Rating.Rating;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,6 +24,8 @@ public class Product {
     private float rating;
     @JsonIgnore
     private ArrayList<Rating> ratings;
+    @JsonIgnore
+    private ArrayList<Comment> comments;
 
     public boolean isSameCategory(String category) {
         for (String c : categories)

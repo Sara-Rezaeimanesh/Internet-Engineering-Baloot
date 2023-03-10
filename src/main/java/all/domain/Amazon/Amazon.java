@@ -27,6 +27,7 @@ public class Amazon {
     ;
 
     public Amazon() {
+
     }
 
     private boolean isInSuppliers(int id) {
