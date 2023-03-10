@@ -74,4 +74,34 @@ public class Product {
     public void updateStock(int i) {
         this.inStock += i;
     }
+
+    private String createCatString() {
+        String catString = "";
+        for(int i = 0; i < categories.size(); i++)
+            catString += i + 1 == categories.size() ? categories.get(i) : categories.get(i) + ", ";
+        return catString;
+    }
+
+    public String createHTML() {
+        String tds = "\t<td>";
+        String tde = "</td>";
+        String trs = "<tr>";
+        String tre = "</tr>";
+
+        return trs + "\n" + tds + id + tde + "\n" + tds + name + tde + "\n" +
+                tds + providerId + tde + "\n" + tds + price + tde +
+                tds + createCatString() + tde + "\n" + tds + rating + tde +
+                tds + inStock + tde + "\n" +
+                tds + "<a href=\"/commodities/" + id + "\">Link</a>" + tde + tre;
+    }
+
+    public String createHTMLForCommodity() {
+        return "<ul>" + "<li id=\"id\">Id: " + id + "</li>" + "\n" +
+               "<li id=\"name\">Name:" + name + "</li>" + "\n" +
+               "<li id=\"providerId\">Provider Id:" + providerId + "</li>" + "\n" +
+               "<li id=\"price\">Price: " + price + "</li>" + "\n" +
+               "<li id=\"categories\">Categories: " +  createCatString() + "</li>" + "\n" +
+               "<li id=\"rating\">Rating: " + rating  + "</li>" + "\n" +
+               "<li id=\"inStock\">In Stock: " + inStock + "</li>" + "\n" + "</ul>";
+    }
 }
