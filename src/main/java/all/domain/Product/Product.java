@@ -44,6 +44,11 @@ public class Product {
         this.rating = rating;
         this.inStock = inStock;
         this.ratings = new ArrayList<>();
+        this.comments = new ArrayList<>();
+    }
+
+    public void addComment(Comment comment){
+        comments.add(comment);
     }
 
     public void updateRating(Rating newRating) {

@@ -1,5 +1,6 @@
 package all.domain.Amazon;
 
+import all.domain.Comment.Comment;
 import all.domain.Rating.Rating;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,6 +12,7 @@ import all.domain.User.User;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Amazon {
@@ -19,15 +21,30 @@ public class Amazon {
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
 
-    private ArrayList<User> users = new ArrayList<>();
-    ;
-    private ArrayList<Supplier> suppliers = new ArrayList<>();
-    ;
-    private ArrayList<Product> products = new ArrayList<>();
-    ;
+    private ArrayList<User> users;
 
-    public Amazon() {
+    private ArrayList<Supplier> suppliers;
 
+    private ArrayList<Product> products;
+
+    public generateCoursesPageHTML(){
+
+    }
+
+
+    public Amazon() throws Exception {
+        Initializer initializer = new Initializer();
+        suppliers = initializer.getProvidersFromAPI("providers");
+        for(Supplier s : suppliers)
+            System.out.println(s.getId());
+        users = initializer.getUsersFromAPI("users");
+        products = initializer.getCommoditiesFromAPI("commodities");
+        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
+        for(Comment c : comments){
+            Product p = findProductsById(c.getCommodityId());
+            assert p != null;
+            p.addComment(c);
+        }
     }
 
     private boolean isInSuppliers(int id) {
