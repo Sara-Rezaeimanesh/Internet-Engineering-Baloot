@@ -45,8 +45,11 @@ public class Amazon {
 //            p.addComment(c);
 //        }
         Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");}}, 10, 1);
-
+        User user = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
+        User user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
         products.add(product);
+        users.add(user);
+        users.add(user2);
     }
 
     private boolean isInSuppliers(int id) {
@@ -95,12 +98,15 @@ public class Amazon {
         System.out.println("\"data\": {\"commoditiesList\": " + ow.writeValueAsString(products) + "}");
     }
 
-    public void rateCommodity(Rating rating) throws Exception {
+    public String rateCommodity(Rating rating) throws Exception {
         if (findUserById(rating.getUsername()) == null)
-            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+            return readHTMLPage("404.html");
         Product p = findProductsById(rating.getProductId());
-        if(p != null) p.updateRating(rating);
-        else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+        if(p != null) {
+            p.updateRating(rating);
+            return "success";
+        }
+        else return readHTMLPage("404.html");
     }
 
     public void getCommodityById(Integer id) throws Exception {
@@ -120,28 +126,31 @@ public class Amazon {
         System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
     }
 
-    public void addToBuyList(String username, int commodityId) throws Exception {
+    public String addToBuyList(String username, int commodityId) throws Exception {
         Product p = findProductsById(commodityId);
         User u = findUserById(username);
-        if(p == null) throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
-        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+        if(p == null || u == null)
+            return readHTMLPage("404.html");
         if(u.hasBoughtProduct(commodityId))
-            throw  new Exception("Product already added.");
+            return readHTMLPage("403.html");
         if(!p.isInStock()) throw new Exception("Product is not in stock!");
         u.addProduct(p);
         p.updateStock(-1);
+
+        return "success";
     }
 
-    public void removeFromBuyList(String username, int commodityId) throws Exception {
+    public String removeFromBuyList(String username, int commodityId) throws Exception {
         Product p = findProductsById(commodityId);
         User u = findUserById(username);
-        if(p == null) throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
-        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+        if(p == null || u == null)
+            return readHTMLPage("404.html");
         if(!u.hasBoughtProduct(commodityId))
-            throw  new Exception("Product does not exist in buyList!");
-
+            return readHTMLPage("403.html");
         u.removeProduct(p);
         p.updateStock(1);
+
+        return "success";
     }
 
     public void getUserBuyList(String name) throws Exception {
@@ -171,17 +180,19 @@ public class Amazon {
             return readHTMLPage("404.html");
 
         commodityHTML += p.createHTMLForCommodity();
-        commodityHTML +=
-                "<form action=\"\" method=\"POST\">\n" +
+        commodityHTML += "<form action=\"/rateCommodity/"+ id +"\" method=\"POST\">\n" +
+                "    <label>Your ID:</label>\n" +
+                "    <input type=\"text\" name=\"user_id\" value=\"\" />\n" +
+                "    <br><br>\n" +
                 "    <label>Rate(between 1 and 10):</label>\n" +
                 "    <input type=\"number\" id=\"quantity\" name=\"quantity\" min=\"1\" max=\"10\">\n" +
                 "    <button type=\"submit\">Rate</button>\n" +
                 "</form>\n" +
                 "<br>\n" +
-                "<form action=\"/addToBuyList/" + id +"\" method=\"POST\">\n" +
-                        "<label>Your ID:</label>\n" +
-                        "<input type=\"text\" name=\"user_id\" value=\"\" />\n" +
-                        "<br><br>\n" +
+                "<form action=\"/addToBuyList/"+ id +"\" method=\"POST\">\n" +
+                "    <label>Your ID:</label>\n" +
+                "    <input type=\"text\" name=\"user_id\" value=\"\" />\n" +
+                "    <br><br>\n" +
                 "    <button type=\"submit\">Add to BuyList</button>\n" +
                 "</form>\n" +
                 "<br />";
