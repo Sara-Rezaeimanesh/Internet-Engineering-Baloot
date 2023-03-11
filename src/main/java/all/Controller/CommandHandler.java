@@ -4,11 +4,15 @@ import all.domain.Amazon.Amazon;
 import all.domain.Product.Product;
 import all.domain.Rating.Rating;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 import io.javalin.Javalin;
+import org.apache.commons.io.FileUtils;
 
 public class CommandHandler {
     private final int COMMAND_IDX = 0;
@@ -28,6 +32,11 @@ public class CommandHandler {
     public CommandHandler(Amazon amazon) {
         CommandHandler.amazon = amazon;
         mapper = new ObjectMapper();
+    }
+
+    private String readHTMLPage(String fileName) throws Exception {
+        File file = new File(Resources.getResource("templates/" + fileName).toURI());
+        return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     }
 
     public void run(int port) throws Exception {
@@ -69,7 +78,6 @@ public class CommandHandler {
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 ctx.status(502);
-
             }
         });
         app.get("/addCredit/:id/:credit", ctx -> {
@@ -82,7 +90,7 @@ public class CommandHandler {
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR))
-                    ctx.status(404);
+                    ctx.html(readHTMLPage("404.html"));
                 else
                     ctx.status(502);
             }
@@ -107,15 +115,15 @@ public class CommandHandler {
 
             } catch (Exception e){
                 if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR)   ||
-                   Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR)    ||
-                   Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR) ||
                    Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
-                    ctx.status(404);
+                    ctx.html(readHTMLPage("404.html"));
+                else if(Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR))
+                    ctx.html(readHTMLPage("403.html"));
                 else
                     ctx.status(502);
             }
         });
-        app.post("/removeFromBuyList/:username/:id", ctx -> {
+        app.get("/removeFromBuyList/:username/:id", ctx -> {
             try {
                 String username = ctx.pathParam("username");
                 String commodityId = ctx.pathParam("id");
@@ -123,14 +131,21 @@ public class CommandHandler {
                 ctx.redirect("/users/" + username);
             } catch (Exception e){
                 if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR)   ||
-                        Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR)    ||
-                        Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR) ||
                         Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
-                    ctx.status(404);
+                    ctx.html(readHTMLPage("404.html"));
+                else if(Objects.equals(e.getMessage(), PRODUCT_HAS_NOT_BOUGHT_ERROR))
+                    ctx.html(readHTMLPage("403.html"));
                 else
                     ctx.status(502);
             }
         });
+        app.post("/removeFromBuyList/:username/:id", ctx -> {
+            String username = ctx.pathParam("username");
+            String commodityId = ctx.pathParam("id");
+            amazon.removeFromBuyList(username, Integer.parseInt(commodityId));
+            ctx.redirect("/removeFromBuyList/" + username + "/" + commodityId);
+        });
+
         app.post("/rateCommodity/:id", ctx -> {
             String username = ctx.formParam("user_id");
             String quantity = ctx.formParam("quantity");
@@ -147,47 +162,41 @@ public class CommandHandler {
                 ctx.redirect("/commodities/"+commodityId);
             } catch (Exception e){
                 if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR) ||
-                        Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR) ||
-                        Objects.equals(e.getMessage(), PRODUCT_HAS_NOT_BOUGHT_ERROR))
-                    ctx.status(404);
+                        Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
+                    ctx.html(readHTMLPage("404.html"));
+                else if(Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR))
+                    ctx.html(readHTMLPage("403.html"));
                 else
-                ctx.status(502);
+                    ctx.status(502);
             }
         });
-//        app.get("/voteComment/:username/:cid/:vote", ctx -> {
-//            try {
-//                String username = ctx.pathParam("username");
-//                String commentId = ctx.pathParam("cid");
-//                String vote = ctx.pathParam("vote");
-//                amazon.voteComment(commentId, Integer.parseInt(vote));
-//                Product commentCommodity = amazon.findCommentCommodity(commentId);
-//                ctx.redirect("/commodities/"+commentCommodity.getId());
-//            } catch (Exception e){
-//                System.out.println(e.getMessage());
-//                ctx.status(502);
-//            }
-//        });
-//        app.get("/voteComment/:username/:cid/:vote", ctx -> {
-//            try {
-//                String username = ctx.pathParam("username");
-//                String commentId = ctx.pathParam("cid");
-//                String vote = ctx.pathParam("vote");
-//                String stat = amazon.voteComment(commentId, vote);
-//                if(!Objects.equals(stat, "success"))
-//                    ctx.html(stat);
-//                else
-//                    ctx.redirect("/commodities/"+commodityId);
-//            } catch (Exception e){
-//                System.out.println(e.getMessage());
-//                ctx.status(502);
-//            }
-//        });
-//        app.post("/voteComment/:cid/:vote", ctx -> {
-//            String username = ctx.formParam("username");
-//            String commentId = ctx.pathParam("cid");
-//            String vote = ctx.pathParam("vote");
-//            ctx.redirect("/voteComment/"+username+"/"+commentId+"/"+vote);
-//        });
+        app.get("/voteComment/:username/:cid/:vote", ctx -> {
+            try {
+                String username = ctx.pathParam("username");
+                String commentId = ctx.pathParam("cid");
+                String vote = ctx.pathParam("vote");
+                if(!vote.equals("0") && !vote.equals("1") && !vote.equals("-1"))
+                    throw new Exception("Invalid Vote");
+                amazon.voteComment(commentId, Integer.parseInt(vote));
+                Product p = amazon.findCommentCommodity(commentId);
+                ctx.redirect("/commodities/"+p.getId());
+
+            } catch (Exception e){
+                if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR) ||
+                        Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
+                    ctx.html(readHTMLPage("404.html"));
+                else if(Objects.equals(e.getMessage(), "Invalid Vote"))
+                    ctx.html(readHTMLPage("403.html"));
+                else
+                    ctx.status(502);
+            }
+        });
+        app.post("/voteComment/:cid/:vote", ctx -> {
+            String username = ctx.formParam("username");
+            String commentId = ctx.pathParam("cid");
+            String vote = ctx.pathParam("vote");
+            ctx.redirect("/voteComment/"+username+"/"+commentId+"/"+vote);
+        });
         app.get("/commodities/search/:categories", ctx -> {
             try {
                 String category = ctx.pathParam("categories");

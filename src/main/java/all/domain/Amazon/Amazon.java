@@ -1,5 +1,6 @@
 package all.domain.Amazon;
 
+import all.domain.Comment.Comment;
 import all.domain.Rating.Rating;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,12 +34,14 @@ public class Amazon {
     public Amazon() throws Exception {
 //        Initializer initializer = new Initializer();
 //        suppliers = initializer.getProvidersFromAPI("providers");
-//        for(Supplier s : suppliers)
-//            System.out.println(s.getId());
 //        users = initializer.getUsersFromAPI("users");
 //        products = initializer.getCommoditiesFromAPI("commodities");
 //        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
 //        for(Comment c : comments){
+//            for(User user : users)
+//                if(Objects.equals(user.getEmail(), c.getUserEmail()))
+//                    c.updateUserId(user.getUsername());
+//
 //            Product p = findProductsById(c.getCommodityId());
 //            assert p != null;
 //            p.addComment(c);
@@ -46,12 +49,18 @@ public class Amazon {
         Supplier supplier = new Supplier(1,"narges", "0/12/1234");
         Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");add("white");}}, 10, 1);
         Product product2 = new Product(2, "chips", 1, 50000, new ArrayList<>(){{add("snack");}}, 10, 1);
-        User user = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 1500);
+        User user = new User("user1", "#123", "b@gmail.com", "12/5/2022", "hi", 1500);
         User user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
-        products.add(product);
-        products.add(product2);
+        Comment c = new Comment("a@gmail.com", 1, "Good shit!" , "Saturday");
+        Comment c1 = new Comment("b@gmail.com", 1, "Bad shit!" , "Sunday");
+
         users.add(user);
         users.add(user2);
+        addSupplier(supplier);
+        addProduct(product);
+        addProduct(product2);
+        addComment(c);
+        addComment(c1);
     }
 
     private Supplier findSupplierById(int id) {
@@ -195,6 +204,16 @@ public class Amazon {
         return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     }
 
+    private void addComment(Comment c) {
+        for(User user : users)
+            if(Objects.equals(user.getEmail(), c.getUserEmail()))
+                c.updateUserId(user.getUsername());
+
+        Product p = findProductsById(c.getCommodityId());
+        assert p != null;
+        p.addComment(c);
+    }
+
     public String createCommodityPage(int id) throws Exception {
         String commodityHTML = readHTMLPage("Commodity_start.html");
         Product p = findProductsById(id);
@@ -205,9 +224,17 @@ public class Amazon {
         commodityHTML += readHTMLPage("Commodity_end.html");
         commodityHTML = commodityHTML.replaceAll("rateCommodity", "rateCommodity/"+id);
         commodityHTML = commodityHTML.replaceAll("addToBuyList", "addToBuyList/"+id);
-        commodityHTML = commodityHTML.replaceAll("likeComment", "likeComment/"+id);
-        commodityHTML = commodityHTML.replaceAll("dislikeComment", "dislikeComment/"+id);
+        commodityHTML += createCommentHTML(id) + "</table>\n\n</body>\n</html>";
+
         return commodityHTML;
+    }
+
+    private String createCommentHTML(int id) {
+        for(Product p : products)
+            if(p.getId() == id)
+                return p.createCommentsHTML();
+
+        return "";
     }
 
     public String createProviderPage(String id) throws Exception {
@@ -245,6 +272,13 @@ public class Amazon {
         return providerHTML;
     }
 
+    public void voteComment(String commentId, int vote) throws Exception {
+        Product p = findCommentCommodity(commentId);
+        if(p == null)
+            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+        p.voteComment(commentId, vote);
+    }
+
     public ArrayList<Product> getCommodityByPriceInterval(int startPrice, int endPrice) {
         ArrayList<Product> samePriceProducts = new ArrayList<>();
         for (Product p : products) {
@@ -256,19 +290,10 @@ public class Amazon {
         return samePriceProducts;
     }
 
-
-//    public void voteComment(String commentId, int vote) throws Exception {
-//        Product p = findCommentCommodity(commentId);
-//        if(p == null)
-//            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
-//        p.voteComment(vote);
-//    }
-//
-//    public Product findCommentCommodity(String commentId) {
-//        for(Product p : products)
-//            if(p.hasComment(commentId))
-//                return p;
-//
-//        return null;
-//    }
+    public Product findCommentCommodity(String commentId) {
+        for(Product p : products)
+            if(p.hasComment(Integer.parseInt(commentId)))
+                return p;
+        return null;
+    }
 }

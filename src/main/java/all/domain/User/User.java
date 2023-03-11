@@ -121,4 +121,8 @@ public class User {
     public void increaseCredit(int newCredit) {
         credit += newCredit;
     }
+
+    public String getEmail() {
+        return email;
+    }
 }

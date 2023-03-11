@@ -114,4 +114,25 @@ public class Product {
         System.out.println("prices" + startPrice + " " + price + " " + endPrice);
         return price <= endPrice && price >= startPrice;
     }
+
+    public void voteComment(String commentId, int vote) {
+        for(Comment c : comments)
+            if(c.idMatches(Integer.parseInt(commentId)))
+                c.updateVote(vote);
+    }
+
+    public boolean hasComment(int commentId) {
+        for(Comment c : comments)
+            if(c.idMatches(commentId))
+                return true;
+
+        return false;
+    }
+
+    public String createCommentsHTML() {
+        String commentsHTML = "";
+        for(Comment c : comments)
+            commentsHTML += c.createHTML();
+        return commentsHTML;
+    }
 }
