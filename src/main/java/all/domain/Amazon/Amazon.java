@@ -180,23 +180,15 @@ public class Amazon {
             return readHTMLPage("404.html");
 
         commodityHTML += p.createHTMLForCommodity();
-        commodityHTML += "<form action=\"/rateCommodity/"+ id +"\" method=\"POST\">\n" +
-                "    <label>Your ID:</label>\n" +
-                "    <input type=\"text\" name=\"user_id\" value=\"\" />\n" +
-                "    <br><br>\n" +
-                "    <label>Rate(between 1 and 10):</label>\n" +
-                "    <input type=\"number\" id=\"quantity\" name=\"quantity\" min=\"1\" max=\"10\">\n" +
-                "    <button type=\"submit\">Rate</button>\n" +
-                "</form>\n" +
-                "<br>\n" +
-                "<form action=\"/addToBuyList/"+ id +"\" method=\"POST\">\n" +
-                "    <label>Your ID:</label>\n" +
-                "    <input type=\"text\" name=\"user_id\" value=\"\" />\n" +
-                "    <br><br>\n" +
-                "    <button type=\"submit\">Add to BuyList</button>\n" +
-                "</form>\n" +
-                "<br />";
         commodityHTML += readHTMLPage("Commodity_end.html");
+        commodityHTML = commodityHTML.replaceAll("rateCommodity", "rateCommodity/"+id);
+        commodityHTML = commodityHTML.replaceAll("addToBuyList", "addToBuyList/"+id);
+        commodityHTML = commodityHTML.replaceAll("likeComment", "likeComment/"+id);
+        commodityHTML = commodityHTML.replaceAll("dislikeComment", "dislikeComment/"+id);
         return commodityHTML;
     }
+
+//    public String incCommentLikes() {
+//
+//    }
 }
