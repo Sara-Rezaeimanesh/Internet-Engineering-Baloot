@@ -52,11 +52,13 @@ public class Product {
     }
 
     public void updateRating(Rating newRating) {
+        System.out.println(newRating.getScore());
         float sumRating = ratings.size() * rating;
         boolean alreadyRated = false;
         for (Rating r : this.ratings)
             if (Objects.equals(newRating.getUsername(), r.getUsername())) {
                 float diff = newRating.getScore() - r.getScore();
+                r.setScore(newRating.getScore());
                 sumRating = sumRating + diff;
                 alreadyRated = true;
             }
@@ -82,7 +84,7 @@ public class Product {
         return catString;
     }
 
-    public String createHTML() {
+    public String createHTML(String removeButton) {
         String tds = "\t<td>";
         String tde = "</td>";
         String trs = "<tr>";
@@ -92,7 +94,7 @@ public class Product {
                 tds + providerId + tde + "\n" + tds + price + tde +
                 tds + createCatString() + tde + "\n" + tds + rating + tde +
                 tds + inStock + tde + "\n" +
-                tds + "<a href=\"/commodities/" + id + "\">Link</a>" + tde + tre;
+                tds + "<a href=\"/commodities/" + id + "\">Link</a>" + tde + removeButton +tre;
     }
 
     public String createHTMLForCommodity() {

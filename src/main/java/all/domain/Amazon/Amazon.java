@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Amazon {
+    private static final String PRODUCT_HAS_BOUGHT_ERROR = "Product already bought!";
+    private static final String PRODUCT_HAS_NOT_BOUGHT_ERROR = "Product hasn't already bought!";
+    private static final String PRODUCT_IS_NOT_IN_STOCK = "Product is not in stock!";
     private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exista!";
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
@@ -44,6 +47,7 @@ public class Amazon {
 //            assert p != null;
 //            p.addComment(c);
 //        }
+        Supplier supplier = new Supplier(1,"narges", "0/12/1234");
         Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");}}, 10, 1);
         User user = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
         User user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
@@ -52,11 +56,11 @@ public class Amazon {
         users.add(user2);
     }
 
-    private boolean isInSuppliers(int id) {
+    private Supplier findSupplierById(int id) {
         for (Supplier s : suppliers)
             if (id == s.getId())
-                return true;
-        return false;
+                return s;
+        return null;
     }
 
     private Product findProductsById(int id) {
@@ -82,15 +86,24 @@ public class Amazon {
     }
 
     public void addProduct(Product product) throws Exception {
-        if (!isInSuppliers(product.getProviderId()))
+        Supplier s = findSupplierById(product.getProviderId());
+        if (s == null)
             throw new Exception(SUPPLIER_DOES_NOT_EXIST_ERROR);
         if (findProductsById(product.getId()) != null)
             throw new Exception(PRODUCT_ALREADY_EXIST_ERROR);
         products.add(product);
+        s.addProductToSupplierList(product.getId());
     }
 
     public void addSupplier(Supplier supplier) {
         suppliers.add(supplier);
+    }
+
+    public void increaseCredit(String username, int credit) throws Exception {
+        User u = findUserById(username);
+        if(u == null)
+            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
+        u.increaseCredit(credit);
     }
 
     public void listCommodities() throws JsonProcessingException {
@@ -98,15 +111,14 @@ public class Amazon {
         System.out.println("\"data\": {\"commoditiesList\": " + ow.writeValueAsString(products) + "}");
     }
 
-    public String rateCommodity(Rating rating) throws Exception {
+    public void rateCommodity(Rating rating) throws Exception {
         if (findUserById(rating.getUsername()) == null)
-            return readHTMLPage("404.html");
+            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         Product p = findProductsById(rating.getProductId());
-        if(p != null) {
+        if(p != null)
             p.updateRating(rating);
-            return "success";
-        }
-        else return readHTMLPage("404.html");
+        else
+            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
     public void getCommodityById(Integer id) throws Exception {
@@ -126,31 +138,32 @@ public class Amazon {
         System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
     }
 
-    public String addToBuyList(String username, int commodityId) throws Exception {
+    public void addToBuyList(String username, int commodityId) throws Exception {
         Product p = findProductsById(commodityId);
+        if(p == null)
+            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
         User u = findUserById(username);
-        if(p == null || u == null)
-            return readHTMLPage("404.html");
+        if(u == null)
+            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         if(u.hasBoughtProduct(commodityId))
-            return readHTMLPage("403.html");
-        if(!p.isInStock()) throw new Exception("Product is not in stock!");
+            throw new Exception(PRODUCT_HAS_BOUGHT_ERROR);
+        if(!p.isInStock())
+            throw new Exception(PRODUCT_IS_NOT_IN_STOCK);
         u.addProduct(p);
         p.updateStock(-1);
-
-        return "success";
     }
 
-    public String removeFromBuyList(String username, int commodityId) throws Exception {
+    public void removeFromBuyList(String username, int commodityId) throws Exception {
         Product p = findProductsById(commodityId);
+        if(p == null)
+            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
         User u = findUserById(username);
-        if(p == null || u == null)
-            return readHTMLPage("404.html");
+        if(u == null)
+            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         if(!u.hasBoughtProduct(commodityId))
-            return readHTMLPage("403.html");
+            throw new Exception(PRODUCT_HAS_NOT_BOUGHT_ERROR);
         u.removeProduct(p);
         p.updateStock(1);
-
-        return "success";
     }
 
     public void getUserBuyList(String name) throws Exception {
@@ -162,7 +175,7 @@ public class Amazon {
     public String createCommoditiesPage() throws Exception {
         String commoditiesHTML = readHTMLPage("Commodities_start.html");
         for(Product p : products)
-            commoditiesHTML += p.createHTML();
+            commoditiesHTML += p.createHTML("");
         commoditiesHTML += readHTMLPage("Commodities_end.html");
 
         return commoditiesHTML;
@@ -188,7 +201,38 @@ public class Amazon {
         return commodityHTML;
     }
 
-//    public String incCommentLikes() {
-//
-//    }
+    public String createProviderPage(String id) throws Exception {
+        String providerHTML = readHTMLPage("Provider_start.html");
+        Supplier p = findSupplierById(Integer.parseInt(id));
+        if(p == null)
+            return readHTMLPage("404.html");
+
+        providerHTML += p.createHTMLForProvider();
+        providerHTML += readHTMLPage("Provider_middle.html");
+        ArrayList<Integer> productsId = p.getProducts();
+        ArrayList<Product> products = new ArrayList<Product>();
+        for(Integer i : productsId){
+            Product product = findProductsById(i);
+            assert product != null;
+            providerHTML += product.createHTML("");
+        }
+        providerHTML += readHTMLPage("Provider_end.html");
+        return providerHTML;
+    }
+
+
+    public String createUserPage(String id) throws Exception {
+        String providerHTML = readHTMLPage("User_start.html");
+        User u = findUserById(id);
+        if(u == null)
+            return readHTMLPage("404.html");
+
+        providerHTML += u.createHTMLForUser();
+        providerHTML += readHTMLPage("User_middle.html");
+        providerHTML += u.createHTMLForBuyList();
+        providerHTML += readHTMLPage("User_middle2.html");
+        providerHTML += u.createHTMLForPurchaseList();
+        providerHTML += readHTMLPage("User_end.html");
+        return providerHTML;
+    }
 }

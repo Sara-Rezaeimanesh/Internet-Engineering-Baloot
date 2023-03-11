@@ -22,6 +22,8 @@ public class User {
     private String address;
     private int credit;
     private ArrayList<Product> buyList;
+    private ArrayList<Product> purchaseList;
+
 
     public void updateUserInfo(User newUserInfo){
         username = newUserInfo.username;
@@ -50,6 +52,7 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.buyList = new ArrayList<>();
+        this.purchaseList = new ArrayList<>();
     }
 
     public boolean hasBoughtProduct(int commodityId) {
@@ -72,4 +75,49 @@ public class User {
     }
 
     public void removeProduct(Product p) { buyList.remove(p); }
+
+    public String createHTMLForUser() {
+        return "<li id=\"username\">Username:" + this.username + "</li>\n" +
+                "<li id=\"email\">Email:" + this.email + "</li>\n" +
+                "<li id=\"birthDate\">Birth Date:" + this.birthDate + "</li>\n" +
+                "<li id=\"credit\">Credit:" + this.credit + "</li>\n" +
+                "<li>\n" +
+                "    <form action=\"\" method=\"POST\" >\n" +
+                "        <label>Buy List Payment</label>\n" +
+                "        <input id=\"form_credit\" type=\"number\" name=\"credit\" value=\"" + this.username +"\">\n" +
+                "        <button type=\"submit\">Increase credit</button>\n" +
+                "    </form>\n" +
+                "</li>" +
+                "<li>\n" +
+                "    <form action=\"\" method=\"POST\" >\n" +
+                "        <label>Buy List Payment</label>\n" +
+                "        <input id=\"form_payment\" type=\"hidden\" name=\"userId\" value=\"" + this.username +"\">\n" +
+                "        <button type=\"submit\">Payment</button>\n" +
+                "    </form>\n" +
+                "</li>";
+    }
+
+    public String createHTMLForBuyList() {
+        String html = "";
+        String removeString = "<td>        \n" +
+                "                <form action=\"\" method=\"POST\" >\n" +
+                "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= "+ username +">\n" +
+                "                    <button type=\"submit\">Remove</button>\n" +
+                "                </form>\n" +
+                "            </td>";
+        for(Product p : buyList)
+            html += p.createHTML(removeString);
+        return html;
+    }
+
+    public String createHTMLForPurchaseList() {
+        String html = "";
+        for(Product p : purchaseList)
+            html += p.createHTML("");
+        return html;
+    }
+
+    public void increaseCredit(int newCredit) {
+        credit += newCredit;
+    }
 }
