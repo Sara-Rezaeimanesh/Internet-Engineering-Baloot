@@ -28,8 +28,11 @@ public class Product {
     private ArrayList<Comment> comments;
 
     public boolean isSameCategory(String category) {
+        boolean isEqualCategory = false;
         for (String c : categories)
-            return c.equals(category);
+            if (c.equals(category)) {
+                return true;
+            }
         return false;
     }
 
@@ -105,5 +108,10 @@ public class Product {
                "<li id=\"categories\">Categories: " +  createCatString() + "</li>" + "\n" +
                "<li id=\"rating\">Rating: " + rating  + "</li>" + "\n" +
                "<li id=\"inStock\">In Stock: " + inStock + "</li>" + "\n" + "</ul>";
+    }
+
+    public boolean isInPriceInterval(int startPrice, int endPrice) {
+        System.out.println("prices" + startPrice + " " + price + " " + endPrice);
+        return price <= endPrice && price >= startPrice;
     }
 }

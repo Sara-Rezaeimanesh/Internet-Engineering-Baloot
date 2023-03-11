@@ -1,22 +1,18 @@
 package all.domain.Amazon;
 
-import all.domain.Comment.Comment;
 import all.domain.Rating.Rating;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import all.domain.Product.Product;
 import all.domain.Supplier.Supplier;
 import all.domain.User.User;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Amazon {
@@ -48,10 +44,12 @@ public class Amazon {
 //            p.addComment(c);
 //        }
         Supplier supplier = new Supplier(1,"narges", "0/12/1234");
-        Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");}}, 10, 1);
-        User user = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
+        Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");add("white");}}, 10, 1);
+        Product product2 = new Product(2, "chips", 1, 50000, new ArrayList<>(){{add("snack");}}, 10, 1);
+        User user = new User("user1", "#123", "a@gmail.com", "12/5/2022", "hi", 1500);
         User user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
         products.add(product);
+        products.add(product2);
         users.add(user);
         users.add(user2);
     }
@@ -121,21 +119,30 @@ public class Amazon {
             throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
-    public void getCommodityById(Integer id) throws Exception {
+    public void printJsonProductById(Product p) throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        System.out.println("\"data\": " + ow.writeValueAsString(p));
+    }
+
+    public Product getCommodityById(Integer id) throws Exception {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         Product p = findProductsById(id);
-        if(p != null) System.out.println("\"data\": " + ow.writeValueAsString(p));
+        if(p != null) return p;
         else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
     }
 
-    public void getCommoditiesByCategory(String category) throws JsonProcessingException {
+    public void printJsonCategory(ArrayList<Product> sameCat) throws JsonProcessingException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        ArrayList<Product> sameCat = new ArrayList<>();
+        System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
+    }
+
+    public ArrayList<Product> getCommoditiesByCategory(String category){
+        ArrayList<Product> sameCatProduct = new ArrayList<>();
         for (Product p : products) {
                 if (p.isSameCategory(category))
-                    sameCat.add(p);
+                    sameCatProduct.add(p);
         }
-        System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
+        return sameCatProduct;
     }
 
     public void addToBuyList(String username, int commodityId) throws Exception {
@@ -172,9 +179,11 @@ public class Amazon {
         u.printBuyList();
     }
 
-    public String createCommoditiesPage() throws Exception {
+    public String createCommoditiesPage(ArrayList<Product> products_, String flag) throws Exception {
+        if(Objects.equals(flag, "all"))
+            products_ = products;
         String commoditiesHTML = readHTMLPage("Commodities_start.html");
-        for(Product p : products)
+        for(Product p : products_)
             commoditiesHTML += p.createHTML("");
         commoditiesHTML += readHTMLPage("Commodities_end.html");
 
@@ -186,11 +195,11 @@ public class Amazon {
         return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     }
 
-    public String createCommodityPage(String id) throws Exception {
+    public String createCommodityPage(int id) throws Exception {
         String commodityHTML = readHTMLPage("Commodity_start.html");
-        Product p = findProductsById(Integer.parseInt(id));
+        Product p = findProductsById(id);
         if(p == null)
-            return readHTMLPage("404.html");
+            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
 
         commodityHTML += p.createHTMLForCommodity();
         commodityHTML += readHTMLPage("Commodity_end.html");
@@ -236,18 +245,30 @@ public class Amazon {
         return providerHTML;
     }
 
-    public void voteComment(String commentId, int vote) throws Exception {
-        Product p = findCommentCommodity(commentId);
-        if(p == null)
-            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
-        p.voteComment(vote);
+    public ArrayList<Product> getCommodityByPriceInterval(int startPrice, int endPrice) {
+        ArrayList<Product> samePriceProducts = new ArrayList<>();
+        for (Product p : products) {
+            if (p.isInPriceInterval(startPrice, endPrice)) {
+                System.out.println("in interval" + p.getId());
+                samePriceProducts.add(p);
+            }
+        }
+        return samePriceProducts;
     }
 
-    public Product findCommentCommodity(String commentId) {
-        for(Product p : products)
-            if(p.hasComment(commentId))
-                return p;
 
-        return null;
-    }
+//    public void voteComment(String commentId, int vote) throws Exception {
+//        Product p = findCommentCommodity(commentId);
+//        if(p == null)
+//            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+//        p.voteComment(vote);
+//    }
+//
+//    public Product findCommentCommodity(String commentId) {
+//        for(Product p : products)
+//            if(p.hasComment(commentId))
+//                return p;
+//
+//        return null;
+//    }
 }

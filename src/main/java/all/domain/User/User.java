@@ -82,8 +82,8 @@ public class User {
                 "<li id=\"birthDate\">Birth Date:" + this.birthDate + "</li>\n" +
                 "<li id=\"credit\">Credit:" + this.credit + "</li>\n" +
                 "<li>\n" +
-                "    <form action=\"\" method=\"POST\" >\n" +
-                "        <label>Buy List Payment</label>\n" +
+                "    <form action=\"/addCredit/"+ this.username + "\" method=\"POST\" >\n" +
+                "        <label>increase credit</label>\n" +
                 "        <input id=\"form_credit\" type=\"number\" name=\"credit\" value=\"" + this.username +"\">\n" +
                 "        <button type=\"submit\">Increase credit</button>\n" +
                 "    </form>\n" +
@@ -99,14 +99,15 @@ public class User {
 
     public String createHTMLForBuyList() {
         String html = "";
-        String removeString = "<td>        \n" +
-                "                <form action=\"\" method=\"POST\" >\n" +
-                "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= "+ username +">\n" +
-                "                    <button type=\"submit\">Remove</button>\n" +
-                "                </form>\n" +
-                "            </td>";
-        for(Product p : buyList)
+        for(Product p : buyList) {
+            String removeString = "<td>        \n" +
+                    "                <form action=\"/removeFromBuyList/" + username + "/" + p.getId() +"\"method=\"POST\" >\n" +
+                    "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= " + username + ">\n" +
+                    "                    <button type=\"submit\">Remove</button>\n" +
+                    "                </form>\n" +
+                    "            </td>";
             html += p.createHTML(removeString);
+        }
         return html;
     }
 

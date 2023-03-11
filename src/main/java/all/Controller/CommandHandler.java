@@ -3,25 +3,12 @@ package all.Controller;
 import all.domain.Amazon.Amazon;
 import all.domain.Product.Product;
 import all.domain.Rating.Rating;
-import all.domain.Supplier.Supplier;
-import all.domain.User.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
-import org.apache.commons.io.FileUtils;
-import org.springframework.data.jpa.repository.query.EscapeCharacter;
-import com.google.common.io.Resources;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class CommandHandler {
     private final int COMMAND_IDX = 0;
@@ -50,7 +37,7 @@ public class CommandHandler {
 
         app.get("/commodities", ctx -> {
             try {
-                ctx.html(amazon.createCommoditiesPage());
+                ctx.html(amazon.createCommoditiesPage(new ArrayList<Product>(), "all"));
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 ctx.status(502);
@@ -58,7 +45,7 @@ public class CommandHandler {
         });
         app.get("/commodities/:id", ctx -> {
             try {
-                ctx.html(amazon.createCommodityPage(ctx.pathParam("id")));
+                ctx.html(amazon.createCommodityPage(Integer.parseInt(ctx.pathParam("id"))));
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 ctx.status(502);
@@ -85,13 +72,15 @@ public class CommandHandler {
 
             }
         });
-        app.post("/addCredit/:id/:credit", ctx -> {
+        app.get("/addCredit/:id/:credit", ctx -> {
             try {
                 String userId = ctx.pathParam("id");
                 String credit = ctx.pathParam("credit");
+                System.out.println("hi" + userId + " " + credit);
                 amazon.increaseCredit(userId, Integer.parseInt(credit));
                 ctx.redirect("/users/" + userId);
             } catch (Exception e){
+                System.out.println(e.getMessage());
                 if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR))
                     ctx.status(404);
                 else
@@ -100,8 +89,8 @@ public class CommandHandler {
 
         });
         app.post("/addCredit/:id", ctx -> {
-            String credit = ctx.formParam("credit");
             String userId = ctx.pathParam("id");
+            String credit = ctx.formParam("credit");
             ctx.redirect("/addCredit/" + userId + "/"+ credit );
         });
         app.post("/addToBuyList/:id", ctx -> {
@@ -121,6 +110,22 @@ public class CommandHandler {
                    Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR)    ||
                    Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR) ||
                    Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
+                    ctx.status(404);
+                else
+                    ctx.status(502);
+            }
+        });
+        app.post("/removeFromBuyList/:username/:id", ctx -> {
+            try {
+                String username = ctx.pathParam("username");
+                String commodityId = ctx.pathParam("id");
+                amazon.removeFromBuyList(username, Integer.parseInt(commodityId));
+                ctx.redirect("/users/" + username);
+            } catch (Exception e){
+                if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR)   ||
+                        Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR)    ||
+                        Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR) ||
+                        Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
                     ctx.status(404);
                 else
                     ctx.status(502);
@@ -149,19 +154,19 @@ public class CommandHandler {
                 ctx.status(502);
             }
         });
-        app.get("/voteComment/:username/:cid/:vote", ctx -> {
-            try {
-                String username = ctx.pathParam("username");
-                String commentId = ctx.pathParam("cid");
-                String vote = ctx.pathParam("vote");
-                amazon.voteComment(commentId, Integer.parseInt(vote));
-                Product commentCommodity = amazon.findCommentCommodity(commentId);
-                ctx.redirect("/commodities/"+commentCommodity.getId());
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-                ctx.status(502);
-            }
-        });
+//        app.get("/voteComment/:username/:cid/:vote", ctx -> {
+//            try {
+//                String username = ctx.pathParam("username");
+//                String commentId = ctx.pathParam("cid");
+//                String vote = ctx.pathParam("vote");
+//                amazon.voteComment(commentId, Integer.parseInt(vote));
+//                Product commentCommodity = amazon.findCommentCommodity(commentId);
+//                ctx.redirect("/commodities/"+commentCommodity.getId());
+//            } catch (Exception e){
+//                System.out.println(e.getMessage());
+//                ctx.status(502);
+//            }
+//        });
 //        app.get("/voteComment/:username/:cid/:vote", ctx -> {
 //            try {
 //                String username = ctx.pathParam("username");
@@ -183,21 +188,27 @@ public class CommandHandler {
 //            String vote = ctx.pathParam("vote");
 //            ctx.redirect("/voteComment/"+username+"/"+commentId+"/"+vote);
 //        });
-//        app.get("/commodities/search/:categories", ctx -> {
-//            try {
-//                String start_price = ctx.pathParam("start_price");
-//                String end_price = ctx.pathParam("end_price");
-//                String commodityId = ctx.pathParam("commodityId");
-//                String stat = amazon.filterCOmmoditiesByCategory();
-//                if(!Objects.equals(stat, "success"))
-//                    ctx.html(stat);
-//                else
-//                    ctx.redirect("/commodities/"+commodityId);
-//            } catch (Exception e){
-//                System.out.println(e.getMessage());
-//                ctx.status(502);
-//            }
-//        });
+        app.get("/commodities/search/:categories", ctx -> {
+            try {
+                String category = ctx.pathParam("categories");
+                System.out.println(category);
+                ArrayList<Product> products = amazon.getCommoditiesByCategory(category);
+                System.out.println(products.size());
+                ctx.html(amazon.createCommoditiesPage(products, "category"));
+            } catch (Exception e){
+                    ctx.status(502);
+            }
+        });
+        app.get("/commodities/search/:startPrice/:endPrice", ctx -> {
+            try {
+                int startPrice = Integer.parseInt(ctx.pathParam("startPrice"));
+                int endPrice = Integer.parseInt(ctx.pathParam("endPrice"));
+                ArrayList<Product> products = amazon.getCommodityByPriceInterval(startPrice, endPrice);
+                ctx.html(amazon.createCommoditiesPage(products, "price"));
+            } catch (Exception e){
+                ctx.status(502);
+            }
+        });
 
     }
 }
