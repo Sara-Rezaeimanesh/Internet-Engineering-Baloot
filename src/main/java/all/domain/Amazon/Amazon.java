@@ -235,4 +235,19 @@ public class Amazon {
         providerHTML += readHTMLPage("User_end.html");
         return providerHTML;
     }
+
+    public void voteComment(String commentId, int vote) throws Exception {
+        Product p = findCommentCommodity(commentId);
+        if(p == null)
+            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+        p.voteComment(vote);
+    }
+
+    public Product findCommentCommodity(String commentId) {
+        for(Product p : products)
+            if(p.hasComment(commentId))
+                return p;
+
+        return null;
+    }
 }

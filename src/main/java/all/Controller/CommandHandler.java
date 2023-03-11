@@ -1,6 +1,7 @@
 package all.Controller;
 
 import all.domain.Amazon.Amazon;
+import all.domain.Product.Product;
 import all.domain.Rating.Rating;
 import all.domain.Supplier.Supplier;
 import all.domain.User.User;
@@ -145,6 +146,19 @@ public class CommandHandler {
                         Objects.equals(e.getMessage(), PRODUCT_HAS_NOT_BOUGHT_ERROR))
                     ctx.status(404);
                 else
+                ctx.status(502);
+            }
+        });
+        app.get("/voteComment/:username/:cid/:vote", ctx -> {
+            try {
+                String username = ctx.pathParam("username");
+                String commentId = ctx.pathParam("cid");
+                String vote = ctx.pathParam("vote");
+                amazon.voteComment(commentId, Integer.parseInt(vote));
+                Product commentCommodity = amazon.findCommentCommodity(commentId);
+                ctx.redirect("/commodities/"+commentCommodity.getId());
+            } catch (Exception e){
+                System.out.println(e.getMessage());
                 ctx.status(502);
             }
         });
