@@ -32,35 +32,32 @@ public class Amazon {
     private ArrayList<Product> products = new ArrayList<>();
 
     public Amazon() throws Exception {
-//        Initializer initializer = new Initializer();
-//        suppliers = initializer.getProvidersFromAPI("providers");
-//        users = initializer.getUsersFromAPI("users");
-//        products = initializer.getCommoditiesFromAPI("commodities");
-//        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
-//        for(Comment c : comments){
-//            for(User user : users)
-//                if(Objects.equals(user.getEmail(), c.getUserEmail()))
-//                    c.updateUserId(user.getUsername());
-//
-//            Product p = findProductsById(c.getCommodityId());
-//            assert p != null;
-//            p.addComment(c);
-//        }
-        Supplier supplier = new Supplier(1,"narges", "0/12/1234");
-        Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");add("white");}}, 10, 1);
-        Product product2 = new Product(2, "chips", 1, 50000, new ArrayList<>(){{add("snack");}}, 10, 1);
-        User user = new User("user1", "#123", "b@gmail.com", "12/5/2022", "hi", 1500);
-        User user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
-        Comment c = new Comment("a@gmail.com", 1, "Good shit!" , "Saturday");
-        Comment c1 = new Comment("b@gmail.com", 1, "Bad shit!" , "Sunday");
+        Initializer initializer = new Initializer();
+        suppliers = initializer.getProvidersFromAPI("providers");
+        suppliers.forEach(Supplier::initialize);
+        ArrayList<User> users_ = initializer.getUsersFromAPI("users");
+        users_.forEach(this::addUser);
+        users.forEach(User::initialize);
+        ArrayList<Product> products_ = initializer.getCommoditiesFromAPI("commodities");
+        products_.forEach(p->{
+            try {
+                addProduct(p);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        products.forEach(Product::initialize);
+        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
+        comments.forEach(Comment::initialize);
+        for(Comment c : comments){
+            for(User user : users)
+                if(Objects.equals(user.getEmail(), c.getUserEmail()))
+                    c.updateUserId(user.getUsername());
 
-        users.add(user);
-        users.add(user2);
-        addSupplier(supplier);
-        addProduct(product);
-        addProduct(product2);
-        addComment(c);
-        addComment(c1);
+            Product p = findProductsById(c.getCommodityId());
+            assert p != null;
+            p.addComment(c);
+        }
     }
 
     private Supplier findSupplierById(int id) {
@@ -237,6 +234,15 @@ public class Amazon {
         return "";
     }
 
+    public String createProvidersPage() throws Exception {
+        String providersHTML = readHTMLPage("Provider_start.html");
+        for(Supplier s : suppliers)
+            providersHTML +=  s.createHTMLForProvider();
+        providersHTML += "</body>\n" +
+                            "</html>";
+        return providersHTML;
+    }
+
     public String createProviderPage(String id) throws Exception {
         String providerHTML = readHTMLPage("Provider_start.html");
         Supplier p = findSupplierById(Integer.parseInt(id));
@@ -246,7 +252,6 @@ public class Amazon {
         providerHTML += p.createHTMLForProvider();
         providerHTML += readHTMLPage("Provider_middle.html");
         ArrayList<Integer> productsId = p.getProducts();
-        ArrayList<Product> products = new ArrayList<Product>();
         for(Integer i : productsId){
             Product product = findProductsById(i);
             assert product != null;
@@ -258,18 +263,40 @@ public class Amazon {
 
 
     public String createUserPage(String id) throws Exception {
-        String providerHTML = readHTMLPage("User_start.html");
+        String userHTML = readHTMLPage("User_start.html");
         User u = findUserById(id);
         if(u == null)
             return readHTMLPage("404.html");
 
-        providerHTML += u.createHTMLForUser();
-        providerHTML += readHTMLPage("User_middle.html");
-        providerHTML += u.createHTMLForBuyList();
-        providerHTML += readHTMLPage("User_middle2.html");
-        providerHTML += u.createHTMLForPurchaseList();
-        providerHTML += readHTMLPage("User_end.html");
-        return providerHTML;
+        userHTML += u.createHTMLForUser();
+        userHTML += readHTMLPage("User_middle.html");
+        userHTML += u.createHTMLForBuyList();
+        userHTML += readHTMLPage("User_middle2.html");
+        userHTML += u.createHTMLForPurchaseList();
+        userHTML += readHTMLPage("User_end.html");
+        return userHTML;
+    }
+
+    public String createUsersPage() throws Exception {
+        String usersHTML = "<meta charset=\"UTF-8\">\n" +
+                            "    <title>User</title>\n" +
+                            "    <style>\n" +
+                            "        li {\n" +
+                            "        \tpadding: 5px\n" +
+                            "        }\n" +
+                            "        table{\n" +
+                            "            width: 100%;\n" +
+                            "            text-align: center;\n" +
+                            "        }\n" +
+                            "    </style>\n" +
+                            "</head>\n" +
+                            "<body>";
+        for(User u : users)
+            usersHTML += u.createHTMLForUser();
+        usersHTML += "</body>\n" +
+                        "</html>";
+
+        return usersHTML;
     }
 
     public void voteComment(String commentId, int vote) throws Exception {
@@ -296,4 +323,7 @@ public class Amazon {
                 return p;
         return null;
     }
+
+
+
 }

@@ -31,6 +31,10 @@ public class Comment {
         this.id = count.incrementAndGet();
     }
 
+    public void initialize() {
+        this.id = count.incrementAndGet();
+    }
+
     public int getCommodityId() {
         return commodityId;
     }

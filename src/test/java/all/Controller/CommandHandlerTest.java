@@ -1,8 +1,13 @@
-package ir.proprog.enrollassist.controller.course;
+package all.Controller;
 
 import all.Controller.CommandHandler;
+import all.domain.Amazon.Amazon;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.*;
@@ -27,26 +32,92 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest(CommandHandler.class)
 class CommandHandlerTest {
-    @Autowired
-    private MockMvc mockMvc;
+    Amazon amazon;
+    CommandHandler cm;
 
     @BeforeEach
-    public void setup() {}
+    public void setup()  {
+        try{
+            amazon = new Amazon();
+            cm = new CommandHandler(amazon);
+            cm.run(8080);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     @Test
-    public void command() throws Exception {
-        mockMvc.perform(get("/rateCommodity/user1/1/1"))
-                .andExpect(jsonPath("$[*].courseTitle", containsInAnyOrder("AI", "DL", "NLP")))
-                .andExpect(jsonPath("$[*].graduateLevel", containsInAnyOrder("Masters", "Masters", "Masters")))
-                .andExpect(jsonPath("$[*].courseNumber.courseNumber", containsInAnyOrder("1234568", "1234567", "1234569")))
-                .andExpect(jsonPath("$[*].courseCredits", containsInAnyOrder(4, 4, 4)))
-                .andExpect(status().isOk());
+    public void searchCommodityByCategoryReturnsAllCategoryCommodities() throws Exception {
+        HttpResponse<String> response = Unirest.get("http://localhost:8080/commodities/search/Vegetables").asString();
+        Assertions.assertEquals(8, response.getBody().toString().split("Vegetables", -1).length-1);
+    }
+
+
+    @Test
+    public void searchCommodityByPriceIntervalReturnsAllPriceIntervalCommodities() throws Exception {
+        HttpResponse<String> response = Unirest.get("http://localhost:8080/commodities/search/9000/14500").asString();
+        Assertions.assertEquals(3, response.getBody().toString().split("<tr>", -1).length-2);
+    }
+
+    @Test
+    public void searchCommodityByPriceIntervalReturnsNoPriceIntervalCommodities() throws Exception {
+        HttpResponse<String> response = Unirest.get("http://localhost:8080/commodities/search/0/1").asString();
+        Assertions.assertEquals(0, response.getBody().toString().split("<tr>", -1).length-2);
+    }
+
+    @Test
+    public void userBuyListReturnsTwoCommodities() throws Exception {
+        amazon.addToBuyList("amir", 1);
+        amazon.addToBuyList("amir", 2);
+        HttpResponse<String> response = Unirest.get("http://localhost:8080/users/amir").asString();
+        Assertions.assertEquals(1, response.getBody().toString().split("Onion", -1).length-1);
+        Assertions.assertEquals(1, response.getBody().toString().split("Potato", -1).length-1);
+    }
+
+    @Test
+    public void userBuyListReturnsNoCommodities() throws Exception {
+        HttpResponse<String> response = Unirest.get("http://localhost:8080/users/amir").asString();
+        Assertions.assertEquals(0, response.getBody().toString().split("removeFromBuyList", -1).length-1);
+    }
+
+    @Test
+    public void rateCommodityUserUpdateRateChangesCommodityRate() throws Exception {
+        HttpResponse<String> response1 = Unirest.get("http://localhost:8080/rateCommodity/amir/1/7").asString();
+        HttpResponse<String> response2 = Unirest.get("http://localhost:8080/rateCommodity/amir/1/4").asString();
+        System.out.println(response2.getBody().toString());
+        Assertions.assertEquals(1, response2.getBody().toString().split("Rating: 4.0", -1).length-1);
+    }
+
+    @Test
+    public void rateCommodityUserAddRateChangesCommodityRate() throws Exception {
+        HttpResponse<String> response1 = Unirest.get("http://localhost:8080/rateCommodity/amir/1/7").asString();
+        HttpResponse<String> response2 = Unirest.get("http://localhost:8080/rateCommodity/hamid/1/4").asString();
+        Assertions.assertEquals(1, response2.getBody().toString().split("Rating: 5.5", -1).length-1);
+    }
+
+    @Test
+    public void rateCommodityReturns404ForUserNotFound() throws Exception {
+        HttpResponse<String> response1 = Unirest.get("http://localhost:8080/rateCommodity/narges/1/7").asString();
+        Assertions.assertEquals(1, response1.getBody().toString().split("<h1>404<br>Page Not Found!</h1>", -1).length-1);
+    }
+
+    @Test
+    public void rateCommodityReturns404ForProductNotFound() throws Exception {
+        HttpResponse<String> response1 = Unirest.get("http://localhost:8080/rateCommodity/amir/50/7").asString();
+        Assertions.assertEquals(1, response1.getBody().toString().split("<h1>404<br>Page Not Found!</h1>", -1).length-1);
+    }
+
+    @Test
+    public void rateCommodityReturns403ForRateIsNotInValidRange() throws Exception {
+        HttpResponse<String> response1 = Unirest.get("http://localhost:8080/rateCommodity/amir/50/12").asString();
+        System.out.println(response1.getBody().toString());
+        Assertions.assertEquals(1, response1.getBody().toString().split("<h1>403<br>This function is Forbidden!</h1>", -1).length-1);
     }
 
     @AfterEach
-    public void teardown() {}
-
-
+    public void teardown() {
+        amazon = null;
+        cm = null;
+    }
 }

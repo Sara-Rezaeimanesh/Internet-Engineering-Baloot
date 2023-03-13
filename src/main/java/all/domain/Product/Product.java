@@ -50,6 +50,11 @@ public class Product {
         this.comments = new ArrayList<>();
     }
 
+    public void initialize() {
+        ratings = new ArrayList<>();
+        comments = new ArrayList<>();
+    }
+
     public void addComment(Comment comment){
         comments.add(comment);
     }

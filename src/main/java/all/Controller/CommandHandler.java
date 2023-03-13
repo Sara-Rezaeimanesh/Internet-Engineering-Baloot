@@ -20,7 +20,7 @@ public class CommandHandler {
 
     private static final String PRODUCT_HAS_BOUGHT_ERROR = "Product already bought!";
     private static final String PRODUCT_HAS_NOT_BOUGHT_ERROR = "Product hasn't already bought!";
-    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exista!";
+    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exist!";
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
@@ -61,9 +61,17 @@ public class CommandHandler {
 
             }
         });
+        app.get("/providers", ctx -> {
+            try {
+                ctx.html(amazon.createProvidersPage());
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                ctx.status(502);
+
+            }
+        });
         app.get("/providers/:id", ctx -> {
             try {
-                System.out.println(1);
                 ctx.html(amazon.createProviderPage(ctx.pathParam("id")));
             } catch (Exception e){
                 System.out.println(e.getMessage());
@@ -71,9 +79,16 @@ public class CommandHandler {
 
             }
         });
+        app.get("/users", ctx -> {
+            try {
+                ctx.html(amazon.createUsersPage());
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                ctx.status(502);
+            }
+        });
         app.get("/users/:id", ctx -> {
             try {
-                System.out.println(1);
                 ctx.html(amazon.createUserPage(ctx.pathParam("id")));
             } catch (Exception e){
                 System.out.println(e.getMessage());
@@ -94,7 +109,6 @@ public class CommandHandler {
                 else
                     ctx.status(502);
             }
-
         });
         app.post("/addCredit/:id", ctx -> {
             String userId = ctx.pathParam("id");
@@ -142,7 +156,6 @@ public class CommandHandler {
         app.post("/removeFromBuyList/:username/:id", ctx -> {
             String username = ctx.pathParam("username");
             String commodityId = ctx.pathParam("id");
-            amazon.removeFromBuyList(username, Integer.parseInt(commodityId));
             ctx.redirect("/removeFromBuyList/" + username + "/" + commodityId);
         });
 
@@ -155,16 +168,16 @@ public class CommandHandler {
         app.get("/rateCommodity/:username/:cid/:rate", ctx -> {
             try {
                 String username = ctx.pathParam("username");
-                String quantity = ctx.pathParam("rate");
                 String commodityId = ctx.pathParam("cid");
-                Rating rating = new Rating(username, Integer.parseInt(commodityId), Integer.parseInt(quantity));
+                String score = ctx.pathParam("rate");
+                Rating rating = new Rating(username, Integer.parseInt(commodityId), Integer.parseInt(score));
                 amazon.rateCommodity(rating);
                 ctx.redirect("/commodities/"+commodityId);
             } catch (Exception e){
                 if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR) ||
                         Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
                     ctx.html(readHTMLPage("404.html"));
-                else if(Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR))
+                else if(Objects.equals(e.getMessage(),"Rating must be between 1 to 10\n"))
                     ctx.html(readHTMLPage("403.html"));
                 else
                     ctx.status(502);

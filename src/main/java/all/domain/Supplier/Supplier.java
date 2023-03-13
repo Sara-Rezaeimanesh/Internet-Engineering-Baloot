@@ -29,6 +29,10 @@ public class Supplier {
         this.registeryDate = registeryDate;
     }
 
+    public void initialize() {
+        products = new ArrayList<>();
+    }
+
     public String createHTMLForProvider() {
         return "<ul>\n" +
         "<li id=\"id\">Id:" + this.id +"</li>\n" +

@@ -111,12 +111,18 @@ public class User {
         return html;
     }
 
+    public void initialize() {
+        buyList = new ArrayList<>();
+        purchaseList = new ArrayList<>();
+    }
+
     public String createHTMLForPurchaseList() {
         String html = "";
         for(Product p : purchaseList)
             html += p.createHTML("");
         return html;
     }
+
 
     public void increaseCredit(int newCredit) {
         credit += newCredit;

@@ -104,5 +104,11 @@
             <artifactId>guava</artifactId>
             <version>31.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.6.01</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
