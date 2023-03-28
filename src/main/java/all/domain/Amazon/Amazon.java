@@ -299,6 +299,12 @@ public class Amazon {
     }
 
     public String getActiveUser() {
+        if(activeUser == null)
+            return "Not logged in";
         return activeUser.getUsername();
+    }
+
+    public void setActiveUser(){
+
     }
 }

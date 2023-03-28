@@ -23,10 +23,12 @@ public class HomeServlet extends HttpServlet {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
         if (amazon.isAnybodyLoggedIn()) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("Home.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
             requestDispatcher.forward(request, response);
         } else {
-            response.sendRedirect("http://localhost:8080/Login");
+            System.out.println("hi");
+            response.sendRedirect("http://localhost:8080/baloot/");
+//            response.sendRedirect("http://localhost:8080/Login");
         }
     }
 }
