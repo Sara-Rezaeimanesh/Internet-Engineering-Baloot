@@ -12,6 +12,9 @@ public class Supplier {
     private String registeryDate;
     private ArrayList<Integer> products = new ArrayList<>();
 
+    public void initialize() {
+        products = new ArrayList<>();
+    }
 
     public ArrayList<Integer> getProducts() {
         return products;

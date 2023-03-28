@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -24,6 +23,10 @@ public class User {
     private ArrayList<Product> buyList;
     private ArrayList<Product> purchaseList;
 
+    public void initialize() {
+        buyList = new ArrayList<>();
+        purchaseList = new ArrayList<>();
+    }
 
     public void updateUserInfo(User newUserInfo){
         username = newUserInfo.username;

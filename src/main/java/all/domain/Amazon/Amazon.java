@@ -20,10 +20,12 @@ public class Amazon {
     private static final String PRODUCT_HAS_BOUGHT_ERROR = "Product already bought!";
     private static final String PRODUCT_HAS_NOT_BOUGHT_ERROR = "Product hasn't already bought!";
     private static final String PRODUCT_IS_NOT_IN_STOCK = "Product is not in stock!";
+    private static Amazon instance;
     private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exista!";
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
+    private User activeUser = null;
 
     private ArrayList<User> users = new ArrayList<>();
 
@@ -32,35 +34,30 @@ public class Amazon {
     private ArrayList<Product> products = new ArrayList<>();
 
     public Amazon() throws Exception {
-//        Initializer initializer = new Initializer();
-//        suppliers = initializer.getProvidersFromAPI("providers");
-//        users = initializer.getUsersFromAPI("users");
-//        products = initializer.getCommoditiesFromAPI("commodities");
-//        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
-//        for(Comment c : comments){
-//            for(User user : users)
-//                if(Objects.equals(user.getEmail(), c.getUserEmail()))
-//                    c.updateUserId(user.getUsername());
-//
-//            Product p = findProductsById(c.getCommodityId());
-//            assert p != null;
-//            p.addComment(c);
-//        }
-        Supplier supplier = new Supplier(1,"narges", "0/12/1234");
-        Product product = new Product(1, "ice cream", 1, 20000, new ArrayList<>(){{add("snack");add("white");}}, 10, 1);
-        Product product2 = new Product(2, "chips", 1, 50000, new ArrayList<>(){{add("snack");}}, 10, 1);
-        User user = new User("user1", "#123", "b@gmail.com", "12/5/2022", "hi", 1500);
-        User user2 = new User("user2", "#123", "a@gmail.com", "12/5/2022", "hi", 500);
-        Comment c = new Comment("a@gmail.com", 1, "Good shit!" , "Saturday");
-        Comment c1 = new Comment("b@gmail.com", 1, "Bad shit!" , "Sunday");
+        Initializer initializer = new Initializer();
+        suppliers = initializer.getProvidersFromAPI("providers");
+        suppliers.forEach(Supplier::initialize);
+        users = initializer.getUsersFromAPI("users");
+        users.forEach(User::initialize);
+        products = initializer.getCommoditiesFromAPI("commodities");
+        products.forEach(Product::initialize);
+        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
+        comments.forEach(Comment::initialize);
+        for(Comment c : comments){
+            for(User user : users)
+                if(Objects.equals(user.getEmail(), c.getUserEmail()))
+                    c.updateUserId(user.getUsername());
 
-        users.add(user);
-        users.add(user2);
-        addSupplier(supplier);
-        addProduct(product);
-        addProduct(product2);
-        addComment(c);
-        addComment(c1);
+            Product p = findProductsById(c.getCommodityId());
+            assert p != null;
+            p.addComment(c);
+        }
+    }
+
+    public static Amazon getInstance() throws Exception {
+        if(instance == null)
+            instance = new Amazon();
+        return instance;
     }
 
     private Supplier findSupplierById(int id) {
@@ -295,5 +292,13 @@ public class Amazon {
             if(p.hasComment(Integer.parseInt(commentId)))
                 return p;
         return null;
+    }
+
+    public boolean isAnybodyLoggedIn() {
+        return activeUser != null;
+    }
+
+    public String getActiveUser() {
+        return activeUser.getUsername();
     }
 }

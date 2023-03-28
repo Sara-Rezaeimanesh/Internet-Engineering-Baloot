@@ -1,6 +1,7 @@
-package ir.proprog.enrollassist.controller.course;
+package all.Controller;
 
 import all.Controller.CommandHandler;
+import all.domain.Amazon.Amazon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,24 +30,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(CommandHandler.class)
 class CommandHandlerTest {
-    @Autowired
-    private MockMvc mockMvc;
+    Amazon amazon;
+    CommandHandler cm;
 
     @BeforeEach
-    public void setup() {}
+    public void setup()  {
+        try{
+            amazon = new Amazon();
+            cm = new CommandHandler(amazon);
+            cm.run(8080);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     @Test
-    public void command() throws Exception {
-        mockMvc.perform(get("/rateCommodity/user1/1/1"))
-                .andExpect(jsonPath("$[*].courseTitle", containsInAnyOrder("AI", "DL", "NLP")))
-                .andExpect(jsonPath("$[*].graduateLevel", containsInAnyOrder("Masters", "Masters", "Masters")))
-                .andExpect(jsonPath("$[*].courseNumber.courseNumber", containsInAnyOrder("1234568", "1234567", "1234569")))
-                .andExpect(jsonPath("$[*].courseCredits", containsInAnyOrder(4, 4, 4)))
-                .andExpect(status().isOk());
+    public void searchCommodityByCategory() throws Exception {
+
     }
 
     @AfterEach
-    public void teardown() {}
-
-
+    public void teardown() {
+        amazon = null;
+        cm = null;
+    }
 }

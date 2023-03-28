@@ -172,9 +172,11 @@ public class CommandHandler {
         });
         app.get("/voteComment/:username/:cid/:vote", ctx -> {
             try {
+
                 String username = ctx.pathParam("username");
                 String commentId = ctx.pathParam("cid");
                 String vote = ctx.pathParam("vote");
+                System.out.println("hello "+commentId+" "+vote);
                 if(!vote.equals("0") && !vote.equals("1") && !vote.equals("-1"))
                     throw new Exception("Invalid Vote");
                 amazon.voteComment(commentId, Integer.parseInt(vote));
@@ -195,6 +197,7 @@ public class CommandHandler {
             String username = ctx.formParam("username");
             String commentId = ctx.pathParam("cid");
             String vote = ctx.pathParam("vote");
+            System.out.println("hello "+commentId+" "+vote);
             ctx.redirect("/voteComment/"+username+"/"+commentId+"/"+vote);
         });
         app.get("/commodities/search/:categories", ctx -> {

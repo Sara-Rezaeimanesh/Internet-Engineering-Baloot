@@ -28,12 +28,16 @@ public class Product {
     private ArrayList<Comment> comments;
 
     public boolean isSameCategory(String category) {
-        boolean isEqualCategory = false;
         for (String c : categories)
-            if (c.equals(category)) {
+            if (c.equals(category))
                 return true;
-            }
+
         return false;
+    }
+
+    public void initialize() {
+        ratings = new ArrayList<>();
+        comments = new ArrayList<>();
     }
 
     public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
@@ -51,6 +55,8 @@ public class Product {
     }
 
     public void addComment(Comment comment){
+        if(comments == null)
+            comments = new ArrayList<>();
         comments.add(comment);
     }
 
@@ -131,6 +137,8 @@ public class Product {
 
     public String createCommentsHTML() {
         String commentsHTML = "";
+        if(comments == null)
+            return commentsHTML;
         for(Comment c : comments)
             commentsHTML += c.createHTML();
         return commentsHTML;

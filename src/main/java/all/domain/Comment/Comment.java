@@ -2,11 +2,6 @@ package all.domain.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
-import springfox.documentation.spring.web.json.Json;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Comment {
@@ -23,12 +18,15 @@ public class Comment {
     @JsonIgnore
     private int dislikes;
 
+    public void initialize() {
+        this.id = count.incrementAndGet();
+    }
+
     public Comment(String userEmail, int commodityId, String text, String date) {
         this.userEmail = userEmail;
         this.commodityId = commodityId;
         this.text = text;
         this.date = date;
-        this.id = count.incrementAndGet();
     }
 
     public int getCommodityId() {
