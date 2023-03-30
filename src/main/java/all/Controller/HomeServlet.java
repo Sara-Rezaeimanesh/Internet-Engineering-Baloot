@@ -2,15 +2,13 @@ package all.Controller;
 
 import all.domain.Amazon.Amazon;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+
 import java.io.IOException;
 import java.util.Arrays;
-
 
 @WebServlet(name = "HomeServlet", urlPatterns = "")
 public class HomeServlet extends HttpServlet {
@@ -22,13 +20,12 @@ public class HomeServlet extends HttpServlet {
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
+        assert amazon != null;
         if (amazon.isAnybodyLoggedIn()) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
             requestDispatcher.forward(request, response);
         } else {
-            System.out.println("hi");
-            response.sendRedirect("http://localhost:8080/baloot/");
-//            response.sendRedirect("http://localhost:8080/Login");
+            response.sendRedirect("http://localhost:8080/baloot/Login");
         }
     }
 }

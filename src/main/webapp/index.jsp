@@ -13,16 +13,16 @@
 <ul>
     <li id="email">username: <%=activeUser%></li>
     <li>
-        <a href="/commodities">Commodities</a>
+        <a href="/baloot/commodities">Commodities</a>
     </li>
     <li>
-        <a href="/buyList">Buy List</a>
+        <a href="${pageContext.request.contextPath}/buyList">Buy List</a>
     </li>
     <li>
-        <a href="/credit">Add Credit</a>
+        <a href="${pageContext.request.contextPath}/credit">Add Credit</a>
     </li>
     <li>
-        <a href="/logout">Log Out</a>
+        <a href="${pageContext.request.contextPath}/logout">Log Out</a>
     </li>
 </ul>
 

@@ -1,6 +1,7 @@
 package all.domain.Amazon;
 
 import all.domain.Comment.Comment;
+import all.domain.Discount.Discount;
 import all.domain.Product.Product;
 import all.domain.Supplier.Supplier;
 import all.domain.User.User;
@@ -55,6 +56,12 @@ public class Initializer {
         String CommentsJsonString = getRequest(baseUrl + URL);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(CommentsJsonString, new TypeToken<ArrayList<Comment>>() {}.getType());
+    }
+
+    public ArrayList<Discount> getDiscountsFromAPI(final String URL) throws Exception{
+        String DiscountJsonString = getRequest(baseUrl + URL);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.fromJson(DiscountJsonString, new TypeToken<ArrayList<Discount>>() {}.getType());
     }
 
 }

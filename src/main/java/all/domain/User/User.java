@@ -20,6 +20,8 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
+
+    private int discount;
     private ArrayList<Product> buyList;
     private ArrayList<Product> purchaseList;
 
@@ -79,33 +81,37 @@ public class User {
 
     public void removeProduct(Product p) { buyList.remove(p); }
 
+    private int calculateCurrBuyListPrice(){
+        int price = 0;
+        for(Product p : buyList)
+            price += p.getPrice();
+        return (price*(100-discount))/100;
+    }
+
     public String createHTMLForUser() {
         return "<li id=\"username\">Username:" + this.username + "</li>\n" +
                 "<li id=\"email\">Email:" + this.email + "</li>\n" +
                 "<li id=\"birthDate\">Birth Date:" + this.birthDate + "</li>\n" +
                 "<li id=\"credit\">Credit:" + this.credit + "</li>\n" +
-                "<li>\n" +
-                "    <form action=\"/addCredit/"+ this.username + "\" method=\"POST\" >\n" +
-                "        <label>increase credit</label>\n" +
-                "        <input id=\"form_credit\" type=\"number\" name=\"credit\" value=\"" + this.username +"\">\n" +
-                "        <button type=\"submit\">Increase credit</button>\n" +
-                "    </form>\n" +
-                "</li>" +
-                "<li>\n" +
-                "    <form action=\"\" method=\"POST\" >\n" +
-                "        <label>Buy List Payment</label>\n" +
-                "        <input id=\"form_payment\" type=\"hidden\" name=\"userId\" value=\"" + this.username +"\">\n" +
-                "        <button type=\"submit\">Payment</button>\n" +
-                "    </form>\n" +
+                "<li>Current Buy List Price: "+ this.calculateCurrBuyListPrice() +"</li>" +
+                "<li> <a href=\"credit\">Add Credit</a> </li>" +
+                "<li>" +
+                "<form action=\"payment\" method=\"POST\">" +
+                    "<label>Submit & Pay</label>" +
+                    "<input id=\"form_payment\" type=\"hidden\" name=\"userId\" value=\" " + this.username +"\">" +
+                    "<button type=\"submit\">Payment</button>" +
+                "</form>" +
                 "</li>";
     }
 
-    public String createHTMLForBuyList() {
+    public String createHTMLForBuyList(String removeAction) {
         String html = "";
         for(Product p : buyList) {
+            if(Objects.equals(removeAction, "/removeFromBuyList/"))
+                removeAction += username + "/" + p.getId() + " ";
             String removeString = "<td>        \n" +
-                    "                <form action=\"/removeFromBuyList/" + username + "/" + p.getId() +"\"method=\"POST\" >\n" +
-                    "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= " + username + ">\n" +
+                    "                <form action=" + removeAction + " method=\"POST\" >\n" +
+                    "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= " + p.getId() + ">\n" +
                     "                    <button type=\"submit\">Remove</button>\n" +
                     "                </form>\n" +
                     "            </td>";
@@ -127,5 +133,25 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean isPassEqual(String password) {
+        return Objects.equals(this.password, password);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void payBuyList() throws Exception {
+        if(credit < calculateCurrBuyListPrice())
+            throw new Exception("Credit is not enough");
+        credit -= calculateCurrBuyListPrice();
+        purchaseList.addAll(buyList);
+        buyList.clear();
+    }
+
+    public void applyDiscount(String discount) {
+        this.discount = Integer.parseInt(discount);
     }
 }

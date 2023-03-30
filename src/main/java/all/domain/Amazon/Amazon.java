@@ -1,6 +1,7 @@
 package all.domain.Amazon;
 
 import all.domain.Comment.Comment;
+import all.domain.Discount.Discount;
 import all.domain.Rating.Rating;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +26,7 @@ public class Amazon {
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
-    private User activeUser = null;
+    private String activeUser = null;
 
     private ArrayList<User> users = new ArrayList<>();
 
@@ -33,6 +34,16 @@ public class Amazon {
 
     private ArrayList<Product> products = new ArrayList<>();
 
+    private ArrayList<Discount> discounts;
+
+    private static String errorMsg;
+
+    public static String getErrorMsg(){
+        return errorMsg;
+    }
+    public static void setErrorMsg(String err){
+         errorMsg = err;
+    }
     public Amazon() throws Exception {
         Initializer initializer = new Initializer();
         suppliers = initializer.getProvidersFromAPI("providers");
@@ -41,6 +52,12 @@ public class Amazon {
         users.forEach(User::initialize);
         products = initializer.getCommoditiesFromAPI("commodities");
         products.forEach(Product::initialize);
+        addToBuyList(users.get(0).getUsername(), products.get(0).getId());
+        addToBuyList(users.get(0).getUsername(), products.get(1).getId());
+        discounts = initializer.getDiscountsFromAPI("discount");
+        discounts.forEach(Discount::initialize);
+        for(Discount d : discounts)
+            d.print();
         ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
         comments.forEach(Comment::initialize);
         for(Comment c : comments){
@@ -74,10 +91,17 @@ public class Amazon {
         return null;
     }
 
-    private User findUserById(String uid) {
+    public User findUserById(String uid) {
         for(User u : users)
             if(u.userNameEquals(uid))
                 return u;
+        return null;
+    }
+
+    public Discount findDiscountById(String did) {
+        for(Discount d : discounts)
+            if(d.discountCodeEquals(did))
+                return d;
         return null;
     }
 
@@ -103,10 +127,10 @@ public class Amazon {
         suppliers.add(supplier);
     }
 
-    public void increaseCredit(String username, int credit) throws Exception {
+    public void increaseCredit(String username, int credit) {
+        if(credit <= 0)
+            errorMsg = "Credit must be more than zero";
         User u = findUserById(username);
-        if(u == null)
-            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
         u.increaseCredit(credit);
     }
 
@@ -262,7 +286,8 @@ public class Amazon {
 
         providerHTML += u.createHTMLForUser();
         providerHTML += readHTMLPage("User_middle.html");
-        providerHTML += u.createHTMLForBuyList();
+        String removeAction = "\"/removeFromBuyList/";
+        providerHTML += u.createHTMLForBuyList(removeAction);
         providerHTML += readHTMLPage("User_middle2.html");
         providerHTML += u.createHTMLForPurchaseList();
         providerHTML += readHTMLPage("User_end.html");
@@ -301,10 +326,38 @@ public class Amazon {
     public String getActiveUser() {
         if(activeUser == null)
             return "Not logged in";
-        return activeUser.getUsername();
+        return activeUser;
     }
 
-    public void setActiveUser(){
+    public boolean DoesUserExist(String username, String password){
+        User user = findUserById(username);
+        return user != null && user.isPassEqual(password);
+    }
+
+    public void setActiveUser(String userName){
+        activeUser = userName;
+    }
+    public void logout() {
+        activeUser = null;
+    }
+
+    public void applyDiscount(String discountCode) throws Exception {
+        User user = findUserById(activeUser);
+        Discount discount = findDiscountById(discountCode);
+        if(discount == null) {
+            errorMsg = "This discount does not exist";
+            throw new Exception();
+        }
+        if(discount.isValidToUse(user.getUsername())) {
+            user.applyDiscount(discount.getDiscount());
+            discount.addToUsed(user.getUsername());
+        }
+        else{
+            errorMsg = "You have already use this discount code";
+            throw new Exception();
+        }
 
     }
+
+
 }
