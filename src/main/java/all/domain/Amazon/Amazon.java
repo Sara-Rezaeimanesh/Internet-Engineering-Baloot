@@ -17,10 +17,9 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public class Amazon {
     private static final String PRODUCT_HAS_BOUGHT_ERROR = "Product already bought!";
@@ -34,9 +33,49 @@ public class Amazon {
     private User activeUser = null;
     private Product chosenProduct = null;
     ArrayList<Product> searchResults = null;
+    ArrayList<Product> suggestedProduct = new ArrayList<>();
 
     public void saveChosenProduct(int id) throws Exception {
         chosenProduct = getCommodityById(id);
+    }
+
+    public static HashMap<Product, Float>
+    sortByValue(HashMap<Product, Float> hm)
+    {
+        HashMap<Product, Float> temp
+                = hm.entrySet()
+                .stream()
+                .sorted((i1, i2)
+                        -> i2.getValue().compareTo(
+                        i1.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+        return temp;
+    }
+
+    public void setSuggestedProduct(){
+        assert chosenProduct != null;
+        int id = chosenProduct.getId();
+        HashMap<Product, Float> ratedProduct = new HashMap<>();
+        for(Product p : products){
+            float score = 0;
+            if(id != p.getId())
+                for(String category : p.getCategories())
+                    if(chosenProduct.isSameCategory(category))
+                        score += 11;
+            score += p.getRating();
+            ratedProduct.put(p, score);
+        }
+        HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
+        int i = 1;
+        for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
+            suggestedProduct.add(set.getKey());
+            i ++;
+            if(i == 5)
+                break;
+        }
     }
 
     private ArrayList<User> users;
@@ -63,8 +102,6 @@ public class Amazon {
         users.forEach(User::initialize);
         products = initializer.getCommoditiesFromAPI("commodities");
         products.forEach(Product::initialize);
-//        addToBuyList(users.get(0).getUsername(), products.get(0).getId());
-//        addToBuyList(users.get(0).getUsername(), products.get(1).getId());
         discounts = initializer.getDiscountsFromAPI("discount");
         discounts.forEach(Discount::initialize);
         for(Discount d : discounts)
@@ -437,5 +474,13 @@ public class Amazon {
 
     public void setActiveUser(String userName) {
         activeUser = findUserById(userName);
+    }
+
+    public String createHTMLForSuggestedProduct() {
+        String html = "";
+        setSuggestedProduct();
+        for(Product p : suggestedProduct)
+            html += p.createHTML("");
+        return html;
     }
 }

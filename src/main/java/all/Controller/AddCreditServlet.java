@@ -12,9 +12,9 @@ import java.io.IOException;
 
 @WebServlet(name = "AddCreditServlet", urlPatterns = "/credit")
 public class AddCreditServlet extends HttpServlet {
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("Credit.jsp");
-        requestDispatcher.forward(request, response);
+
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
