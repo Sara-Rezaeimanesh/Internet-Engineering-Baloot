@@ -18,7 +18,7 @@
     String activeUser = amazon.getActiveUser();
 %>
 <body>
-    <a href="/">Home</a>
+    <a href="${pageContext.request.contextPath}/">Home</a>
     <p id="username">username: <%=activeUser%></p>
     <br><br>
     <form action="${pageContext.request.contextPath}/filterProducts" method="POST">
@@ -26,6 +26,7 @@
         <input type="text" name="search" value="">
         <button type="submit" name="action" value="search_by_category">Search By Cagtegory</button>
         <button type="submit" name="action" value="search_by_name">Search By Name</button>
+        <button type="submit" name="action" value="search_by_id">Search By Id</button>
         <button type="submit" name="action" value="clear">Clear Search</button>
     </form>
     <br><br>

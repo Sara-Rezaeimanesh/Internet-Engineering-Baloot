@@ -27,19 +27,19 @@
     </ul>
 
     <label>Add Your Comment:</label>
-    <form action="${pageContext.request.contextPath}/addComment" method="post">
+    <form action="${pageContext.request.contextPath}/commodities/comment" method="post">
       <input type="text" name="comment" value="" />
-      <button type="submit">submit</button>
+      <button type="submit" name="action" value="comment">submit</button>
     </form>
     <br>
-    <form action="${pageContext.request.contextPath}/rateCommodity" method="POST">
+    <form action="${pageContext.request.contextPath}/commodities/rate" method="POST">
       <label>Rate(between 1 and 10):</label>
       <input type="number" id="quantity" name="quantity" min="1" max="10">
-      <button type="submit">Rate</button>
+      <button type="submit" name="action" value="rate">Rate</button>
     </form>
     <br>
-    <form action="${pageContext.request.contextPath}/addToBuyList" method="POST">
-      <button type="submit">Add to BuyList</button>
+    <form action="${pageContext.request.contextPath}/commodities/add" method="POST">
+      <button type="submit" name="action" value="add">Add to BuyList</button>
     </form>
     <br />
     <table>

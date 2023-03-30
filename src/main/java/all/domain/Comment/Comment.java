@@ -45,31 +45,31 @@ public class Comment {
     public String createHTML() {
         return
                 "    <tr>\n" +
-                "        <td>" + userId + "</td>\n" +
+                "        <td>" + userEmail + "</td>\n" +
                 "        <td>" + text + "</td>\n" +
                 "        <td>" + date + "</td>\n" +
                 "        <td>\n" +
-                "            <form action=\"/voteComment/" + id + "/1\" method=\"POST\">\n" +
+                "            <form action=\"like\" method=\"POST\">\n" +
                 "                <label for=\"\">" + likes + "</label>\n" +
                 "                <input\n" +
                 "                        id=\"form_comment_id\"\n" +
                 "                        type=\"hidden\"\n" +
                 "                        name=\"comment_id\"\n" +
-                "                        value=\"01\"\n" +
+                "                        value=\""+ id +"\"\n" +
                 "                />\n" +
-                "                <button type=\"submit\">like</button>\n" +
+                "                <button type=\"submit\" name=\"action\" value=\"like\">like</button>\n" +
                 "            </form>\n" +
                 "        </td>\n" +
                 "        <td>\n" +
-                "            <form action=\"/voteComment/" + id + "/-1\" method=\"POST\">\n" +
+                "            <form action=\"dislike\" method=\"POST\">\n" +
                 "                <label for=\"\">" + dislikes + "</label>\n" +
                 "                <input\n" +
                 "                        id=\"form_comment_id\"\n" +
                 "                        type=\"hidden\"\n" +
                 "                        name=\"comment_id\"\n" +
-                "                        value=\"01\"\n" +
+                "                        value=\""+ id +"\"\n" +
                 "                />\n" +
-                "                <button type=\"submit\">dislike</button>\n" +
+                "                <button type=\"submit\" name=\"action\" value=\"dislike\">dislike</button>\n" +
                 "            </form>\n" +
                 "        </td>\n" +
                 "    </tr>";

@@ -26,8 +26,8 @@ public class Amazon {
     private static final String PRODUCT_HAS_NOT_BOUGHT_ERROR = "Product hasn't already bought!";
     private static final String PRODUCT_IS_NOT_IN_STOCK = "Product is not in stock!";
     private static Amazon instance;
-    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exista!";
-    private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
+    private final String PRODUCT_ALREADY_EXIST_ERROR = "Product already exists!";
+    private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier does not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
     private User activeUser = null;
@@ -204,10 +204,10 @@ public class Amazon {
     }
 
     public Product getCommodityById(Integer id) throws Exception {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         Product p = findProductsById(id);
         if(p != null) return p;
-        else throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+        errorMsg = PRODUCT_DOES_NOT_EXIT_ERROR;
+        throw new Exception();
     }
 
     public void printJsonCategory(ArrayList<Product> sameCat) throws JsonProcessingException {
@@ -215,20 +215,30 @@ public class Amazon {
         System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
     }
 
-    public ArrayList<Product> getCommoditiesByCategory(String category){
+    public ArrayList<Product> getCommoditiesByCategory(String category) throws Exception {
         ArrayList<Product> sameCatProduct = new ArrayList<>();
         for (Product p : products) {
                 if (p.isSameCategory(category))
                     sameCatProduct.add(p);
+        }
+        if(sameCatProduct.size() == 0) {
+            errorMsg = "No products within \"" + category + "\" category.";
+            throw new Exception();
         }
         return sameCatProduct;
     }
 
     public void addToBuyList() throws Exception {
         if(activeUser.hasBoughtProduct(chosenProduct.getId()))
+        {
+            errorMsg = PRODUCT_HAS_BOUGHT_ERROR;
             throw new Exception(PRODUCT_HAS_BOUGHT_ERROR);
+        }
         if(!chosenProduct.isInStock())
+        {
+            errorMsg = PRODUCT_IS_NOT_IN_STOCK;
             throw new Exception(PRODUCT_IS_NOT_IN_STOCK);
+        }
         activeUser.addProduct(chosenProduct);
         chosenProduct.updateStock(-1);
     }
@@ -418,16 +428,18 @@ public class Amazon {
         return chosenProduct.createCommentsHTML();
     }
 
-    public void saveSearchResults(String searchString, String action) {
+    public void saveSearchResults(String searchString, String action) throws Exception {
+        searchResults = new ArrayList<>();
         if(Objects.equals(action, "search_by_category"))
             searchResults = getCommoditiesByCategory(searchString);
         else if(Objects.equals(action, "search_by_name"))
             searchResults = getCommoditiesByName(searchString);
         else if(Objects.equals(action, "sort_by_rate"))
             searchResults = sortCommoditiesByRate();
+        else if(Objects.equals(action, "search_by_id"))
+            searchResults.add(getCommodityById(Integer.parseInt(searchString)));
         else if(Objects.equals(action, "clear"))
             searchResults = products;
-
     }
 
     private ArrayList<Product> sortCommoditiesByRate() {
@@ -442,10 +454,10 @@ public class Amazon {
 
     private ArrayList<Product> getCommoditiesByName(String searchString) {
         ArrayList<Product> sameNameProduct = new ArrayList<>();
-        for (Product p : products) {
-            if (Objects.equals(p.getName(), searchString))
+        for (Product p : products)
+            if (p.getName().contains(searchString))
                 sameNameProduct.add(p);
-        }
+
         return sameNameProduct;
     }
 
@@ -459,7 +471,7 @@ public class Amazon {
 
     private String getTodayDate() {
         LocalDate localDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDate.format(formatter);
     }
 

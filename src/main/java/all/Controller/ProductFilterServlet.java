@@ -16,12 +16,16 @@ public class ProductFilterServlet extends HttpServlet {
         String action = request.getParameter("action");
         try {
             Amazon amazon = Amazon.getInstance();
-            String searchString = request.getParameter("search");
-            amazon.saveSearchResults(searchString, action);
+            if(amazon.isAnybodyLoggedIn()) {
+                String searchString = request.getParameter("search");
+                amazon.saveSearchResults(searchString, action);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/Commodities.jsp");
+                requestDispatcher.forward(request, response);
+            }
+            else
+                response.sendRedirect("http://localhost:8080/baloot/Login");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            response.sendRedirect("http://localhost:8080/baloot/error");
         }
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/Commodities.jsp");
-        requestDispatcher.forward(request, response);
     }
 }
