@@ -12,10 +12,22 @@ import java.io.IOException;
 
 @WebServlet(name = "AddCreditServlet", urlPatterns = "/credit")
 public class AddCreditServlet extends HttpServlet {
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        Amazon amazon = null;
+        try {
+            amazon = Amazon.getInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (amazon.isAnybodyLoggedIn()) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("Credit.jsp");
+            requestDispatcher.forward(request, response);
+        }
+        else{
+            response.sendRedirect("http://localhost:8080/baloot/Login");
+        }
     }
+
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Amazon amazon = null;
@@ -24,14 +36,12 @@ public class AddCreditServlet extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        int credit = Integer.parseInt(request.getParameter("credit"));
         try {
-            if(amazon.isAnybodyLoggedIn())
-                amazon.increaseCredit(amazon.getActiveUser(), credit);
-            else
-                response.sendRedirect("http://localhost:8080/baloot/Login");
+            int credit = Integer.parseInt(request.getParameter("credit"));
+            amazon.increaseCredit(amazon.getActiveUser(), credit);
         } catch (Exception e) {
             response.sendRedirect("http://localhost:8080/baloot/error");
+            return;
         }
         response.sendRedirect("http://localhost:8080/baloot");
     }

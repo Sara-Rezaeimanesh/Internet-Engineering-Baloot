@@ -33,7 +33,7 @@ public class Amazon {
     private User activeUser = null;
     private Product chosenProduct = null;
     ArrayList<Product> searchResults = null;
-    ArrayList<Product> suggestedProduct = new ArrayList<>();
+    ArrayList<Product> suggestedProduct;
 
     public void saveChosenProduct(int id) throws Exception {
         chosenProduct = getCommodityById(id);
@@ -56,6 +56,7 @@ public class Amazon {
     }
 
     public void setSuggestedProduct(){
+        suggestedProduct = new ArrayList<>();
         assert chosenProduct != null;
         int id = chosenProduct.getId();
         HashMap<Product, Float> ratedProduct = new HashMap<>();
@@ -69,7 +70,7 @@ public class Amazon {
             ratedProduct.put(p, score);
         }
         HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
-        int i = 1;
+        int i = 0;
         for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
             suggestedProduct.add(set.getKey());
             i ++;
@@ -176,9 +177,11 @@ public class Amazon {
         suppliers.add(supplier);
     }
 
-    public void increaseCredit(String username, int credit) {
-        if(credit <= 0)
+    public void increaseCredit(String username, int credit) throws Exception {
+        if(credit <= 0) {
             errorMsg = "Credit must be more than zero";
+            throw new Exception("Credit must be more than zero");
+        }
         User u = findUserById(username);
         u.increaseCredit(credit);
     }
