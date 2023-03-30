@@ -332,7 +332,7 @@ public class Amazon {
     public String getActiveUser() {
         if(activeUser == null)
             return "Not logged in";
-        return activeUser;
+        return activeUser.getUsername();
     }
 
     public boolean DoesUserExist(String username, String password){
@@ -340,23 +340,19 @@ public class Amazon {
         return user != null && user.isPassEqual(password);
     }
 
-    public void setActiveUser(String userName){
-        activeUser = userName;
-    }
     public void logout() {
         activeUser = null;
     }
 
     public void applyDiscount(String discountCode) throws Exception {
-        User user = findUserById(activeUser);
         Discount discount = findDiscountById(discountCode);
         if(discount == null) {
             errorMsg = "This discount does not exist";
             throw new Exception();
         }
-        if(discount.isValidToUse(user.getUsername())) {
-            user.applyDiscount(discount.getDiscount());
-            discount.addToUsed(user.getUsername());
+        if(discount.isValidToUse(activeUser.getUsername())) {
+            activeUser.applyDiscount(discount.getDiscount());
+            discount.addToUsed(activeUser.getUsername());
         }
         else{
             errorMsg = "You have already use this discount code";
