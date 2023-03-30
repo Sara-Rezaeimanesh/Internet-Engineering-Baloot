@@ -103,17 +103,17 @@ public class Product {
                 tds + providerId + tde + "\n" + tds + price + tde +
                 tds + createCatString() + tde + "\n" + tds + rating + tde +
                 tds + inStock + tde + "\n" +
-                tds + "<a href=\"/commodities/" + id + "\">Link</a>" + tde + removeButton +tre;
+                tds + "<a href=\"commodities/" + id + "\">Link</a>" + tde + removeButton +tre;
     }
 
     public String createHTMLForCommodity() {
-        return "<ul>" + "<li id=\"id\">Id: " + id + "</li>" + "\n" +
+        return "<li id=\"id\">Id: " + id + "</li>" + "\n" +
                "<li id=\"name\">Name:" + name + "</li>" + "\n" +
                "<li id=\"providerId\">Provider Id:" + providerId + "</li>" + "\n" +
                "<li id=\"price\">Price: " + price + "</li>" + "\n" +
                "<li id=\"categories\">Categories: " +  createCatString() + "</li>" + "\n" +
                "<li id=\"rating\">Rating: " + rating  + "</li>" + "\n" +
-               "<li id=\"inStock\">In Stock: " + inStock + "</li>" + "\n" + "</ul>";
+               "<li id=\"inStock\">In Stock: " + inStock + "</li>" + "\n";
     }
 
     public boolean isInPriceInterval(int startPrice, int endPrice) {
@@ -142,5 +142,8 @@ public class Product {
         for(Comment c : comments)
             commentsHTML += c.createHTML();
         return commentsHTML;
+    }
+
+    public void addRating(Rating rating) {
     }
 }

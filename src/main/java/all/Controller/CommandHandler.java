@@ -106,23 +106,23 @@ public class CommandHandler {
             String commodityId = ctx.pathParam("id");
             ctx.redirect("/addToBuyList/"+username+"/"+commodityId);
         });
-        app.get("/addToBuyList/:username/:id", ctx -> {
-            try {
-                String username = ctx.pathParam("username");
-                String commodityId = ctx.pathParam("id");
-                amazon.addToBuyList(username, Integer.parseInt(commodityId));
-                ctx.redirect("/commodities/"+commodityId);
-
-            } catch (Exception e){
-                if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR)   ||
-                   Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
-                    ctx.html(readHTMLPage("404.html"));
-                else if(Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR))
-                    ctx.html(readHTMLPage("403.html"));
-                else
-                    ctx.status(502);
-            }
-        });
+//        app.get("/addToBuyList/:username/:id", ctx -> {
+//            try {
+//                String username = ctx.pathParam("username");
+//                String commodityId = ctx.pathParam("id");
+//                amazon.addToBuyList(username, Integer.parseInt(commodityId));
+//                ctx.redirect("/commodities/"+commodityId);
+//
+//            } catch (Exception e){
+//                if(Objects.equals(e.getMessage(), USER_DOES_NOT_EXIST_ERROR)   ||
+//                   Objects.equals(e.getMessage(), PRODUCT_DOES_NOT_EXIT_ERROR))
+//                    ctx.html(readHTMLPage("404.html"));
+//                else if(Objects.equals(e.getMessage(), PRODUCT_HAS_BOUGHT_ERROR))
+//                    ctx.html(readHTMLPage("403.html"));
+//                else
+//                    ctx.status(502);
+//            }
+//        });
         app.get("/removeFromBuyList/:username/:id", ctx -> {
             try {
                 String username = ctx.pathParam("username");

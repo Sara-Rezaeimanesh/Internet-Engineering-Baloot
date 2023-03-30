@@ -68,14 +68,14 @@ enum CommandEnum implements Command {
             amazon.getCommoditiesByCategory(args.get(0).textValue());
         }
     },
-    addToBuyList {
-        @Override
-        public void execute(String json) throws Exception {
-            ArrayList<JsonNode> args = extractArgs(json,
-                    new ArrayList<>(Arrays.asList("username", "commodityId")));
-            amazon.addToBuyList(args.get(0).textValue(), Integer.parseInt(String.valueOf(args.get(1))));
-        }
-    },
+//    addToBuyList {
+//        @Override
+//        public void execute(String json) throws Exception {
+//            ArrayList<JsonNode> args = extractArgs(json,
+//                    new ArrayList<>(Arrays.asList("username", "commodityId")));
+//            amazon.addToBuyList(args.get(0).textValue(), Integer.parseInt(String.valueOf(args.get(1))));
+//        }
+//    },
     removeFromBuyList {
         @Override
         public void execute(String json) throws Exception {

@@ -12,9 +12,14 @@ import all.domain.User.User;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 
+import javax.sound.sampled.Port;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Amazon {
@@ -26,13 +31,19 @@ public class Amazon {
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier is not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
-    private String activeUser = null;
+    private User activeUser = null;
+    private Product chosenProduct = null;
+    ArrayList<Product> searchResults = null;
 
-    private ArrayList<User> users = new ArrayList<>();
+    public void saveChosenProduct(int id) throws Exception {
+        chosenProduct = getCommodityById(id);
+    }
 
-    private ArrayList<Supplier> suppliers = new ArrayList<>();
+    private ArrayList<User> users;
 
-    private ArrayList<Product> products = new ArrayList<>();
+    private ArrayList<Supplier> suppliers;
+
+    private ArrayList<Product> products;
 
     private ArrayList<Discount> discounts;
 
@@ -52,8 +63,8 @@ public class Amazon {
         users.forEach(User::initialize);
         products = initializer.getCommoditiesFromAPI("commodities");
         products.forEach(Product::initialize);
-        addToBuyList(users.get(0).getUsername(), products.get(0).getId());
-        addToBuyList(users.get(0).getUsername(), products.get(1).getId());
+//        addToBuyList(users.get(0).getUsername(), products.get(0).getId());
+//        addToBuyList(users.get(0).getUsername(), products.get(1).getId());
         discounts = initializer.getDiscountsFromAPI("discount");
         discounts.forEach(Discount::initialize);
         for(Discount d : discounts)
@@ -69,6 +80,7 @@ public class Amazon {
             assert p != null;
             p.addComment(c);
         }
+        searchResults = products;
     }
 
     public static Amazon getInstance() throws Exception {
@@ -175,19 +187,13 @@ public class Amazon {
         return sameCatProduct;
     }
 
-    public void addToBuyList(String username, int commodityId) throws Exception {
-        Product p = findProductsById(commodityId);
-        if(p == null)
-            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
-        User u = findUserById(username);
-        if(u == null)
-            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
-        if(u.hasBoughtProduct(commodityId))
+    public void addToBuyList() throws Exception {
+        if(activeUser.hasBoughtProduct(chosenProduct.getId()))
             throw new Exception(PRODUCT_HAS_BOUGHT_ERROR);
-        if(!p.isInStock())
+        if(!chosenProduct.isInStock())
             throw new Exception(PRODUCT_IS_NOT_IN_STOCK);
-        u.addProduct(p);
-        p.updateStock(-1);
+        activeUser.addProduct(chosenProduct);
+        chosenProduct.updateStock(-1);
     }
 
     public void removeFromBuyList(String username, int commodityId) throws Exception {
@@ -359,5 +365,77 @@ public class Amazon {
 
     }
 
+    public ArrayList<Product> getAllProducts() {
+        return products;
+    }
 
+    public String convertProductsToListItems() {
+        StringBuilder productsHTML = new StringBuilder();
+        for(Product product : searchResults)
+            productsHTML.append(product.createHTML(""));
+
+        return productsHTML.toString();
+    }
+
+    public String getChosenProductHTML() {
+        return chosenProduct.createHTMLForCommodity();
+
+    }
+    public String getProuctComments() {
+        return chosenProduct.createCommentsHTML();
+    }
+
+    public void saveSearchResults(String searchString, String action) {
+        if(Objects.equals(action, "search_by_category"))
+            searchResults = getCommoditiesByCategory(searchString);
+        else if(Objects.equals(action, "search_by_name"))
+            searchResults = getCommoditiesByName(searchString);
+        else if(Objects.equals(action, "sort_by_rate"))
+            searchResults = sortCommoditiesByRate();
+        else if(Objects.equals(action, "clear"))
+            searchResults = products;
+
+    }
+
+    private ArrayList<Product> sortCommoditiesByRate() {
+        searchResults = copyList(products);
+        searchResults.sort(Comparator.comparing(Product::getRating).reversed());
+        return searchResults;
+    }
+
+    private ArrayList<Product> copyList(ArrayList<Product> products) {
+        return new ArrayList<>(products);
+    }
+
+    private ArrayList<Product> getCommoditiesByName(String searchString) {
+        ArrayList<Product> sameNameProduct = new ArrayList<>();
+        for (Product p : products) {
+            if (Objects.equals(p.getName(), searchString))
+                sameNameProduct.add(p);
+        }
+        return sameNameProduct;
+    }
+
+    public void addComment(String commentText) throws Exception {
+        String todayDate = getTodayDate();
+        Comment comment = new Comment(activeUser.getEmail(), chosenProduct.getId(), commentText, todayDate);
+        Product product = findProductsById(chosenProduct.getId());
+        if(product == null) throw new Exception("Product does not exist!");
+        product.addComment(comment);
+    }
+
+    private String getTodayDate() {
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+        return localDate.format(formatter);
+    }
+
+    public void addRating(String quantity) throws Exception {
+        Rating rating = new Rating(activeUser.getUsername(), chosenProduct.getId(), Integer.parseInt(quantity));
+        rateCommodity(rating);
+    }
+
+    public void rateComment(String commentId, String vote) {
+        chosenProduct.voteComment(commentId, Integer.parseInt(vote));
+    }
 }
