@@ -13,7 +13,7 @@
 <ul>
     <li id="email">username: <%=activeUser%></li>
     <li>
-        <a href="commodities">Commodities</a>
+        <a href="${pageContext.request.contextPath}>Commodities</a>
     </li>
     <li>
         <a href="${pageContext.request.contextPath}/buyList">Buy List</a>

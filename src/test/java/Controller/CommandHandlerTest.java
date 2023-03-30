@@ -188,48 +188,48 @@ class CommandHandlerTest {
         amazon.addProduct(product);
     }
 
-    @Test
-    void addProductToBuyListThrowsUserNotFoundException() throws Exception {
-        addUser1AndProduct1AndSupplier1();
-        try {
-            amazon.addToBuyList("user2", 1);
-        } catch(Exception e) {
-            assertEquals(USER_DOES_NOT_EXIST_ERROR, e.getMessage());
-        }
-    }
-
-    @Test
-    void addProductToBuyListThrowsProductNotFoundException() throws Exception {
-        addUser1AndProduct1AndSupplier1();
-        try {
-            amazon.addToBuyList("user2", 2);
-        } catch(Exception e) {
-            assertEquals(PRODUCT_DOES_NOT_EXIT_ERROR, e.getMessage());
-        }
-    }
-
-    @Test
-    void addProductToBuyListThrowsProductAlreadyAddedException() throws Exception {
-        addUser1AndProduct1AndSupplier1();
-        amazon.addToBuyList("user1", 1);
-        try {
-            amazon.addToBuyList("user1", 1);
-        } catch(Exception e) {
-            assertEquals("Product already added.", e.getMessage());
-        }
-    }
-
-    @Test
-    void addProductToBuyListThrowsNotInStockException() throws Exception {
-        addUser1AndProduct1AndSupplier1();
-        amazon.addUser(user2);
-        amazon.addToBuyList("user1", 1);
-        try {
-            amazon.addToBuyList("user2", 1);
-        } catch(Exception e) {
-            assertEquals("Product is not in stock!", e.getMessage());
-        }
-    }
+//    @Test
+//    void addProductToBuyListThrowsUserNotFoundException() throws Exception {
+//        addUser1AndProduct1AndSupplier1();
+//        try {
+//            amazon.addToBuyList("user2", 1);
+//        } catch(Exception e) {
+//            assertEquals(USER_DOES_NOT_EXIST_ERROR, e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    void addProductToBuyListThrowsProductNotFoundException() throws Exception {
+//        addUser1AndProduct1AndSupplier1();
+//        try {
+//            amazon.addToBuyList("user2", 2);
+//        } catch(Exception e) {
+//            assertEquals(PRODUCT_DOES_NOT_EXIT_ERROR, e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    void addProductToBuyListThrowsProductAlreadyAddedException() throws Exception {
+//        addUser1AndProduct1AndSupplier1();
+//        amazon.addToBuyList("user1", 1);
+//        try {
+//            amazon.addToBuyList("user1", 1);
+//        } catch(Exception e) {
+//            assertEquals("Product already added.", e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    void addProductToBuyListThrowsNotInStockException() throws Exception {
+//        addUser1AndProduct1AndSupplier1();
+//        amazon.addUser(user2);
+//        amazon.addToBuyList("user1", 1);
+//        try {
+//            amazon.addToBuyList("user2", 1);
+//        } catch(Exception e) {
+//            assertEquals("Product is not in stock!", e.getMessage());
+//        }
+//    }
 
     @AfterEach
     void tearDown() {

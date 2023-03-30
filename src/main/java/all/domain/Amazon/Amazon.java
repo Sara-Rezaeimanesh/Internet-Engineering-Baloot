@@ -434,4 +434,8 @@ public class Amazon {
     public void rateComment(String commentId, String vote) {
         chosenProduct.voteComment(commentId, Integer.parseInt(vote));
     }
+
+    public void setActiveUser(String userName) {
+        activeUser = findUserById(userName);
+    }
 }
