@@ -18,6 +18,6 @@
     </head>
     <body>
         <a href="/baloot/">Home</a>
-        <h1>errorMsg</h1>
+        <h1><%=errorMsg%></h1>
     </body>
 </html>

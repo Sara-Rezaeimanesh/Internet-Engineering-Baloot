@@ -45,7 +45,7 @@
             <th></th>
             <th></th>
         </tr>
-            <%= user.createHTMLForBuyList("\"remove\"") %>
+            <%= user.createHTMLForBuyList("remove") %>
         <tr>
             <th>
             <form action="/baloot/discount" method="post">

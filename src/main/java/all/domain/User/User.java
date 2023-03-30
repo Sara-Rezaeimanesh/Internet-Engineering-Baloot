@@ -110,7 +110,7 @@ public class User {
             if(Objects.equals(removeAction, "/removeFromBuyList/"))
                 removeAction += username + "/" + p.getId() + " ";
             String removeString = "<td>        \n" +
-                    "                <form action=" + removeAction + " method=\"POST\" >\n" +
+                    "                <form action= \"" + removeAction + "/"+ p.getId() +" \" method=\"POST\" >\n" +
                     "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= " + p.getId() + ">\n" +
                     "                    <button type=\"submit\">Remove</button>\n" +
                     "                </form>\n" +
