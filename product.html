@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="product.css">
+  </head>
+  <body>
+    <header class="product-header d-flex justfy-context-center">
+      <div class="col-md-9 d-flex">
+        <img src="src/logo.png" class="img-fluid logo-image"/>
+        <p class="header-title">Baloot</p>
+      </div>
+      <div class="col-md-3 d-flex h-100 justfy-context-center align-items-center">
+        <p class="header-username text-title bold">#username</p>
+        <div class="cart-box d-flex">
+          <p class="text-title cart-text">Cart</p>
+          <p class="text-title cart-text cart-number">0</p>
+        </div>
+      </div>
+    </header>
+    <div class="container product-card">
+      <div class="h-100">
+        <div class="h-50 row product-desc">
+          <div class="h-100 col-md-6 overflow-none">
+            <img class="img-fluid product-pic" src="src/phone2.png"/>
+          </div>
+          <div class="col-md-6 d-flex h-100 product-details">
+            <p class="product-name">Huawei nova 9</p>
+            <div class="row">
+              <small class="text-danger col-md-8 text-small bold">5 left in stock</small>
+              <div class="col-md-4 d-flex">
+                <img src="src/star.png" class="star-img" />
+                <p class="stars">4.1<p class="text-secondary star-num">(12)</p></p>
+              </div>
+              <small class="text-small bold">by: <a href="#">Huawei</a></small>
+            </div>
+            <div class="category">
+              <p class="cat-p text-small">Category(s)</p>
+              <ul class="cat-ul text-small">
+                <li>Technology</li>
+                <li>IT</li>
+                <li>Smart phone</li>
+                <li>Huawei</li>
+              </ul>
+            </div>
+            <div class="row buy d-flex justfy-context-center align-items-center">
+              <p class="price bold col-md-8">300$</p>
+              <div class="col-md-4 pl-0 pr-0 buy-btn-div d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-dark buy-btn">add to cart</button>
+              </div>
+              
+            </div>
+            <div class="row rate d-flex align-items-center col-md-12">
+              <div class="ten-stars col-md-10">
+                <p class="text-small bold ten-stars-text">rate now</p>
+                <img class="img-fluid image-5star" src="src/5stars.png"/>
+                <img class="img-fluid image-5star" src="src/5stars.png"/>
+              </div>
+              <button type="button" class="btn btn-dark col-md-2 rate-btn">submit</button>
+            </div>
+          </div>
+        </div>
+        <div class="row h-50 comments">
+          <div class="col-md-12 mt-4">
+            <p class="text-title">Comments <small class="text-secondary">(2)</small></p>
+            <div class="comment-item d-flex flex-column">
+              <p class="bold mb-1 comment-item-text">This was awesome!!!!</p>
+              <div class="d-flex">
+                <p class="text-secondary text-very-small">2023-03-20</p>
+                <p class="random-dot text-secondary">&nbsp&nbsp&nbsp.&nbsp&nbsp&nbsp</p>
+                <p class="text-secondary text-small">username</p>
+              </div>
+              <div class="d-flex justify-content-end align-items-center">
+                <p class="helpful">Is this comment helpful?</p>
+                <div class="d-flex align-items-center thumbs">
+                  <p class="text-very-small">1</p>
+                  <img src="src/thumbs up.png" class="thumbs-img" />
+                  <p class="text-very-small">1</p>
+                  <img src="src/thumbs down.png" class="thumbs-img" />
+                </div>
+              </div>
+            </div>
+            <div class="comment-item d-flex flex-column">
+              <p class="bold mb-1 comment-item-text">This was awful!!!!</p>
+              <div class="d-flex">
+                <p class="text-secondary text-very-small">2023-03-20</p>
+                <p class="random-dot text-secondary">&nbsp&nbsp&nbsp.&nbsp&nbsp&nbsp</p>
+                <p class="text-secondary text-small">username</p>
+              </div>
+              <div class="d-flex justify-content-end align-items-center">
+                <p class="helpful">Is this comment helpful?</p>
+                <div class="d-flex align-items-center thumbs">
+                  <p class="text-very-small">1</p>
+                  <img src="src/thumbs up.png" class="thumbs-img" />
+                  <p class="text-very-small">1</p>
+                  <img src="src/thumbs down.png" class="thumbs-img" />
+                </div>
+              </div>
+            </div>
+            <div class="comment-item">
+              <div class="your-comment mt-2 d-flex flex-column">
+                <p class="text-title comment-submit-title">Submit your opinion</p>
+                <div class="d-flex align-items-end mt-3 w-100 submit-comment">
+                  <div class="col-md-11">
+                    <textarea class="form-control comment" rows="3"></textarea>
+                  </div>
+                  <button type="button" class="btn btn-dark col-md-1 rate-btn comment-btn">post</button>
+                </div>
+                
+              </div>
+            </div>
+        </div>
+      <div class="row vh-40 suggestions">
+        <p class="text-title-big">You might also like...</p>
+        <div class="d-flex suggestions-carousel">
+          <div class="d-flex flex-column suggestion-card">
+            <p class="bold pl-0 text-title suggestion-title">Huawei nova 9</p>
+            <p class="text-danger text-very-small bold">1 left in stock</p>
+            <img src="src/phone3.png" class="img-fluid suggestion-img"/>
+            <div class="d-flex suggestion-price">
+              <p class="suggestion-price-item">300$</p>
+              <div class="col-md-8 pl-0 pr-0 sugg-buy-btn-div d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-dark suggestion-buy-btn">add to cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column suggestion-card">
+            <p class="bold pl-0 text-title suggestion-title">Huawei nova 9</p>
+            <p class="text-danger text-very-small bold">1 left in stock</p>
+            <img src="src/phone3.png" class="img-fluid suggestion-img"/>
+            <div class="d-flex suggestion-price">
+              <p class="suggestion-price-item">300$</p>
+              <div class="col-md-8 pl-0 pr-0 sugg-buy-btn-div d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-dark suggestion-buy-btn">add to cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column suggestion-card">
+            <p class="bold pl-0 text-title suggestion-title">Huawei nova 9</p>
+            <p class="text-danger text-very-small bold">1 left in stock</p>
+            <img src="src/phone3.png" class="img-fluid suggestion-img"/>
+            <div class="d-flex suggestion-price">
+              <p class="suggestion-price-item">300$</p>
+              <div class="col-md-8 pl-0 pr-0 sugg-buy-btn-div d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-dark suggestion-buy-btn">add to cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column suggestion-card">
+            <p class="bold pl-0 text-title suggestion-title">Huawei nova 9</p>
+            <p class="text-danger text-very-small bold">1 left in stock</p>
+            <img src="src/phone3.png" class="img-fluid suggestion-img"/>
+            <div class="d-flex suggestion-price">
+              <p class="suggestion-price-item">300$</p>
+              <div class="col-md-8 pl-0 pr-0 sugg-buy-btn-div d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-dark suggestion-buy-btn">add to cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <span class="bold footer-text container-fluid">2023 @UT</span>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    
+  </body>
+  
+</html>
