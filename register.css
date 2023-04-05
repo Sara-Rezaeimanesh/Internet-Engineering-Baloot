@@ -1,0 +1,31 @@
+body {
+    height: 100vh;
+    background-color: #F7F0E9;
+}
+
+.register-container {
+    width: 50%;
+    height: 100%;
+}
+
+.register-btn {
+    background-color: #593C1C;
+}
+
+.register-btn:hover {
+    background-color: #332210;
+}
+
+input {
+    height: 2.8rem !important;
+}
+
+.signup-title {
+    color: #332210;
+}
+
+@media screen and (max-width: 800px) {
+    .register-container {
+        width: 90%;
+    }
+}
