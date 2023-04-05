@@ -6,11 +6,25 @@
 html {
     position: relative;
     min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+html *
+{
+   font-family: Arial !important;
 }
 
 body {
     min-height: 100vh;
     padding-bottom: 0 !important;
+    max-width: 1200px;
+}
+
+.text-small-li {
+    font-size: .8rem;
 }
 
 .cat-ul {
@@ -90,8 +104,6 @@ body {
     padding-top: 40px;
     min-height: 100vh;
     background-color: white;
-    font-family: 'Inter';
-    font-style: normal;
 }
 
 .product-body {
@@ -352,6 +364,7 @@ footer{
 .suggestions-carousel {
     justify-content: space-between;
     padding-right: 0;
+    flex-wrap: wrap;
 }
 
 .suggestion-card {
@@ -360,6 +373,7 @@ footer{
     border-radius: 10px;
     width: auto;
     height: auto;
+    min-width: 210px !important;
 }
 
 .suggestion-card:hover {
@@ -402,4 +416,93 @@ footer{
 .sugg-buy-btn-div {
     padding-top: .5rem;
     padding-bottom: .5rem;
+}
+
+@media screen and (max-width: 1000px) {
+    .product-name {
+        margin-top: 1.5rem;
+    }
+    .product-header {
+        padding-right: 1.5rem;
+        justify-content: space-between;
+        max-width: 100%;
+    }
+
+    .suggestions-carousel {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-5star {
+        width: 5.5rem;
+    }
+
+    .rate {
+        padding-right: .5rem;
+    }
+
+    .buy {
+        padding-left: .5rem;
+        padding-right: .5rem;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .rate-btn {
+        width: 20%;
+    }
+    .rate {
+        justify-content: space-between;
+    }
+}
+
+@media screen and (min-width: 760px) {
+    body {
+        width: 100%;
+    }
+    .product-header {
+        padding-right: 5rem;
+        justify-content: space-around;
+        max-width: 100%;
+    }
+
+    .buy-btn {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+
+    .buy {
+        width: 90vw;
+    }
+
+    .stars-div {
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+    }
+    .rate-btn {
+        margin-top: 0.5rem;
+    }
+    .price {
+        width: auto;
+    }
+    .buy-btn-div {
+        width: 50%;
+    }
+    .submit-comment {
+        flex-direction: column;
+    }
+    .sugg-buy-btn-div {
+        width: 70%;
+    }
+    .rate-btn {
+        width: 20%;
+    }
+    .rate {
+        justify-content: space-between;
+    }
 }
