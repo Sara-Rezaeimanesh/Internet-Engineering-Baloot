@@ -439,10 +439,18 @@ public class Amazon {
             searchResults = getCommoditiesByName(searchString);
         else if(Objects.equals(action, "sort_by_rate"))
             searchResults = sortCommoditiesByRate();
+        else if(Objects.equals(action, "sort_by_price"))
+            searchResults = sortCommoditiesByPrice();
         else if(Objects.equals(action, "search_by_id"))
             searchResults.add(getCommodityById(Integer.parseInt(searchString)));
         else if(Objects.equals(action, "clear"))
             searchResults = products;
+    }
+
+    private ArrayList<Product> sortCommoditiesByPrice() {
+        searchResults = copyList(products);
+        searchResults.sort(Comparator.comparing(Product::getPrice).reversed());
+        return searchResults;
     }
 
     private ArrayList<Product> sortCommoditiesByRate() {

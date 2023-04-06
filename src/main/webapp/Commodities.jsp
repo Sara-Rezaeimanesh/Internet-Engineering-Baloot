@@ -34,6 +34,10 @@
         <label>Sort By:</label>
         <button type="submit" name="action" value="sort_by_rate">Rate</button>
     </form>
+    <form action="${pageContext.request.contextPath}/filterProducts" method="POST">
+        <label>Sort By:</label>
+        <button type="submit" name="action" value="sort_by_price">Price</button>
+    </form>
     <br><br>
     <table>
         <tr>
