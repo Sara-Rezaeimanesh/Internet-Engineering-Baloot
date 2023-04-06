@@ -18,6 +18,6 @@ public class LogoutServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
         amazon.logout();
-        response.sendRedirect("http://localhost:8080/baloot/Login");
+        response.sendRedirect("http://localhost:8080/baloot/login");
     }
 }

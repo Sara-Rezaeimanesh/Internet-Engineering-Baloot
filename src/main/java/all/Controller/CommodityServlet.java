@@ -25,7 +25,7 @@ public class CommodityServlet extends HttpServlet {
                 requestDispatcher.forward(request, response);
             }
             else
-                response.sendRedirect("http://localhost:8080/baloot/Login");
+                response.sendRedirect("http://localhost:8080/baloot/login");
         } catch (Exception e) {
             response.sendRedirect("http://localhost:8080/baloot/error");
         }
@@ -43,7 +43,7 @@ public class CommodityServlet extends HttpServlet {
         }
         try {
             if(!amazon.isAnybodyLoggedIn()) {
-                response.sendRedirect("http://localhost:8080/baloot/Login");
+                response.sendRedirect("http://localhost:8080/baloot/login");
                 return;
             }
             if(Objects.equals(action, "rate"))

@@ -20,7 +20,7 @@ public class CommoditiesServlet extends HttpServlet {
                 requestDispatcher.forward(request, response);
             }
             else
-                response.sendRedirect("http://localhost:8080/baloot/Login");
+                response.sendRedirect("http://localhost:8080/baloot/login");
 
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));

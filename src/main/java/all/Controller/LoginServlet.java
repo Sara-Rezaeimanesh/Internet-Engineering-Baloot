@@ -7,11 +7,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/Login")
+@WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("Login.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("login.jsp");
         requestDispatcher.forward(request, response);
     }
 
@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
             amazon.setActiveUser(userName);
             response.sendRedirect("http://localhost:8080/baloot");
         } else {
-            response.sendRedirect("http://localhost:8080/baloot/Login");
+            response.sendRedirect("http://localhost:8080/baloot/login");
         }
     }
 

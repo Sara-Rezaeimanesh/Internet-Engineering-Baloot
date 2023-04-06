@@ -24,7 +24,7 @@ public class AddCreditServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
         }
         else{
-            response.sendRedirect("http://localhost:8080/baloot/Login");
+            response.sendRedirect("http://localhost:8080/baloot/login");
         }
     }
 
