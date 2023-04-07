@@ -141,6 +141,7 @@ body {
     height: 4rem;
     padding-top: 0.3rem;
     padding-left: 1.2rem;
+    padding-right: 1.2rem;
 }
 
 .product-card {
@@ -319,7 +320,7 @@ p {
 .header-username {
     font-size: 0.9rem;
     color: #593C1C;
-    margin-left: 2rem;
+    /* margin-left: 4rem; */
 }
 
 .comment {
@@ -450,7 +451,7 @@ footer{
     }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 100px) {
     .rate-btn {
         width: 20%;
     }
@@ -459,33 +460,98 @@ footer{
     }
 }
 
-@media screen and (min-width: 760px) {
+@media screen and (min-width: 760px) and (max-width: 950px){
     body {
         width: 100%;
     }
-    .product-header {
-        padding-right: 5rem;
+    .suggestions-carousel {
         justify-content: space-around;
+        align-items: center;
+    }
+    .product-header {
+        justify-content: space-between;
         max-width: 100%;
+    }
+    .product-card {
+        width: 100%;
     }
 
     .buy-btn {
         width: 100%;
     }
+    .product-card {
+        padding-right: 3rem !important;
+        padding-left: 3rem !important;
+        max-width: none;
+        width: 100%;
+    }
+    .header-username {
+        margin-left: 0;
+    }
+    .suggestion-card {
+        width: 35%;
+        height: auto;
+    }
+    .suggestion-img {
+        height: auto;
+    }
+    .suggestion-title {
+        font-size: 1rem;
+    }
+    .text-very-small {
+        font-size: .7rem;
+    }
+    .suggestion-price-item {
+        font-size: 1.5rem;
+        margin-left: .5rem;
+    }
+    .suggestion-buy-btn {
+        font-size: .8rem;
+    }
+    .suggestion-price {
+        margin-top: 0.5rem;
+    }
+    .suggestion-price-item {
+        font-size: 1.1rem;
+        margin-left: .5rem;
+    }
+    .suggestions-carousel {
+        padding-left: 0;
+    }
+    .rate-btn {
+        width: 20%;
+        margin: 0;
+    }
+    .comment-btn-div {
+        padding: 0 !important;
+    }
+    .comment {
+        margin-right: 1rem;
+    }
+    .rate {
+        justify-content: space-between;
+    }
+    
 }
 
 @media screen and (max-width: 500px) {
-
     .buy {
         width: 90vw;
     }
-
+    .product-header {
+        padding-left: 10px !important;
+        padding-right: 15px !important;
+    }
+    .header-username {
+        display: none;
+    }
     .stars-div {
         margin-top: .5rem;
         margin-bottom: .5rem;
     }
     .rate-btn {
         margin-top: 0.5rem;
+        margin-left: 0.5rem;
     }
     .price {
         width: auto;
@@ -504,5 +570,31 @@ footer{
     }
     .rate {
         justify-content: space-between;
+    }
+    .suggestion-card {
+        width: 85%;
+        height: auto;
+    }
+    .suggestion-img {
+        height: auto;
+    }
+    .suggestion-title {
+        font-size: 1.1rem;
+    }
+    .text-very-small {
+        font-size: 0.7rem;
+    }
+    .suggestion-price-item {
+        font-size: 1rem;
+    }
+    .suggestion-buy-btn {
+        font-size: 0.8rem;
+    }
+    .suggestion-price {
+        margin-top: 0.5rem;
+    }
+    .comment-btn-div {
+        margin-left: 0;
+        width: 24%;
     }
 }

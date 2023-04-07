@@ -28,4 +28,7 @@ input {
     .register-container {
         width: 90%;
     }
+    .pass-input {
+        margin-top: 1rem;
+    }
 }
