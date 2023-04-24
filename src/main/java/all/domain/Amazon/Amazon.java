@@ -79,7 +79,7 @@ public class Amazon {
         }
     }
 
-    private ArrayList<User> users;
+
 
     private ArrayList<Supplier> suppliers;
 
@@ -141,13 +141,6 @@ public class Amazon {
         return null;
     }
 
-    public User findUserById(String uid) {
-        for(User u : users)
-            if(u.userNameEquals(uid))
-                return u;
-        return null;
-    }
-
     public Discount findDiscountById(String did) {
         for(Discount d : discounts)
             if(d.discountCodeEquals(did))
@@ -155,13 +148,7 @@ public class Amazon {
         return null;
     }
 
-    public void addUser(User user) {
-        for (User user_ : this.users)
-            if (user_.userNameEquals(user.getUsername())) {
-                user_.updateUserInfo(user);
-            }
-        users.add(user);
-    }
+
 
     public void addProduct(Product product) throws Exception {
         Supplier s = findSupplierById(product.getProviderId());
@@ -177,14 +164,7 @@ public class Amazon {
         suppliers.add(supplier);
     }
 
-    public void increaseCredit(String username, int credit) throws Exception {
-        if(credit <= 0) {
-            errorMsg = "Credit must be more than zero";
-            throw new Exception("Credit must be more than zero");
-        }
-        User u = findUserById(username);
-        u.increaseCredit(credit);
-    }
+
 
     public void listCommodities() throws JsonProcessingException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -231,39 +211,7 @@ public class Amazon {
         return sameCatProduct;
     }
 
-    public void addToBuyList() throws Exception {
-        if(activeUser.hasBoughtProduct(chosenProduct.getId()))
-        {
-            errorMsg = PRODUCT_HAS_BOUGHT_ERROR;
-            throw new Exception(PRODUCT_HAS_BOUGHT_ERROR);
-        }
-        if(!chosenProduct.isInStock())
-        {
-            errorMsg = PRODUCT_IS_NOT_IN_STOCK;
-            throw new Exception(PRODUCT_IS_NOT_IN_STOCK);
-        }
-        activeUser.addProduct(chosenProduct);
-        chosenProduct.updateStock(-1);
-    }
 
-    public void removeFromBuyList(String username, int commodityId) throws Exception {
-        Product p = findProductsById(commodityId);
-        if(p == null)
-            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
-        User u = findUserById(username);
-        if(u == null)
-            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
-        if(!u.hasBoughtProduct(commodityId))
-            throw new Exception(PRODUCT_HAS_NOT_BOUGHT_ERROR);
-        u.removeProduct(p);
-        p.updateStock(1);
-    }
-
-    public void getUserBuyList(String name) throws Exception {
-        User u = findUserById(name);
-        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
-        u.printBuyList();
-    }
 
     public String createCommoditiesPage(ArrayList<Product> products_, String flag) throws Exception {
         if(Objects.equals(flag, "all"))
@@ -334,21 +282,7 @@ public class Amazon {
     }
 
 
-    public String createUserPage(String id) throws Exception {
-        String providerHTML = readHTMLPage("User_start.html");
-        User u = findUserById(id);
-        if(u == null)
-            return readHTMLPage("404.html");
 
-        providerHTML += u.createHTMLForUser();
-        providerHTML += readHTMLPage("User_middle.html");
-        String removeAction = "\"/removeFromBuyList/";
-        providerHTML += u.createHTMLForBuyList(removeAction);
-        providerHTML += readHTMLPage("User_middle2.html");
-        providerHTML += u.createHTMLForPurchaseList();
-        providerHTML += readHTMLPage("User_end.html");
-        return providerHTML;
-    }
 
     public void voteComment(String commentId, int vote) throws Exception {
         Product p = findCommentCommodity(commentId);
@@ -375,24 +309,6 @@ public class Amazon {
         return null;
     }
 
-    public boolean isAnybodyLoggedIn() {
-        return activeUser != null;
-    }
-
-    public String getActiveUser() {
-        if(activeUser == null)
-            return "Not logged in";
-        return activeUser.getUsername();
-    }
-
-    public boolean DoesUserExist(String username, String password){
-        User user = findUserById(username);
-        return user != null && user.isPassEqual(password);
-    }
-
-    public void logout() {
-        activeUser = null;
-    }
 
     public void applyDiscount(String discountCode) throws Exception {
         Discount discount = findDiscountById(discountCode);
@@ -495,9 +411,6 @@ public class Amazon {
         chosenProduct.voteComment(commentId, Integer.parseInt(vote));
     }
 
-    public void setActiveUser(String userName) {
-        activeUser = findUserById(userName);
-    }
 
     public String createHTMLForSuggestedProduct() {
         String html = "";
