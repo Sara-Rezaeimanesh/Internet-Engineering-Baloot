@@ -1,5 +1,5 @@
-<%@ page import="all.domain.Amazon.Amazon" %>
-<%@ page import="all.domain.User.User" %>
+<%@ page import="com.baloot.IE.domain.Amazon.Amazon" %>
+<%@ page import="com.baloot.IE.domain.User.User" %>
 
 <%
     Amazon amazon = Amazon.getInstance();

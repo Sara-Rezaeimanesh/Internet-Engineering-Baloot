@@ -13,7 +13,7 @@
       }
     </style>
   </head>
-  <%@ page import="all.domain.Amazon.Amazon" %>
+  <%@ page import="com.baloot.IE.domain.Amazon.Amazon" %>
 
   <%
       Amazon amazon = Amazon.getInstance();
