@@ -145,17 +145,6 @@ public class Amazon {
         users.add(user);
     }
 
-    public void addProduct(Product product) throws Exception {
-
-        Supplier s = findSupplierById(product.getProviderId());
-        if (s == null)
-            throw new Exception(SUPPLIER_DOES_NOT_EXIST_ERROR);
-        if (productRepository.findProductsById(product.getId()) != null)
-            throw new Exception(PRODUCT_ALREADY_EXIST_ERROR);
-        productRepository.add(product);
-        s.addProductToSupplierList(product.getId());
-    }
-
     public void addSupplier(Supplier supplier) {
         suppliers.add(supplier);
     }
@@ -167,23 +156,6 @@ public class Amazon {
         }
         User u = findUserById(username);
         u.increaseCredit(credit);
-    }
-
-    public void rateCommodity(Rating rating) throws Exception {
-        if (findUserById(rating.getUsername()) == null)
-            throw new IllegalArgumentException(USER_DOES_NOT_EXIST_ERROR);
-        productRepository.updateRating(rating);
-    }
-
-    public void printJsonProductById(Product p) throws JsonProcessingException {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        System.out.println("\"data\": " + ow.writeValueAsString(p));
-    }
-
-
-    public void printJsonCategory(ArrayList<Product> sameCat) throws JsonProcessingException {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        System.out.println("\"data\": {\"commoditiesListByCategory\": " + ow.writeValueAsString(sameCat) + "}");
     }
 
     public void addToBuyList() throws Exception {
@@ -220,9 +192,6 @@ public class Amazon {
         u.printBuyList();
     }
 
-    public boolean isAnybodyLoggedIn() {
-        return activeUser != null;
-    }
 
     public String getActiveUser() {
         if(activeUser == null)
@@ -264,50 +233,15 @@ public class Amazon {
         return productsHTML.toString();
     }
 
-    public String getChosenProductHTML() {
-        return chosenProduct.createHTMLForCommodity();
-
-    }
-    public String getProuctComments() {
-        return chosenProduct.createCommentsHTML();
-    }
-
     private ArrayList<Product> copyList(ArrayList<Product> products) {
         return new ArrayList<>(products);
     }
 
-    public void addComment(String commentText) throws Exception {
-        String todayDate = getTodayDate();
-        Comment comment = new Comment(activeUser.getEmail(), chosenProduct.getId(), commentText, todayDate);
-        Product product = productRepository.findProductsById(chosenProduct.getId());
-        if(product == null) throw new Exception("Product does not exist!");
-        product.addComment(comment);
-    }
 
-    private String getTodayDate() {
-        LocalDate localDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return localDate.format(formatter);
-    }
 
-    public void addRating(String quantity) throws Exception {
-        Rating rating = new Rating(activeUser.getUsername(), chosenProduct.getId(), Integer.parseInt(quantity));
-        rateCommodity(rating);
-    }
 
     public void rateComment(String commentId, String vote) {
         chosenProduct.voteComment(commentId, Integer.parseInt(vote));
     }
 
-    public void setActiveUser(String userName) {
-        activeUser = findUserById(userName);
-    }
-
-//    public String createHTMLForSuggestedProduct() {
-//        String html = "";
-//        setSuggestedProduct();
-//        for(Product p : suggestedProduct)
-//            html += p.createHTML("");
-//        return html;
-//    }
 }

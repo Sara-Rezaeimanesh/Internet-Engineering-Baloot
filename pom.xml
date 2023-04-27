@@ -8,11 +8,11 @@
         <version>2.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>ir.ac.ut.ie</groupId>
-    <artifactId>Bolbolestan05</artifactId>
+    <groupId>.com</groupId>
+    <artifactId>Balootv5</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Balootv.5</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Online Market</description>
     <properties>
         <java.version>11</java.version>
     </properties>

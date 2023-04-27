@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,12 +35,14 @@ public class ProductRepository {
         }
     }
 
+
     public List<Product> filterProducts(String category, String priceRange, String name, String id) {
         List<Product> searchResults = new ArrayList<>(products);
         if (category != null)
             searchResults = searchResults.stream().filter(product -> product.getCategories().contains(category)).collect(Collectors.toList());
         if (priceRange != null) {
             String[] priceRangeArray = priceRange.split("-");
+            System.out.println(priceRangeArray[0] + " " + priceRangeArray[1]);
             double minPrice = Double.parseDouble(priceRangeArray[0]);
             double maxPrice = Double.parseDouble(priceRangeArray[1]);
             searchResults = searchResults.stream()
@@ -55,7 +59,7 @@ public class ProductRepository {
         return searchResults;
     }
 
-    public List<Product> sortProducts(String sort_param) {
+    public List<Product> sortProducts(List<Product> products, String sort_param) {
         if(Objects.equals(sort_param, "price"))
             products.sort(Comparator.comparingDouble(Product::getPrice));
         else if(Objects.equals(sort_param, "rate"))
@@ -104,10 +108,25 @@ public class ProductRepository {
         chosenProduct = p;
     }
 
-    public void updateRating(Rating rating) {
-        if(chosenProduct != null)
-            chosenProduct.updateRating(rating);
-        else
-            throw new IllegalArgumentException("Product does not exist!");
+    public void updateRating(String username, String quantity, int id) throws Exception {
+        Rating rating = new Rating(username, id, Integer.parseInt(quantity));
+        Product product = findProductsById(id);
+        if(product == null) throw new IllegalArgumentException("Product does not exist!");
+        product.updateRating(rating);
     }
+
+    public void addComment(String username, int id, String commentTxt) {
+        String todayDate = getTodayDate();
+        Comment comment = new Comment(username, id, commentTxt, todayDate);
+        Product product = findProductsById(chosenProduct.getId());
+        if(product == null) throw new IllegalArgumentException("Product does not exist!");
+        product.addComment(comment);
+    }
+
+    private String getTodayDate() {
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
+    }
+
 }
