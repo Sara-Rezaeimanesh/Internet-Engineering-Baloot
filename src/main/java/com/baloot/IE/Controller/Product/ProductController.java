@@ -23,12 +23,11 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public List<Product> all(HttpServletRequest request, HttpServletResponse response,
-                                  @RequestParam(name = "category", required = false) String category,
-                                  @RequestParam(name = "price_range", required = false) String priceRange,
-                                  @RequestParam(name = "name", required = false) String name,
-                                  @RequestParam(name = "id", required = false) String id,
-                                  @RequestParam(name = "sort", required = false) String sort_param) throws Exception {
+    public List<Product> all(@RequestParam(name = "category", required = false) String category,
+                             @RequestParam(name = "price_range", required = false) String priceRange,
+                             @RequestParam(name = "name", required = false) String name,
+                             @RequestParam(name = "id", required = false) String id,
+                             @RequestParam(name = "sort", required = false) String sort_param) {
         List<Product> products = productRepository.filterProducts(category, priceRange, name, id);
         if(sort_param != null)
             products = productRepository.sortProducts(products, sort_param);
@@ -36,22 +35,20 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product one(HttpServletRequest request, HttpServletResponse response, @PathVariable int id) throws Exception {
+    public Product one(@PathVariable int id){
         Product p = productRepository.findProductsById(id);
         productRepository.saveChosenProduct(p);
         return p;
     }
 
     @PostMapping("/{id}/ratings")
-    public void rate(HttpServletRequest request, HttpServletResponse response,
-                          @PathVariable int id,
-                          @RequestParam("rate") String rate) throws Exception {
+    public void rate(@PathVariable int id, @RequestParam("rate") String rate) throws Exception {
       productRepository.updateRating(session.getActiveUser().getUsername(), rate, id);
     }
 
     @GetMapping("/{id}/comments")
     public ArrayList<Comment> allComments(HttpServletRequest request, HttpServletResponse response,
-                                          @PathVariable int id) throws Exception {
+                                          @PathVariable int id) {
         return productRepository.getProductComments(id);
     }
 
@@ -59,7 +56,7 @@ public class ProductController {
     @PostMapping("/{id}/comments")
     public void addComment(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable int id,
-                       @RequestParam("comment") String comment) throws Exception {
+                       @RequestParam("comment") String comment) {
         productRepository.addComment(session.getActiveUser().getEmail(), id, comment);
     }
 
@@ -67,7 +64,7 @@ public class ProductController {
     public void voteComment(HttpServletRequest request, HttpServletResponse response,
                         @PathVariable int id,
                         @PathVariable int commentId,
-                        @RequestParam("vote") String vote) throws Exception {
-        productRepository.voteComment(session.getActiveUser().getUsername(), id, commentId, Integer.parseInt(vote));
+                        @RequestParam("vote") String vote) {
+        productRepository.voteComment(session.getActiveUser().getEmail(), id, commentId, Integer.parseInt(vote));
     }
 }

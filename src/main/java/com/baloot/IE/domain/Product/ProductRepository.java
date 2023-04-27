@@ -87,9 +87,9 @@ public class ProductRepository {
         products.add(product);
     }
 
-    public void voteComment(String userId, int productId, int commentId, int vote) {
+    public void voteComment(String userEmail, int productId, int commentId, int vote) {
         Product p = findProductsById(productId);
-        p.voteComment(userId, commentId, vote);
+        p.voteComment(userEmail, commentId, vote);
     }
 
     public void saveChosenProduct(Product p) {

@@ -84,45 +84,6 @@ public class User {
         return (price*(100-discount))/100;
     }
 
-    public String createHTMLForUser() {
-        return "<li id=\"username\">Username:" + this.username + "</li>\n" +
-                "<li id=\"email\">Email:" + this.email + "</li>\n" +
-                "<li id=\"birthDate\">Birth Date:" + this.birthDate + "</li>\n" +
-                "<li id=\"credit\">Credit:" + this.credit + "</li>\n" +
-                "<li>Current Buy List Price: "+ this.calculateCurrBuyListPrice() +"</li>" +
-                "<li> <a href=\"credit\">Add Credit</a> </li>" +
-                "<li>" +
-                "<form action=\"payment\" method=\"POST\">" +
-                    "<label>Submit & Pay</label>" +
-                    "<input id=\"form_payment\" type=\"hidden\" name=\"userId\" value=\" " + this.username +"\">" +
-                    "<button type=\"submit\">Payment</button>" +
-                "</form>" +
-                "</li>";
-    }
-
-    public String createHTMLForBuyList(String removeAction) {
-        String html = "";
-        for(Product p : buyList) {
-            if(Objects.equals(removeAction, "/removeFromBuyList/"))
-                removeAction += username + "/" + p.getId() + " ";
-            String removeString = "<td>        \n" +
-                    "                <form action= \"" + removeAction + "/"+ p.getId() +" \" method=\"POST\" >\n" +
-                    "                    <input id=\"form_commodity_id\" type=\"hidden\" name=\"commodityId\" value= " + p.getId() + ">\n" +
-                    "                    <button type=\"submit\">Remove</button>\n" +
-                    "                </form>\n" +
-                    "            </td>";
-            html += p.createHTML(removeString);
-        }
-        return html;
-    }
-
-    public String createHTMLForPurchaseList() {
-        String html = "";
-        for(Product p : purchaseList)
-            html += p.createHTML("");
-        return html;
-    }
-
     public void increaseCredit(int newCredit) {
         credit += newCredit;
     }

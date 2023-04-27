@@ -27,14 +27,6 @@ public class Product {
     @JsonIgnore
     private ArrayList<Comment> comments;
 
-    public boolean isSameCategory(String category) {
-        for (String c : categories)
-            if (c.equals(category))
-                return true;
-
-        return false;
-    }
-
     public void initialize() {
         ratings = new ArrayList<>();
         comments = new ArrayList<>();
@@ -93,57 +85,9 @@ public class Product {
         return catString;
     }
 
-    public String createHTML(String removeButton) {
-        String tds = "\t<td>";
-        String tde = "</td>";
-        String trs = "<tr>";
-        String tre = "</tr>";
-
-        return trs + "\n" + tds + id + tde + "\n" + tds + name + tde + "\n" +
-                tds + providerId + tde + "\n" + tds + price + tde +
-                tds + createCatString() + tde + "\n" + tds + rating + tde +
-                tds + inStock + tde + "\n" +
-                tds + "<a href=\"commodities/" + id + "\">Link</a>" + tde + removeButton +tre;
-    }
-
-    public String createHTMLForCommodity() {
-        return "<li id=\"id\">Id: " + id + "</li>" + "\n" +
-               "<li id=\"name\">Name:" + name + "</li>" + "\n" +
-               "<li id=\"providerId\">Provider Id:" + providerId + "</li>" + "\n" +
-               "<li id=\"price\">Price: " + price + "</li>" + "\n" +
-               "<li id=\"categories\">Categories: " +  createCatString() + "</li>" + "\n" +
-               "<li id=\"rating\">Rating: " + rating  + "</li>" + "\n" +
-               "<li id=\"inStock\">In Stock: " + inStock + "</li>" + "\n";
-    }
-
-    public boolean isInPriceInterval(int startPrice, int endPrice) {
-        System.out.println("prices" + startPrice + " " + price + " " + endPrice);
-        return price <= endPrice && price >= startPrice;
-    }
-
-    public void voteComment(String userId, int commentId, int vote) {
+    public void voteComment(String userEmail, int commentId, int vote) {
         for(Comment c : comments)
             if(c.idMatches(commentId))
-                c.updateVote(userId, vote);
-    }
-
-    public boolean hasComment(int commentId) {
-        for(Comment c : comments)
-            if(c.idMatches(commentId))
-                return true;
-
-        return false;
-    }
-
-    public String createCommentsHTML() {
-        String commentsHTML = "";
-        if(comments == null)
-            return commentsHTML;
-        for(Comment c : comments)
-            commentsHTML += c.createHTML();
-        return commentsHTML;
-    }
-
-    public void addRating(Rating rating) {
+                c.updateVote(userEmail, vote);
     }
 }

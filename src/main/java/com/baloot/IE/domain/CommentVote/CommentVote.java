@@ -5,7 +5,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class CommentVote {
-    private String username;
+    private String userEmail;
     private int vote;
 
     public void updateVote(int newVote) {
