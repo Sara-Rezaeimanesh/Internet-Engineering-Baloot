@@ -37,35 +37,21 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product one(HttpServletRequest request, HttpServletResponse response, @PathVariable int id) throws Exception {
-        if(session.isAnybodyLoggedIn()) {
-            Product p = productRepository.findProductsById(id);
-            productRepository.saveChosenProduct(p);
-            return p;
-        }
-        else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw new Exception("Please login first!");
-        }
+        Product p = productRepository.findProductsById(id);
+        productRepository.saveChosenProduct(p);
+        return p;
     }
 
     @PostMapping("/{id}/ratings")
     public void rate(HttpServletRequest request, HttpServletResponse response,
                           @PathVariable int id,
                           @RequestParam("rate") String rate) throws Exception {
-      if(!session.isAnybodyLoggedIn()) {
-          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-          throw new Exception("Please login first!");
-      }
       productRepository.updateRating(session.getActiveUser().getUsername(), rate, id);
     }
 
     @GetMapping("/{id}/comments")
     public ArrayList<Comment> allComments(HttpServletRequest request, HttpServletResponse response,
                                           @PathVariable int id) throws Exception {
-        if (!session.isAnybodyLoggedIn()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw new Exception("Please login first!");
-        }
         return productRepository.getProductComments(id);
     }
 
@@ -74,19 +60,7 @@ public class ProductController {
     public void addComment(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable int id,
                        @RequestParam("comment") String comment) throws Exception {
-        if(!session.isAnybodyLoggedIn()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw new Exception("Please login first!");
-        }
-        productRepository.addComment(session.getActiveUser().getUsername(), id, comment);
-//      if(Objects.equals(action, "comment"))
-//
-//      if(Objects.equals(action, "add"))
-//          amazon.addToBuyList();
-//      if(Objects.equals(action, "like"))
-//          amazon.rateComment(arg, "1");
-//      if(Objects.equals(action, "dislike"))
-//          amazon.rateComment(arg, "-1");
+        productRepository.addComment(session.getActiveUser().getEmail(), id, comment);
     }
 
     @PostMapping("/{id}/comments/{commentId}")
@@ -94,10 +68,6 @@ public class ProductController {
                         @PathVariable int id,
                         @PathVariable int commentId,
                         @RequestParam("vote") String vote) throws Exception {
-        if(!session.isAnybodyLoggedIn()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw new Exception("Please login first!");
-        }
         productRepository.voteComment(session.getActiveUser().getUsername(), id, commentId, Integer.parseInt(vote));
     }
 }

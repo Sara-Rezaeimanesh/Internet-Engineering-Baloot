@@ -102,10 +102,10 @@ public class ProductRepository {
         product.updateRating(rating);
     }
 
-    public void addComment(String username, int id, String commentTxt) {
+    public void addComment(String userEmail, int id, String commentTxt) {
         String todayDate = getTodayDate();
-        Comment comment = new Comment(username, id, commentTxt, todayDate);
-        Product product = findProductsById(chosenProduct.getId());
+        Comment comment = new Comment(userEmail, id, commentTxt, todayDate);
+        Product product = findProductsById(id);
         product.addComment(comment);
     }
 

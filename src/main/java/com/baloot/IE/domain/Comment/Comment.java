@@ -11,16 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Comment {
     private static final AtomicInteger count = new AtomicInteger(0);
     private int id;
-    private String userEmail;
-    private String userId;
-    private int commodityId;
-    private String text;
-    private String date;
-    private ArrayList<CommentVote> votes;
-
-    @JsonIgnore
+    private final String userEmail;
+    private final int commodityId;
+    private final String text;
+    private final String date;
+    private final ArrayList<CommentVote> votes;
     private int likes;
-    @JsonIgnore
     private int dislikes;
 
     public void initialize() {
@@ -32,6 +28,7 @@ public class Comment {
         this.commodityId = commodityId;
         this.text = text;
         this.date = date;
+        votes = new ArrayList<>();
     }
 
     public int getCommodityId() {

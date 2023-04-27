@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-
+@Getter
 @NoArgsConstructor
 public class User {
     private String username;
@@ -36,10 +37,6 @@ public class User {
         birthDate = newUserInfo.birthDate;
         credit = newUserInfo.credit;
         email = newUserInfo.email;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public User(@JsonProperty("username") String username_,
@@ -130,16 +127,8 @@ public class User {
         credit += newCredit;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public boolean isPassEqual(String password) {
         return Objects.equals(this.password, password);
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void payBuyList() throws Exception {
