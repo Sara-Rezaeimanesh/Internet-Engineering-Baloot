@@ -35,9 +35,7 @@ public class Initializer {
     }
 
     public ArrayList<Product> getCommoditiesFromAPI(final String URL) throws Exception{
-        System.out.println("here");
         String ProductsJsonString = getRequest(baseUrl + URL);
-        System.out.println(ProductsJsonString);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(ProductsJsonString, new TypeToken<ArrayList<Product>>() {}.getType());
     }

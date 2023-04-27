@@ -12,10 +12,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/v1/products")
 public class ProductController {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
     @Autowired
     public ProductController() throws Exception {
         this.productRepository = ProductRepository.getInstance();
@@ -44,32 +44,35 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product one(HttpServletRequest request, HttpServletResponse response, @PathVariable int id) throws Exception {
         Amazon amazon = Amazon.getInstance();
-        if(amazon.isAnybodyLoggedIn())
-            return productRepository.findProductsById(id);
+        if(amazon.isAnybodyLoggedIn()) {
+            Product p = productRepository.findProductsById(id);
+            productRepository.saveChosenProduct(p);
+            return p;
+        }
         else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             throw new Exception("Please login first!");
         }
     }
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/ratings")
     public void action(HttpServletRequest request, HttpServletResponse response,
                           @PathVariable int id,
-                          @RequestParam("action") String action,
-                          @RequestParam("arg") String arg) throws Exception {
+                          @RequestParam("rate") String rate) throws Exception {
         Amazon amazon = Amazon.getInstance();
       if(!amazon.isAnybodyLoggedIn()) {
           response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           throw new Exception("Please login first!");
       }
-      if(Objects.equals(action, "rate"))
-          amazon.addRating(arg);
-      if(Objects.equals(action, "comment"))
-          amazon.addComment(arg);
-      if(Objects.equals(action, "add"))
-          amazon.addToBuyList();
-      if(Objects.equals(action, "like"))
-          amazon.rateComment(arg, "1");
-      if(Objects.equals(action, "dislike"))
-          amazon.rateComment(arg, "-1");
+      amazon.addRating(rate);
+//      if(Objects.equals(action, "comment"))
+//          amazon.addComment(arg);
+//      if(Objects.equals(action, "add"))
+//          amazon.addToBuyList();
+//      if(Objects.equals(action, "like"))
+//          amazon.rateComment(arg, "1");
+//      if(Objects.equals(action, "dislike"))
+//          amazon.rateComment(arg, "-1");
     }
+
+
 }

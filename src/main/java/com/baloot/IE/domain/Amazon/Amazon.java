@@ -105,8 +105,8 @@ public class Amazon {
         suppliers.forEach(Supplier::initialize);
         users = initializer.getUsersFromAPI("users");
         users.forEach(User::initialize);
-        discounts = initializer.getDiscountsFromAPI("discount");
-        discounts.forEach(Discount::initialize);
+//        discounts = initializer.getDiscountsFromAPI("discount");
+//        discounts.forEach(Discount::initialize);
     }
 
     public static Amazon getInstance() throws Exception {
@@ -171,12 +171,8 @@ public class Amazon {
 
     public void rateCommodity(Rating rating) throws Exception {
         if (findUserById(rating.getUsername()) == null)
-            throw new Exception(USER_DOES_NOT_EXIST_ERROR);
-        Product p = productRepository.findProductsById(rating.getProductId());
-        if(p != null)
-            p.updateRating(rating);
-        else
-            throw new Exception(PRODUCT_DOES_NOT_EXIT_ERROR);
+            throw new IllegalArgumentException(USER_DOES_NOT_EXIST_ERROR);
+        productRepository.updateRating(rating);
     }
 
     public void printJsonProductById(Product p) throws JsonProcessingException {

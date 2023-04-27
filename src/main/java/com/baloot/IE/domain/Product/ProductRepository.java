@@ -2,6 +2,7 @@ package com.baloot.IE.domain.Product;
 
 import com.baloot.IE.domain.Amazon.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
+import com.baloot.IE.domain.Rating.Rating;
 import com.baloot.IE.domain.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ProductRepository {
     private static ProductRepository instance;
     List<Product> products;
+    private Product chosenProduct;
 
     public ProductRepository() throws Exception {
         Initializer initializer = new Initializer();
@@ -96,5 +98,16 @@ public class ProductRepository {
             if(p.hasComment(Integer.parseInt(commentId)))
                 return p;
         return null;
+    }
+
+    public void saveChosenProduct(Product p) {
+        chosenProduct = p;
+    }
+
+    public void updateRating(Rating rating) {
+        if(chosenProduct != null)
+            chosenProduct.updateRating(rating);
+        else
+            throw new IllegalArgumentException("Product does not exist!");
     }
 }
