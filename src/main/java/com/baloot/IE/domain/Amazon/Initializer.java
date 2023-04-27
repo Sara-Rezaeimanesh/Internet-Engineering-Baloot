@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class Initializer {
     String baseUrl = "http://5.253.25.110:5000/api/";
+
     public static String getRequest(String url) throws Exception{
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(url);
@@ -34,7 +35,9 @@ public class Initializer {
     }
 
     public ArrayList<Product> getCommoditiesFromAPI(final String URL) throws Exception{
+        System.out.println("here");
         String ProductsJsonString = getRequest(baseUrl + URL);
+        System.out.println(ProductsJsonString);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(ProductsJsonString, new TypeToken<ArrayList<Product>>() {}.getType());
     }

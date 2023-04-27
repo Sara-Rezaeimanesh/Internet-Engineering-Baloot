@@ -79,7 +79,4 @@ public class Comment {
         return userEmail;
     }
 
-    public void updateUserId(String username) {
-        userId = username;
-    }
 }

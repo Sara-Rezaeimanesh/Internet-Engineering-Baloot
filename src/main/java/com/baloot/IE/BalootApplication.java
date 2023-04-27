@@ -1,7 +1,5 @@
 package com.baloot.IE;
 
-import com.baloot.IE.Controller.CommandHandler;
-import com.baloot.IE.domain.Amazon.Amazon;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

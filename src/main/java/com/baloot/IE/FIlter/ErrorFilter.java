@@ -1,7 +1,9 @@
 package com.baloot.IE.FIlter;
 
+import com.baloot.IE.domain.Amazon.Amazon;
 import com.google.gson.JsonObject;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -9,14 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Component
 @WebFilter(filterName = "ErrorFilter", urlPatterns = {"/*"})
-@Order(2)
 public class ErrorFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
+            HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
             filterChain.doFilter(servletRequest, servletResponse);
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             int statusCode = response.getStatus();
@@ -30,11 +34,10 @@ public class ErrorFilter implements Filter {
                 }
             }
             response.setContentType("application/json");
-
             JsonObject errorJson = new JsonObject();
-            errorJson.addProperty("message", "An error occurred");
-            errorJson.addProperty("exceptionType", e.getClass().getName());
-            errorJson.addProperty("exceptionMessage", e.getMessage());
+            errorJson.addProperty("code", statusCode);
+            errorJson.addProperty("message", e.getMessage());
+            errorJson.addProperty("more info", "imaginary.website.com");
 
             PrintWriter out = response.getWriter();
             out.print(errorJson);
