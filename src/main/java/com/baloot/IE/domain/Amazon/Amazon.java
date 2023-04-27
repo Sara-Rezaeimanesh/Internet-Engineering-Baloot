@@ -1,24 +1,11 @@
 package com.baloot.IE.domain.Amazon;
 
-import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Discount.Discount;
 import com.baloot.IE.domain.Product.ProductRepository;
-import com.baloot.IE.domain.Rating.Rating;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Supplier.Supplier;
 import com.baloot.IE.domain.User.User;
 import org.springframework.stereotype.Component;
-//import com.google.common.io.Resources;
-//import org.apache.commons.io.FileUtils;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,15 +19,8 @@ public class Amazon {
     private final String SUPPLIER_DOES_NOT_EXIST_ERROR = "Supplier does not exist!";
     private final String PRODUCT_DOES_NOT_EXIT_ERROR = "Product does not exist!";
     private final String USER_DOES_NOT_EXIST_ERROR = "User does not exist!";
-    private User activeUser = null;
-    private Product chosenProduct = null;
-    ArrayList<Product> searchResults = null;
     ArrayList<Product> suggestedProduct;
 
-
-//    public Product getChosenProduct(int id) throws Exception {
-//        return getCommodityById(id);
-//    }
 
     public static HashMap<Product, Float>
     sortByValue(HashMap<Product, Float> hm)
@@ -158,20 +138,20 @@ public class Amazon {
         u.increaseCredit(credit);
     }
 
-    public void addToBuyList() throws Exception {
-        if(activeUser.hasBoughtProduct(chosenProduct.getId()))
-        {
-            errorMsg = PRODUCT_HAS_BOUGHT_ERROR;
-            throw new Exception(PRODUCT_HAS_BOUGHT_ERROR);
-        }
-        if(!chosenProduct.isInStock())
-        {
-            errorMsg = PRODUCT_IS_NOT_IN_STOCK;
-            throw new Exception(PRODUCT_IS_NOT_IN_STOCK);
-        }
-        activeUser.addProduct(chosenProduct);
-        chosenProduct.updateStock(-1);
-    }
+//    public void addToBuyList() throws Exception {
+//        if(activeUser.hasBoughtProduct(chosenProduct.getId()))
+//        {
+//            errorMsg = PRODUCT_HAS_BOUGHT_ERROR;
+//            throw new Exception(PRODUCT_HAS_BOUGHT_ERROR);
+//        }
+//        if(!chosenProduct.isInStock())
+//        {
+//            errorMsg = PRODUCT_IS_NOT_IN_STOCK;
+//            throw new Exception(PRODUCT_IS_NOT_IN_STOCK);
+//        }
+//        activeUser.addProduct(chosenProduct);
+//        chosenProduct.updateStock(-1);
+//    }
 
     public void removeFromBuyList(String username, int commodityId) throws Exception {
         Product p = productRepository.findProductsById(commodityId);
@@ -192,56 +172,25 @@ public class Amazon {
         u.printBuyList();
     }
 
-
-    public String getActiveUser() {
-        if(activeUser == null)
-            return "Not logged in";
-        return activeUser.getUsername();
-    }
-
     public boolean DoesUserExist(String username, String password){
         User user = findUserById(username);
         return user != null && user.isPassEqual(password);
     }
 
-    public void logout() {
-        activeUser = null;
-    }
-
-    public void applyDiscount(String discountCode) throws Exception {
-        Discount discount = findDiscountById(discountCode);
-        if(discount == null) {
-            errorMsg = "This discount does not exist";
-            throw new Exception();
-        }
-        if(discount.isValidToUse(activeUser.getUsername())) {
-            activeUser.applyDiscount(discount.getDiscount());
-            discount.addToUsed(activeUser.getUsername());
-        }
-        else{
-            errorMsg = "You have already use this discount code";
-            throw new Exception();
-        }
-
-    }
-
-    public String convertProductsToListItems() {
-        StringBuilder productsHTML = new StringBuilder();
-        for(Product product : searchResults)
-            productsHTML.append(product.createHTML(""));
-
-        return productsHTML.toString();
-    }
-
-    private ArrayList<Product> copyList(ArrayList<Product> products) {
-        return new ArrayList<>(products);
-    }
-
-
-
-
-    public void rateComment(String commentId, String vote) {
-        chosenProduct.voteComment(commentId, Integer.parseInt(vote));
-    }
-
+//    public void applyDiscount(String discountCode) throws Exception {
+//        Discount discount = findDiscountById(discountCode);
+//        if(discount == null) {
+//            errorMsg = "This discount does not exist";
+//            throw new Exception();
+//        }
+//        if(discount.isValidToUse(activeUser.getUsername())) {
+//            activeUser.applyDiscount(discount.getDiscount());
+//            discount.addToUsed(activeUser.getUsername());
+//        }
+//        else{
+//            errorMsg = "You have already use this discount code";
+//            throw new Exception();
+//        }
+//
+//    }
 }

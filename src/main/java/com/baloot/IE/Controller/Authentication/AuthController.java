@@ -21,13 +21,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void login(HttpServletRequest request, HttpServletResponse response,
+    public User login(HttpServletRequest request, HttpServletResponse response,
                                 @RequestParam("username") String username,
                                 @RequestParam("password") String password) throws Exception {
         Amazon amazon = Amazon.getInstance();
         if(amazon.DoesUserExist(username, password)) {
             User user = amazon.findUserById(username);
             session.setActiveUser(user);
+            return user;
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             throw new Exception("Invalid username or password!");

@@ -121,10 +121,10 @@ public class Product {
         return price <= endPrice && price >= startPrice;
     }
 
-    public void voteComment(String commentId, int vote) {
+    public void voteComment(String userId, int commentId, int vote) {
         for(Comment c : comments)
-            if(c.idMatches(Integer.parseInt(commentId)))
-                c.updateVote(vote);
+            if(c.idMatches(commentId))
+                c.updateVote(userId, vote);
     }
 
     public boolean hasComment(int commentId) {

@@ -1,7 +1,11 @@
 package com.baloot.IE.domain.Comment;
 
+import com.baloot.IE.domain.CommentVote.CommentVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Comment {
@@ -12,6 +16,7 @@ public class Comment {
     private int commodityId;
     private String text;
     private String date;
+    private ArrayList<CommentVote> votes;
 
     @JsonIgnore
     private int likes;
@@ -35,11 +40,15 @@ public class Comment {
 
     public boolean idMatches(int commentId) { return commentId == id; }
 
-    public void updateVote(int vote) {
-        if(vote == 1)
-            likes += 1;
-        else
-            dislikes += 1;
+    public void updateVote(String userId, int vote) {
+        for(CommentVote cv : votes)
+            if(Objects.equals(cv.getUsername(), userId)) {
+                int previous_vote = cv.getVote();
+                cv.updateVote(vote);
+                likes += vote - previous_vote;
+                dislikes -= vote - previous_vote;
+            }
+        votes.add(new CommentVote(userId, vote));
     }
 
     public String createHTML() {

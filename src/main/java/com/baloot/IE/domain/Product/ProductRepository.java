@@ -75,33 +75,21 @@ public class ProductRepository {
             instance = new ProductRepository();
         return instance;
     }
-    public ArrayList<Product> getProducts(ArrayList<Product> products) {
-        return products;
-    }
 
     public Product findProductsById(int id) {
         for (Product p : products)
             if (id == p.getId())
                 return p;
-        return null;
+        throw new IllegalArgumentException("Product does not exist!");
     }
 
     public void add(Product product) {
         products.add(product);
     }
 
-    public void voteComment(String commentId, int vote) throws Exception {
-        Product p = findCommentCommodity(commentId);
-        if(p == null)
-            throw new IllegalArgumentException("Product does not exist!");
-        p.voteComment(commentId, vote);
-    }
-
-    public Product findCommentCommodity(String commentId) {
-        for(Product p : products)
-            if(p.hasComment(Integer.parseInt(commentId)))
-                return p;
-        return null;
+    public void voteComment(String userId, int productId, int commentId, int vote) {
+        Product p = findProductsById(productId);
+        p.voteComment(userId, commentId, vote);
     }
 
     public void saveChosenProduct(Product p) {
@@ -111,7 +99,6 @@ public class ProductRepository {
     public void updateRating(String username, String quantity, int id) throws Exception {
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);
-        if(product == null) throw new IllegalArgumentException("Product does not exist!");
         product.updateRating(rating);
     }
 
@@ -119,7 +106,6 @@ public class ProductRepository {
         String todayDate = getTodayDate();
         Comment comment = new Comment(username, id, commentTxt, todayDate);
         Product product = findProductsById(chosenProduct.getId());
-        if(product == null) throw new IllegalArgumentException("Product does not exist!");
         product.addComment(comment);
     }
 
@@ -129,4 +115,8 @@ public class ProductRepository {
         return localDate.format(formatter);
     }
 
+    public ArrayList<Comment> getProductComments(int id) {
+        Product p = findProductsById(id);
+        return p.getComments();
+    }
 }
