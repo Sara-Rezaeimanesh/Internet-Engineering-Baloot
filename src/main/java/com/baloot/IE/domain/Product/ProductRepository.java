@@ -134,8 +134,10 @@ public class ProductRepository {
         HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
         int i = 0;
         for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
-            suggestedProducts.add(set.getKey());
-            i ++;
+            if(product.getId() != set.getKey().getId()) {
+                suggestedProducts.add(set.getKey());
+                i ++;
+            }
             if(i == 5)
                 break;
         }

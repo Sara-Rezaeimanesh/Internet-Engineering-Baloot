@@ -66,4 +66,9 @@ public class ProductController {
                         @RequestParam("vote") String vote) {
         productRepository.voteComment(session.getActiveUser().getEmail(), id, commentId, Integer.parseInt(vote));
     }
+
+    @GetMapping("/{id}/suggestions")
+    public ArrayList<Product> getSuggetions(@PathVariable int id) {
+        return productRepository.findProductsById(id).getSuggestedProducts();
+    }
 }

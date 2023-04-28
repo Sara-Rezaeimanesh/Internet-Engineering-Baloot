@@ -45,7 +45,7 @@ public class Amazon {
         userRepository = UserRepository.getInstance();
         suppliers = initializer.getProvidersFromAPI("providers");
         suppliers.forEach(Supplier::initialize);
-
+//
 //        discounts = initializer.getDiscountsFromAPI("discount");
 //        discounts.forEach(Discount::initialize);
     }
@@ -110,13 +110,6 @@ public class Amazon {
         u.removeProduct(p);
         p.updateStock(1);
     }
-
-    public void getUserBuyList(String name) throws Exception {
-        User u = userRepository.findUserById(name);
-        if(u == null) throw new Exception(USER_DOES_NOT_EXIST_ERROR);
-        u.printBuyList();
-    }
-
 
 
 //    public void applyDiscount(String discountCode) throws Exception {

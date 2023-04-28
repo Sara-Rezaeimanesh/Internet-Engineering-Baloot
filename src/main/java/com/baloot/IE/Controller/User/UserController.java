@@ -35,4 +35,10 @@ public class UserController {
     public User one(@PathVariable String id) {
         return userRepository.findUserById(id);
     }
+
+    @PutMapping("/{id}/credit")
+    public void increaseCredit(@PathVariable String id,
+                               @RequestParam(name = "amount") int amount) {
+        userRepository.findUserById(id).increaseCredit(amount);
+    }
 }

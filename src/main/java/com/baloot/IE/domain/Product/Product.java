@@ -26,6 +26,7 @@ public class Product {
     private ArrayList<Rating> ratings;
     @JsonIgnore
     private ArrayList<Comment> comments;
+    @JsonIgnore
     private ArrayList<Product> suggestedProducts;
 
     public void initialize() {

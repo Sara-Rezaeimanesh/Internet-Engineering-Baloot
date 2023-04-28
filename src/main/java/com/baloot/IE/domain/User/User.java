@@ -1,14 +1,11 @@
 package com.baloot.IE.domain.User;
+import com.baloot.IE.domain.Cart.Cart;
 import com.baloot.IE.domain.Product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -22,22 +19,11 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
-    private int discount;
-    private ArrayList<Product> buyList;
-    private ArrayList<Product> purchaseList;
+    @JsonIgnore
+    private Cart cart;
 
     public void initialize() {
-        buyList = new ArrayList<>();
-        purchaseList = new ArrayList<>();
-    }
-
-    public void updateUserInfo(User newUserInfo){
-        username = newUserInfo.username;
-        password = newUserInfo.password;
-        address = newUserInfo.address;
-        birthDate = newUserInfo.birthDate;
-        credit = newUserInfo.credit;
-        email = newUserInfo.email;
+        cart = new Cart();
     }
 
     public User(@JsonProperty("username") String username_,
@@ -54,36 +40,21 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
-        this.buyList = new ArrayList<>();
-        this.purchaseList = new ArrayList<>();
     }
 
     public boolean hasBoughtProduct(int commodityId) {
-        for(Product p : buyList)
-            if(p.getId() == commodityId)
-                return true;
-        return false;
+        return cart.hasProduct(commodityId);
     }
 
-    public void addProduct(Product p) { buyList.add(p); }
+    public void addProduct(Product p) { cart.add(p); }
+    public void removeProduct(Product p) { cart.remove(p); }
 
     public boolean userNameEquals(String username) {
         return Objects.equals(this.username, username);
     }
 
-    public void printBuyList() throws JsonProcessingException {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        System.out.println("\"data\": {\"buyList\": " + ow.writeValueAsString(buyList) + "}");
-
-    }
-
-    public void removeProduct(Product p) { buyList.remove(p); }
-
-    private int calculateCurrBuyListPrice(){
-        int price = 0;
-        for(Product p : buyList)
-            price += p.getPrice();
-        return (price*(100-discount))/100;
+    private double calculateCurrBuyListPrice(){
+        return cart.calcTotal();
     }
 
     public void increaseCredit(int newCredit) {
@@ -94,16 +65,11 @@ public class User {
         return Objects.equals(this.password, password);
     }
 
-    public void payBuyList() throws Exception {
+    public void pay() throws Exception {
         if(credit < calculateCurrBuyListPrice())
             throw new Exception("Credit is not enough");
         credit -= calculateCurrBuyListPrice();
-        purchaseList.addAll(buyList);
-        buyList.clear();
-    }
-
-    public void applyDiscount(String discount) {
-        this.discount = Integer.parseInt(discount);
+        cart.buy();
     }
 
     public UserView userToView() {
