@@ -3,24 +3,17 @@ package com.baloot.IE.domain.Product;
 import com.baloot.IE.domain.Amazon.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
-import com.baloot.IE.domain.User.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class ProductRepository {
     private static ProductRepository instance;
     List<Product> products;
-    private Product chosenProduct;
 
     public ProductRepository() throws Exception {
         Initializer initializer = new Initializer();
@@ -92,10 +85,6 @@ public class ProductRepository {
         p.voteComment(userEmail, commentId, vote);
     }
 
-    public void saveChosenProduct(Product p) {
-        chosenProduct = p;
-    }
-
     public void updateRating(String username, String quantity, int id) throws Exception {
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);
@@ -119,4 +108,37 @@ public class ProductRepository {
         Product p = findProductsById(id);
         return p.getComments();
     }
+
+    public static HashMap<Product, Float> sortByValue(HashMap<Product, Float> hm)
+    {
+        HashMap<Product, Float> temp = hm.entrySet().stream()
+                .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+        return temp;
+    }
+
+    public void setSuggestedProducts(Product product){
+        ArrayList<Product> suggestedProducts = new ArrayList<>();
+        int id = product.getId();
+        HashMap<Product, Float> ratedProduct = new HashMap<>();
+        for(Product p : products){
+            float score = 0;
+            if(id != p.getId())
+                for(String category : p.getCategories())
+                    if(product.isSameCategory(category))
+                        score += 11;
+            score += p.getRating();
+            ratedProduct.put(p, score);
+        }
+        HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
+        int i = 0;
+        for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
+            suggestedProducts.add(set.getKey());
+            i ++;
+            if(i == 5)
+                break;
+        }
+    }
+
 }

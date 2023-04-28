@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -26,6 +26,7 @@ public class Product {
     private ArrayList<Rating> ratings;
     @JsonIgnore
     private ArrayList<Comment> comments;
+    private ArrayList<Product> suggestedProduct;
 
     public void initialize() {
         ratings = new ArrayList<>();
@@ -89,5 +90,9 @@ public class Product {
         for(Comment c : comments)
             if(c.idMatches(commentId))
                 c.updateVote(userEmail, vote);
+    }
+
+    public boolean isSameCategory(String category) {
+        return categories.contains(category);
     }
 }

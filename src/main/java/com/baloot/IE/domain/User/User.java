@@ -20,7 +20,6 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
-
     private int discount;
     private ArrayList<Product> buyList;
     private ArrayList<Product> purchaseList;
@@ -52,6 +51,7 @@ public class User {
         this.email = email_;
         this.address = address_;
         this.credit = credit_;
+        this.birthDate = birthDate_;
         this.buyList = new ArrayList<>();
         this.purchaseList = new ArrayList<>();
     }

@@ -4,14 +4,17 @@ import com.baloot.IE.domain.Amazon.Amazon;
 import com.baloot.IE.domain.Product.ProductRepository;
 import com.baloot.IE.domain.Session.Session;
 import com.baloot.IE.domain.User.User;
+import com.baloot.IE.domain.User.UserRepository;
+import com.baloot.IE.domain.User.UserView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("")
 public class AuthController {
     private final Session session;
 
@@ -24,9 +27,9 @@ public class AuthController {
     public User login(HttpServletRequest request, HttpServletResponse response,
                                 @RequestParam("username") String username,
                                 @RequestParam("password") String password) throws Exception {
-        Amazon amazon = Amazon.getInstance();
-        if(amazon.DoesUserExist(username, password)) {
-            User user = amazon.findUserById(username);
+        UserRepository userRepository = UserRepository.getInstance();
+        if(userRepository.DoesUserExist(username, password)) {
+            User user = userRepository.findUserById(username);
             session.setActiveUser(user);
             return user;
         } else {
@@ -36,8 +39,17 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void logout() {
         session.logout();
+    }
+
+    @PostMapping("/signup")
+    public UserView signUp(HttpServletRequest request, HttpServletResponse response,
+                           @RequestBody UserView userView) throws Exception {
+        UserRepository userRepository = UserRepository.getInstance();
+        userRepository.addUser(userView.viewToUser());
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        return userView;
     }
 }
 

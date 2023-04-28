@@ -37,7 +37,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product one(@PathVariable int id){
         Product p = productRepository.findProductsById(id);
-        productRepository.saveChosenProduct(p);
+        productRepository.setSuggestedProducts(p);
         return p;
     }
 
