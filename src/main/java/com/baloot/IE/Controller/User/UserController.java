@@ -53,9 +53,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}/cart/buy")
-    public void buyCart(@PathVariable String id) {
-        Cart cart = userRepository.findUserById(id).getCart();
-        cart.buy();
+    public void buyCart(@PathVariable String id) throws Exception {
+        userRepository.findUserById(id).pay();
     }
 
     @PostMapping("/{id}/cart")
