@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/credit")
-    public void increaseCredit(@PathVariable String id,
-                               @RequestParam(name = "amount") int amount) {
-        userRepository.findUserById(id).increaseCredit(amount);
+    public void increaseCredit(@PathVariable String id, @RequestBody Map<String, String> body) {
+        userRepository.findUserById(id).increaseCredit(Integer.parseInt(body.get("amount")));
     }
 }

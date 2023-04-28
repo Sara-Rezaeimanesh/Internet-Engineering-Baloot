@@ -1,30 +1,32 @@
 package com.baloot.IE.Controller.CartController;
 
+import com.baloot.IE.Controller.User.UserController;
 import com.baloot.IE.domain.Session.Session;
 import com.baloot.IE.domain.Cart.Cart;
+import com.baloot.IE.domain.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("users/{id}/cart")
 public class CartController {
-    private Cart cart;
-    private Session session;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CartController() {
-        session = Session.getInstance();
+    public CartController() throws Exception {
+        userRepository = UserRepository.getInstance();
     }
+
     @GetMapping("")
-    public Cart getCart() {
-        return session.getActiveUser().getCart();
+    public Cart getCart(@PathVariable String id) {
+        return userRepository.findUserById(id).getCart();
     }
 
     @GetMapping("/buy")
-    public void buyCart() {
-        cart = session.getActiveUser().getCart();
+    public void buyCart(@PathVariable String id) {
+        Cart cart = userRepository.findUserById(id).getCart();
         cart.buy();
     }
 }

@@ -13,13 +13,10 @@ import java.util.*;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-
     private final ProductRepository productRepository;
-    private final Session session;
     @Autowired
     public ProductController() throws Exception {
         this.productRepository = ProductRepository.getInstance();
-        session = Session.getInstance();
     }
 
     @GetMapping("")
@@ -42,33 +39,30 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/ratings")
-    public void rate(@PathVariable int id, @RequestParam("rate") String rate) throws Exception {
-      productRepository.updateRating(session.getActiveUser().getUsername(), rate, id);
+    public void rate(@PathVariable int id, @RequestBody Map<String, String> body) throws Exception {
+      productRepository.updateRating(body.get("username"), body.get("rate"), id);
     }
 
     @GetMapping("/{id}/comments")
-    public ArrayList<Comment> allComments(HttpServletRequest request, HttpServletResponse response,
-                                          @PathVariable int id) {
+    public ArrayList<Comment> allComments(@PathVariable int id) {
         return productRepository.getProductComments(id);
     }
 
     @PostMapping("/{id}/comments")
-    public void addComment(HttpServletRequest request, HttpServletResponse response,
-                       @PathVariable int id,
-                       @RequestParam("comment") String comment) {
-        productRepository.addComment(session.getActiveUser().getEmail(), id, comment);
+    public void addComment(@PathVariable int id,
+                           @RequestBody Map<String, String> body) {
+        productRepository.addComment(body.get("username"), id, body.get("comment"));
     }
 
-    @PostMapping("/{id}/comments/{commentId}")
-    public void voteComment(HttpServletRequest request, HttpServletResponse response,
-                        @PathVariable int id,
-                        @PathVariable int commentId,
-                        @RequestParam("vote") String vote) {
-        productRepository.voteComment(session.getActiveUser().getEmail(), id, commentId, Integer.parseInt(vote));
+    @PutMapping("/{id}/comments/{commentId}/vote")
+    public void voteComment(@PathVariable int id, @PathVariable int commentId,
+                            @RequestBody Map<String, String> body) {
+        productRepository.voteComment(body.get("username"), id,
+                                    commentId, Integer.parseInt(body.get("vote")));
     }
 
     @GetMapping("/{id}/suggestions")
-    public ArrayList<Product> getSuggetions(@PathVariable int id) {
+    public ArrayList<Product> getSuggestions(@PathVariable int id) {
         return productRepository.findProductsById(id).getSuggestedProducts();
     }
 }

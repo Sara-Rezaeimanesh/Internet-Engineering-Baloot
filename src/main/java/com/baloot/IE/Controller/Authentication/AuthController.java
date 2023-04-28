@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("")
@@ -25,10 +26,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public User login(HttpServletRequest request, HttpServletResponse response,
-                                @RequestBody LoginView loginView) throws Exception {
+                        @RequestBody Map<String, String> body) throws Exception {
         UserRepository userRepository = UserRepository.getInstance();
-        if(userRepository.userExists(loginView.getUsername(), loginView.getPassword())) {
-            User user = userRepository.findUserById(loginView.getUsername());
+        if(userRepository.userExists(body.get("username"), body.get("password"))) {
+            User user = userRepository.findUserById(body.get("username"));
             session.setActiveUser(user);
             return user;
         } else {
