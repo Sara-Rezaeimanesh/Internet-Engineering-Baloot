@@ -22,7 +22,7 @@ public class UserRepository {
             if(u.userNameEquals(uid))
                 return u;
 
-        return null;
+        throw new IllegalArgumentException("User does not exits.");
     }
     public boolean userExists(String username, String password){
         User user = findUserById(username);
