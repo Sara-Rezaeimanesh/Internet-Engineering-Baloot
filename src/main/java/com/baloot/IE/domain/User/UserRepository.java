@@ -24,7 +24,7 @@ public class UserRepository {
 
         return null;
     }
-    public boolean DoesUserExist(String username, String password){
+    public boolean userExists(String username, String password){
         User user = findUserById(username);
         return user != null && user.isPassEqual(password);
     }

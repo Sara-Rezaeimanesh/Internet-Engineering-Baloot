@@ -25,11 +25,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public User login(HttpServletRequest request, HttpServletResponse response,
-                                @RequestParam("username") String username,
-                                @RequestParam("password") String password) throws Exception {
+                                @RequestBody LoginView loginView) throws Exception {
         UserRepository userRepository = UserRepository.getInstance();
-        if(userRepository.DoesUserExist(username, password)) {
-            User user = userRepository.findUserById(username);
+        if(userRepository.userExists(loginView.getUsername(), loginView.getPassword())) {
+            User user = userRepository.findUserById(loginView.getUsername());
             session.setActiveUser(user);
             return user;
         } else {
