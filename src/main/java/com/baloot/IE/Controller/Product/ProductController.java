@@ -52,7 +52,6 @@ public class ProductController {
         return productRepository.getProductComments(id);
     }
 
-
     @PostMapping("/{id}/comments")
     public void addComment(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable int id,

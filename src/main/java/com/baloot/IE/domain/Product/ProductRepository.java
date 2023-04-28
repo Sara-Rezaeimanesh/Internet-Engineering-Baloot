@@ -139,6 +139,7 @@ public class ProductRepository {
             if(i == 5)
                 break;
         }
+        product.addSuggestedProducts(suggestedProducts);
     }
 
 }

@@ -26,7 +26,7 @@ public class Product {
     private ArrayList<Rating> ratings;
     @JsonIgnore
     private ArrayList<Comment> comments;
-    private ArrayList<Product> suggestedProduct;
+    private ArrayList<Product> suggestedProducts;
 
     public void initialize() {
         ratings = new ArrayList<>();
@@ -94,5 +94,9 @@ public class Product {
 
     public boolean isSameCategory(String category) {
         return categories.contains(category);
+    }
+
+    public void addSuggestedProducts(ArrayList<Product> suggestedProducts) {
+        this.suggestedProducts = suggestedProducts;
     }
 }
