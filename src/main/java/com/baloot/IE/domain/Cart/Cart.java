@@ -1,10 +1,14 @@
 package com.baloot.IE.domain.Cart;
 
 import com.baloot.IE.domain.Product.Product;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class Cart {
     private ArrayList<CartItem> buyList;
     private ArrayList<CartItem> purchaseList;
