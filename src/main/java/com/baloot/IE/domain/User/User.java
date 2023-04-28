@@ -1,5 +1,6 @@
 package com.baloot.IE.domain.User;
 import com.baloot.IE.domain.Product.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 public class User {
     private String username;
+    @JsonIgnore
     private String password;
     private String email;
     private String birthDate;
@@ -102,5 +104,9 @@ public class User {
 
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
+    }
+
+    public UserView userToView() {
+        return new UserView(username, password, email, birthDate, address, credit);
     }
 }

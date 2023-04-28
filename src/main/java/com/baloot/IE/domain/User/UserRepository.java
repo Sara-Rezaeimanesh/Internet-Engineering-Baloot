@@ -36,7 +36,7 @@ public class UserRepository {
     public void addUser(User user) {
         for (User user_ : users)
             if (user_.userNameEquals(user.getUsername())) {
-                user_.updateUserInfo(user);
+                throw new IllegalArgumentException("Username already exists. Please Login.");
             }
         users.add(user);
     }

@@ -44,12 +44,14 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public UserView signUp(HttpServletRequest request, HttpServletResponse response,
+    public User signUp(HttpServletRequest request, HttpServletResponse response,
                            @RequestBody UserView userView) throws Exception {
         UserRepository userRepository = UserRepository.getInstance();
-        userRepository.addUser(userView.viewToUser());
+        User newUser = userView.viewToUser();
+        userRepository.addUser(newUser);
+        session.setActiveUser(newUser);
         response.setStatus(HttpServletResponse.SC_CREATED);
-        return userView;
+        return newUser;
     }
 }
 
