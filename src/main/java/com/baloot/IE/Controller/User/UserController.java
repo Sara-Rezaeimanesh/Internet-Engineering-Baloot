@@ -63,4 +63,11 @@ public class UserController {
         Product product = productRepository.findProductsById(Integer.parseInt(body.get("product-id")));
         userRepository.findUserById(id).getCart().add(product);
     }
+
+    @DeleteMapping("/{id}/cart")
+    public void removeFromCart(@PathVariable String id,
+                          @RequestBody Map<String, String> body) {
+        Product product = productRepository.findProductsById(Integer.parseInt(body.get("product-id")));
+        userRepository.findUserById(id).getCart().remove(product);
+    }
 }
