@@ -2,7 +2,6 @@ package com.baloot.IE.Controller.Product;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Product.ProductRepository;
-import com.baloot.IE.domain.Session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

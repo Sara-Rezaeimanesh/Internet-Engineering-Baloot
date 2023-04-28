@@ -1,22 +1,21 @@
 package com.baloot.IE.domain.Supplier;
 
+import com.baloot.IE.domain.Product.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
+@Getter
 public class Supplier {
 
     private int id;
     private String name;
     private String registeryDate;
-    private ArrayList<Integer> products = new ArrayList<>();
+    private ArrayList<Product> products = new ArrayList<>();
 
     public void initialize() {
         products = new ArrayList<>();
-    }
-
-    public ArrayList<Integer> getProducts() {
-        return products;
     }
 
     public int getId() {
@@ -31,15 +30,8 @@ public class Supplier {
         this.registeryDate = registeryDate;
     }
 
-    public String createHTMLForProvider() {
-        return "<ul>\n" +
-        "<li id=\"id\">Id:" + this.id +"</li>\n" +
-        "<li id=\"name\">Name:" + this.name +"</li>\n" +
-        "<li id=\"registryDate\">Registry Date:" + this.registeryDate + "</li>\n"
-        + "</ul>";
-    }
 
-    public void addProductToSupplierList(Integer p) {
-        products.add(p);
+    public void addProductList(ArrayList<Product> products) {
+        this.products = products;
     }
 }

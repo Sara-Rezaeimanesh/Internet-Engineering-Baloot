@@ -58,6 +58,8 @@ public class User {
     }
 
     public void increaseCredit(int newCredit) {
+        if(newCredit <= 0)
+            throw new IllegalArgumentException("Credit value must be greater than zero.");
         credit += newCredit;
     }
 

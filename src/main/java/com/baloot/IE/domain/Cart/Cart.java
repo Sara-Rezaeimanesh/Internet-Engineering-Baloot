@@ -62,5 +62,6 @@ public class Cart {
     public void buy() {
         purchaseList.addAll(buyList);
         buyList.clear();
+        total = 0;
     }
 }

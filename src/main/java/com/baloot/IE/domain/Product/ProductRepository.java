@@ -109,6 +109,14 @@ public class ProductRepository {
         return p.getComments();
     }
 
+    public ArrayList<Product> getProductsBySupplierId(int supplierId) {
+        ArrayList<Product> supplierProducts = new ArrayList<>();
+        for(Product product  : products)
+            if(product.getProviderId() == supplierId)
+                supplierProducts.add(product);
+        return supplierProducts;
+    }
+
     public static HashMap<Product, Float> sortByValue(HashMap<Product, Float> hm)
     {
         HashMap<Product, Float> temp = hm.entrySet().stream()
