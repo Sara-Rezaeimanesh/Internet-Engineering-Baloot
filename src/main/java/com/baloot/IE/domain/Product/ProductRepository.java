@@ -17,7 +17,7 @@ public class ProductRepository {
 
     public ProductRepository() throws Exception {
         Initializer initializer = new Initializer();
-        products = initializer.getCommoditiesFromAPI("commodities");
+        products = initializer.getCommoditiesFromAPI("v2/commodities");
         products.forEach(Product::initialize);
         ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
         comments.forEach(Comment::initialize);
@@ -149,9 +149,5 @@ public class ProductRepository {
                 break;
         }
         product.addSuggestedProducts(suggestedProducts);
-    }
-
-    public List<Product> getAll() {
-        return products;
     }
 }

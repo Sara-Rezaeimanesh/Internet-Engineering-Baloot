@@ -9,12 +9,15 @@ import java.util.*;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
+    private final int ppp;
     private final ProductRepository productRepository;
     private List<Product> results;
     @Autowired
     public ProductController() throws Exception {
         this.productRepository = ProductRepository.getInstance();
         results = new ArrayList<>();
+        ppp = 12;
     }
 
     @GetMapping("")
@@ -32,8 +35,8 @@ public class ProductController {
                 results = productRepository.sortProducts(results, sort_param);
         }
         int result_size = results.size();
-        int end = Math.min(results.size(), (page + 1) * 8);
-        return new SearchResult(results.subList(page*8, end), result_size);
+        int end = Math.min(results.size(), (page + 1) * ppp);
+        return new SearchResult(results.subList(page*ppp, end), result_size);
     }
 
     @GetMapping("/{id}")

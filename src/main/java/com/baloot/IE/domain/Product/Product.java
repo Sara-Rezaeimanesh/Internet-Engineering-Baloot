@@ -21,6 +21,7 @@ public class Product {
     private ArrayList<String> categories;
     private int inStock;
     private float rating;
+    private String image;
     @JsonIgnore
     private ArrayList<Rating> ratings;
     @JsonIgnore
@@ -35,7 +36,7 @@ public class Product {
 
     public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
                    @JsonProperty("price") int price, @JsonProperty("categories") ArrayList<String> categories, @JsonProperty("rating") int rating,
-                   @JsonProperty("inStock") int inStock) {
+                   @JsonProperty("inStock") int inStock, @JsonProperty("image") String image) {
         this.id = id;
         this.name = name;
         this.providerId = providerId;
@@ -43,6 +44,7 @@ public class Product {
         this.categories = categories;
         this.rating = rating;
         this.inStock = inStock;
+        this.image = image;
         this.ratings = new ArrayList<>();
         this.comments = new ArrayList<>();
     }
