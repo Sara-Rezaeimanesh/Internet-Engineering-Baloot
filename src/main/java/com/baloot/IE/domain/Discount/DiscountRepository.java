@@ -38,4 +38,8 @@ public class DiscountRepository {
             throw new Exception("You have already use this discount code.");
         }
     }
+
+    public ArrayList<Discount> getAll() {
+        return discounts;
+    }
 }
