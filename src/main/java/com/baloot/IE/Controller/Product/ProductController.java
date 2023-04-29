@@ -10,21 +10,30 @@ import java.util.*;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductRepository productRepository;
+    private List<Product> results;
     @Autowired
     public ProductController() throws Exception {
         this.productRepository = ProductRepository.getInstance();
+        results = new ArrayList<>();
     }
 
     @GetMapping("")
-    public List<Product> all(@RequestParam(name = "category", required = false) String category,
+    public SearchResult all(@RequestParam(name = "category", required = false) String category,
                              @RequestParam(name = "price_range", required = false) String priceRange,
                              @RequestParam(name = "name", required = false) String name,
                              @RequestParam(name = "id", required = false) String id,
-                             @RequestParam(name = "sort", required = false) String sort_param) {
-        List<Product> products = productRepository.filterProducts(category, priceRange, name, id);
-        if(sort_param != null)
-            products = productRepository.sortProducts(products, sort_param);
-        return products;
+                             @RequestParam(name = "sort", required = false) String sort_param,
+                             @RequestParam(name = "apply") String apply,
+                             @RequestParam(name = "page") int page) {
+
+        if(Integer.parseInt(apply) == 1) {
+            results = productRepository.filterProducts(category, priceRange, name, id);
+            if(sort_param != null)
+                results = productRepository.sortProducts(results, sort_param);
+        }
+        int result_size = results.size();
+        int end = Math.min(results.size(), (page + 1) * 8);
+        return new SearchResult(results.subList(page*8, end), result_size);
     }
 
     @GetMapping("/{id}")

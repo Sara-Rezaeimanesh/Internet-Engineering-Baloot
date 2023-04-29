@@ -151,4 +151,7 @@ public class ProductRepository {
         product.addSuggestedProducts(suggestedProducts);
     }
 
+    public List<Product> getAll() {
+        return products;
+    }
 }

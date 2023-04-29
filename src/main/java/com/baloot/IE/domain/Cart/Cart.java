@@ -13,6 +13,7 @@ public class Cart {
     private ArrayList<CartItem> purchaseList;
     private int discount;
     private double total;
+    private int no_items;
 
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
@@ -22,6 +23,7 @@ public class Cart {
         buyList = new ArrayList<>();
         purchaseList = new ArrayList<>();
         total = 0;
+        no_items = 0;
     }
 
     public void add(Product p) throws Exception {
@@ -31,9 +33,11 @@ public class Cart {
         for(CartItem ci : buyList)
             if(ci.hasProduct(p.getId())) {
                 ci.updateQuantity(1);
+                no_items += 1;
                 return;
             }
         buyList.add(new CartItem(p, 1));
+        no_items += 1;
     }
 
     public void remove(Product p) {
@@ -44,6 +48,7 @@ public class Cart {
                 if(ci.isOut())
                     buyList.remove(ci);
                 total -= p.getPrice();
+                no_items -= 1;
                 return;
             }
         throw new IllegalArgumentException("Item not available in cart!");
