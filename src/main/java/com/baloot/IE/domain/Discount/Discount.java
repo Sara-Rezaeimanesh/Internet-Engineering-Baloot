@@ -1,12 +1,16 @@
 package com.baloot.IE.domain.Discount;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
+@Getter
 public class Discount {
     private final String discountCode;
     private final String discount;
-
+    @JsonIgnore
     private ArrayList<String> usedByUsers;
 
     public Discount(String discountCode, String discount) {

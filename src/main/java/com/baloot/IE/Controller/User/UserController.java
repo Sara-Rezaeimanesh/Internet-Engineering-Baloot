@@ -65,7 +65,7 @@ public class UserController {
         userRepository.findUserById(id).getCart().remove(product);
     }
 
-    @PostMapping("/{id}/discount")
+    @PostMapping("/{id}/discounts")
     public void addDiscount(@PathVariable String id,
                             @RequestBody Map<String, String> body) throws Exception {
         User user = userRepository.findUserById(id);
