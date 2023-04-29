@@ -28,15 +28,17 @@ public class DiscountRepository {
         throw new IllegalArgumentException("Discount is not available!");
     }
 
-    public void applyDiscount(String discountCode, User user) throws Exception {
+    public double applyDiscount(String discountCode, User user) throws Exception {
         Discount discount = findDiscountById(discountCode);
+        double totalAfterDiscount;
         if(discount.isValidToUse(user.getUsername())) {
-            user.applyDiscount(discount.getDiscount());
+            totalAfterDiscount = user.applyDiscount(discount.getDiscount());
             discount.addToUsed(user.getUsername());
         }
         else{
             throw new Exception("You have already use this discount code.");
         }
+        return totalAfterDiscount;
     }
 
     public ArrayList<Discount> getAll() {

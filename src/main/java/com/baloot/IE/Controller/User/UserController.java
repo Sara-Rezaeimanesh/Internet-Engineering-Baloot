@@ -66,9 +66,9 @@ public class UserController {
     }
 
     @PostMapping("/{id}/discounts")
-    public void addDiscount(@PathVariable String id,
+    public double addDiscount(@PathVariable String id,
                             @RequestBody Map<String, String> body) throws Exception {
         User user = userRepository.findUserById(id);
-        discountRepository.applyDiscount(body.get("discount-id"), user);
+        return discountRepository.applyDiscount(body.get("discount-id"), user);
     }
 }
