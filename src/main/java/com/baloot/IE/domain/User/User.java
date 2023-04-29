@@ -46,9 +46,6 @@ public class User {
         return cart.hasProduct(commodityId);
     }
 
-    public void addProduct(Product p) { cart.add(p); }
-    public void removeProduct(Product p) { cart.remove(p); }
-
     public boolean userNameEquals(String username) {
         return Objects.equals(this.username, username);
     }

@@ -32,7 +32,9 @@ public class Cart {
         return false;
     }
 
-    public void add(Product p) {
+    public void add(Product p) throws Exception {
+        if(!p.isInStock())
+            throw new Exception("Product is not in stock!");
         total += p.getPrice();
         for(CartItem ci : buyList)
             if(ci.hasProduct(p.getId())) {
@@ -60,6 +62,9 @@ public class Cart {
     }
 
     public void buy() {
+        for(CartItem ci : buyList) {
+            ci.updateProductStock();
+        }
         purchaseList.addAll(buyList);
         buyList.clear();
         total = 0;

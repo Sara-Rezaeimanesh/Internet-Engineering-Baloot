@@ -59,7 +59,7 @@ public class UserController {
 
     @PostMapping("/{id}/cart")
     public void addToCart(@PathVariable String id,
-                          @RequestBody Map<String, String> body) {
+                          @RequestBody Map<String, String> body) throws Exception {
         Product product = productRepository.findProductsById(Integer.parseInt(body.get("product-id")));
         userRepository.findUserById(id).getCart().add(product);
     }

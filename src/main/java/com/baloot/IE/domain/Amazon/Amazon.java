@@ -29,14 +29,11 @@ public class Amazon {
         errorMsg = err;
     }
     public Amazon() throws Exception {
-        Initializer initializer = new Initializer();
+
         productRepository = ProductRepository.getInstance();
         userRepository = UserRepository.getInstance();
         supplierRepository = SupplierRepository.getInstance();
 
-//
-//        discounts = initializer.getDiscountsFromAPI("discount");
-//        discounts.forEach(Discount::initialize);
     }
 
     public static Amazon getInstance() throws Exception {

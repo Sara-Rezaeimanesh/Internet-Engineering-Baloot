@@ -21,4 +21,8 @@ public class CartItem {
     public boolean isOut() {
         return quantity == 0;
     }
+
+    public void updateProductStock() {
+        product.updateStock(-quantity);
+    }
 }
