@@ -1,6 +1,5 @@
 package com.baloot.IE.domain.User;
 import com.baloot.IE.domain.Cart.Cart;
-import com.baloot.IE.domain.Product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -42,10 +41,6 @@ public class User {
         this.birthDate = birthDate_;
     }
 
-    public boolean hasBoughtProduct(int commodityId) {
-        return cart.hasProduct(commodityId);
-    }
-
     public boolean userNameEquals(String username) {
         return Objects.equals(this.username, username);
     }
@@ -71,7 +66,7 @@ public class User {
         cart.buy();
     }
 
-    public UserView userToView() {
-        return new UserView(username, password, email, birthDate, address, credit);
+    public void applyDiscount(String discount) {
+        cart.applyDiscount(discount);
     }
 }

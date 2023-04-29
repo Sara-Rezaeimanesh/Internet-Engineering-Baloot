@@ -3,7 +3,6 @@ package com.baloot.IE.domain.Cart;
 import com.baloot.IE.domain.Product.Product;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -23,13 +22,6 @@ public class Cart {
         buyList = new ArrayList<>();
         purchaseList = new ArrayList<>();
         total = 0;
-    }
-
-    public boolean hasProduct(int commodityId) {
-        for(CartItem ci : buyList)
-            if(ci.hasProduct(commodityId))
-                return true;
-        return false;
     }
 
     public void add(Product p) throws Exception {
@@ -62,9 +54,9 @@ public class Cart {
     }
 
     public void buy() {
-        for(CartItem ci : buyList) {
+        for(CartItem ci : buyList)
             ci.updateProductStock();
-        }
+
         purchaseList.addAll(buyList);
         buyList.clear();
         total = 0;

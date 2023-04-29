@@ -1,4 +1,4 @@
-package com.baloot.IE.domain.Amazon;
+package com.baloot.IE.domain.Initializer;
 
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Discount.Discount;

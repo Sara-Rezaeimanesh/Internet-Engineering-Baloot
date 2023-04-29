@@ -12,12 +12,11 @@ import java.util.Map;
 @RequestMapping("")
 public class AuthController {
     @PostMapping("/login")
-    public User login(HttpServletRequest request, HttpServletResponse response,
+    public User login(HttpServletResponse response,
                         @RequestBody Map<String, String> body) throws Exception {
         UserRepository userRepository = UserRepository.getInstance();
         if(userRepository.userExists(body.get("username"), body.get("password"))) {
-            User user = userRepository.findUserById(body.get("username"));
-            return user;
+            return userRepository.findUserById(body.get("username"));
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             throw new Exception("Invalid username or password!");
@@ -28,8 +27,8 @@ public class AuthController {
     public void logout() {}
 
     @PostMapping("/signup")
-    public User signUp(HttpServletRequest request, HttpServletResponse response,
-                           @RequestBody UserView userView) throws Exception {
+    public User signUp(HttpServletResponse response,
+                       @RequestBody UserView userView) throws Exception {
         UserRepository userRepository = UserRepository.getInstance();
         User newUser = userView.viewToUser();
         userRepository.addUser(newUser);

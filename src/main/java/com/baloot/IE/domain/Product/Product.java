@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -78,13 +77,6 @@ public class Product {
 
     public void updateStock(int i) {
         this.inStock += i;
-    }
-
-    private String createCatString() {
-        String catString = "";
-        for(int i = 0; i < categories.size(); i++)
-            catString += i + 1 == categories.size() ? categories.get(i) : categories.get(i) + ", ";
-        return catString;
     }
 
     public void voteComment(String userEmail, int commentId, int vote) {

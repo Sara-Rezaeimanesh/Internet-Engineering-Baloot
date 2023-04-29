@@ -9,9 +9,9 @@ import java.util.ArrayList;
 @Getter
 public class Supplier {
 
-    private int id;
-    private String name;
-    private String registeryDate;
+    private final int id;
+    private final String name;
+    private final String registeryDate;
     private ArrayList<Product> products = new ArrayList<>();
 
     public void initialize() {
@@ -29,7 +29,6 @@ public class Supplier {
         this.name = name;
         this.registeryDate = registeryDate;
     }
-
 
     public void addProductList(ArrayList<Product> products) {
         this.products = products;

@@ -1,6 +1,6 @@
 package com.baloot.IE.domain.User;
 
-import com.baloot.IE.domain.Amazon.Initializer;
+import com.baloot.IE.domain.Initializer.Initializer;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,6 @@
 package com.baloot.IE.domain.Supplier;
 
-import com.baloot.IE.Controller.Supplier.SupplierController;
-import com.baloot.IE.domain.Amazon.Initializer;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.baloot.IE.domain.Initializer.Initializer;
 import java.util.ArrayList;
 
 public class SupplierRepository {

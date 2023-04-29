@@ -1,24 +1,16 @@
 package com.baloot.IE.Controller.User;
 
 import com.baloot.IE.domain.Cart.Cart;
+import com.baloot.IE.domain.Discount.DiscountRepository;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Product.ProductRepository;
 import com.baloot.IE.domain.User.User;
 import com.baloot.IE.domain.User.UserRepository;
-import com.baloot.IE.domain.User.UserView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -26,10 +18,13 @@ public class UserController {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
+    private final DiscountRepository discountRepository;
+
     @Autowired
     public UserController() throws Exception {
         userRepository = UserRepository.getInstance();
         productRepository = ProductRepository.getInstance();
+        discountRepository = DiscountRepository.getInstance();
     }
 
     @GetMapping("")
@@ -52,7 +47,7 @@ public class UserController {
         return userRepository.findUserById(id).getCart();
     }
 
-    @GetMapping("/{id}/cart/buy")
+    @PostMapping("/{id}/cart/buy")
     public void buyCart(@PathVariable String id) throws Exception {
         userRepository.findUserById(id).pay();
     }
@@ -64,10 +59,16 @@ public class UserController {
         userRepository.findUserById(id).getCart().add(product);
     }
 
-    @DeleteMapping("/{id}/cart")
-    public void removeFromCart(@PathVariable String id,
-                          @RequestBody Map<String, String> body) {
-        Product product = productRepository.findProductsById(Integer.parseInt(body.get("product-id")));
+    @DeleteMapping("/{id}/cart/{product_id}")
+    public void removeFromCart(@PathVariable String id, @PathVariable int product_id) {
+        Product product = productRepository.findProductsById(product_id);
         userRepository.findUserById(id).getCart().remove(product);
+    }
+
+    @PostMapping("/{id}/discount")
+    public void addDiscount(@PathVariable String id,
+                            @RequestBody Map<String, String> body) throws Exception {
+        User user = userRepository.findUserById(id);
+        discountRepository.applyDiscount(body.get("discount-id"), user);
     }
 }

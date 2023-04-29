@@ -3,8 +3,6 @@ package com.baloot.IE.domain.Comment;
 import com.baloot.IE.domain.CommentVote.CommentVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;

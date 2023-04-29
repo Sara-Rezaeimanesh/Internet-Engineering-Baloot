@@ -11,7 +11,7 @@
     </style>
 </head>
 
-<%@ page import="com.baloot.IE.domain.Amazon.Amazon" %>
+<%@ page import="com.baloot.IE.domain.Initializer.Amazon" %>
 
 <%
     Amazon amazon = Amazon.getInstance();

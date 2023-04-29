@@ -1,12 +1,13 @@
 package com.baloot.IE.domain.Discount;
 
-import com.baloot.IE.domain.Amazon.Initializer;
+import com.baloot.IE.domain.Initializer.Initializer;
+import com.baloot.IE.domain.User.User;
 
 import java.util.ArrayList;
 
 public class DiscountRepository {
-    private ArrayList<Discount> discounts;
-    private DiscountRepository instance;
+    private final ArrayList<Discount> discounts;
+    private static DiscountRepository instance;
 
     public DiscountRepository() throws Exception {
         Initializer initializer = new Initializer();
@@ -14,7 +15,7 @@ public class DiscountRepository {
         discounts.forEach(Discount::initialize);
     }
 
-    public DiscountRepository getInstance() throws Exception {
+    public static DiscountRepository getInstance() throws Exception {
         if(instance == null)
             instance = new DiscountRepository();
         return instance;
@@ -25,5 +26,16 @@ public class DiscountRepository {
             if(d.discountCodeEquals(did))
                 return d;
         throw new IllegalArgumentException("Discount is not available!");
+    }
+
+    public void applyDiscount(String discountCode, User user) throws Exception {
+        Discount discount = findDiscountById(discountCode);
+        if(discount.isValidToUse(user.getUsername())) {
+            user.applyDiscount(discount.getDiscount());
+            discount.addToUsed(user.getUsername());
+        }
+        else{
+            throw new Exception("You have already use this discount code.");
+        }
     }
 }

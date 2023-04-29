@@ -1,4 +1,4 @@
-<%@ page import="com.baloot.IE.domain.Amazon.Amazon" %>
+<%@ page import="com.baloot.IE.domain.Initializer.Amazon" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

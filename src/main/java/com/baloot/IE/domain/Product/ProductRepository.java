@@ -1,6 +1,6 @@
 package com.baloot.IE.domain.Product;
 
-import com.baloot.IE.domain.Amazon.Initializer;
+import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
 import org.springframework.stereotype.Component;
@@ -119,11 +119,10 @@ public class ProductRepository {
 
     public static HashMap<Product, Float> sortByValue(HashMap<Product, Float> hm)
     {
-        HashMap<Product, Float> temp = hm.entrySet().stream()
+        return hm.entrySet().stream()
                 .sorted((i1, i2) -> i2.getValue().compareTo(i1.getValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
-        return temp;
     }
 
     public void setSuggestedProducts(Product product){

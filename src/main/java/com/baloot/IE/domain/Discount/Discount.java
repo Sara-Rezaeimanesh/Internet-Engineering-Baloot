@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Discount {
-    private String discountCode;
-    private String discount;
+    private final String discountCode;
+    private final String discount;
 
     private ArrayList<String> usedByUsers;
 
@@ -24,10 +24,6 @@ public class Discount {
 
     public String getDiscount() {
         return discount;
-    }
-
-    public void print() {
-        System.out.println(discountCode + " " + discount);
     }
 
     public boolean isValidToUse(String username) {
