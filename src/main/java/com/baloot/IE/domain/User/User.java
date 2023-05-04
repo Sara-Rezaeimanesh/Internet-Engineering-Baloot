@@ -21,10 +21,6 @@ public class User {
     @JsonIgnore
     private Cart cart;
 
-    public void initialize() {
-        cart = new Cart();
-    }
-
     public User(@JsonProperty("username") String username_,
                 @JsonProperty("password") String password_,
                 @JsonProperty("email") String email_,
@@ -39,6 +35,7 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
+        this.cart = new Cart();
     }
 
     public boolean userNameEquals(String username) {

@@ -10,7 +10,6 @@ public class UserRepository {
     private UserRepository() throws Exception {
         Initializer initializer = new Initializer();
         users = initializer.getUsersFromAPI("users");
-        users.forEach(User::initialize);
     }
     public static UserRepository getInstance() throws Exception {
         if(instance == null)
