@@ -34,7 +34,6 @@ public class Cart {
         for(CartItem ci : buyList)
             if(ci.hasProduct(p.getId())) {
                 ci.updateQuantity(1);
-                no_items += 1;
                 return;
             }
         buyList.add(new CartItem(p, 1));
@@ -66,5 +65,6 @@ public class Cart {
         purchaseList.addAll(buyList);
         buyList.clear();
         total = 0;
+        no_items = 0;
     }
 }

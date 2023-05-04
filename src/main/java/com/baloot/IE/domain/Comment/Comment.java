@@ -30,6 +30,7 @@ public class Comment {
         this.text = text;
         this.date = date;
         votes = new ArrayList<>();
+        initialize();
     }
 
     public boolean idMatches(int commentId) { return commentId == id; }
