@@ -22,6 +22,7 @@ public class Product {
     private int inStock;
     private float rating;
     private String image;
+    int num_rates;
     @JsonIgnore
     private ArrayList<Rating> ratings;
     @JsonIgnore
@@ -47,6 +48,7 @@ public class Product {
         this.image = image;
         this.ratings = new ArrayList<>();
         this.comments = new ArrayList<>();
+        num_rates = 0;
     }
 
     public void addComment(Comment comment){
@@ -69,6 +71,7 @@ public class Product {
         if (!alreadyRated) {
             sumRating = sumRating + newRating.getScore();
             ratings.add(newRating);
+            num_rates += 1;
         }
         setRating(sumRating / ratings.size());
     }
