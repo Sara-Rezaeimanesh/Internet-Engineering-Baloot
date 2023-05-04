@@ -68,6 +68,6 @@ public class User {
 
     public double applyDiscount(String discount) {
         cart.applyDiscount(discount);
-        return calculateCurrBuyListPrice();
+        return cart.calcTotal();
     }
 }

@@ -1,4 +1,4 @@
-package com.baloot.IE.Controller.DiscountController;
+package com.baloot.IE.Controller.Discount;
 
 import com.baloot.IE.domain.Discount.Discount;
 import com.baloot.IE.domain.Discount.DiscountRepository;

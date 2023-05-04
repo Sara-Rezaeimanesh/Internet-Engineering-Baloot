@@ -17,6 +17,7 @@ public class Cart {
 
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
+        total = calcTotal();
     }
 
     public Cart() {
