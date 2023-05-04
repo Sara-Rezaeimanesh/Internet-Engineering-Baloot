@@ -2,6 +2,7 @@ package com.baloot.IE.Controller.Product;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Product.ProductRepository;
+import com.baloot.IE.domain.Supplier.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -12,10 +13,12 @@ public class ProductController {
 
     private final int ppp;
     private final ProductRepository productRepository;
+    private final SupplierRepository supplierRepository;
     private List<Product> results;
     @Autowired
     public ProductController() throws Exception {
         this.productRepository = ProductRepository.getInstance();
+        this.supplierRepository = SupplierRepository.getInstance();
         results = new ArrayList<>();
         ppp = 12;
     }
@@ -26,11 +29,16 @@ public class ProductController {
                              @RequestParam(name = "name", required = false) String name,
                              @RequestParam(name = "id", required = false) String id,
                              @RequestParam(name = "sort", required = false) String sort_param,
+                             @RequestParam(name = "provider", required = false) String provider_name,
                              @RequestParam(name = "apply") String apply,
                              @RequestParam(name = "page") int page) {
 
+        int supplier_id = -1;
+        if(provider_name != null)
+            supplier_id = supplierRepository.findSupplierByName(provider_name).getId();
+
         if(Integer.parseInt(apply) == 1) {
-            results = productRepository.filterProducts(category, priceRange, name, id);
+            results = productRepository.filterProducts(category, priceRange, name, id, supplier_id);
             if(sort_param != null)
                 results = productRepository.sortProducts(results, sort_param);
         }

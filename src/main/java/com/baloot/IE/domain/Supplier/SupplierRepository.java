@@ -30,4 +30,12 @@ public class SupplierRepository {
 
         throw new IllegalArgumentException("Supplier does not exist.");
     }
+
+    public Supplier findSupplierByName(String name) {
+        for (Supplier s : suppliers)
+            if (name.equalsIgnoreCase(s.getName()))
+                return s;
+
+        throw new IllegalArgumentException("Supplier does not exist.");
+    }
 }
