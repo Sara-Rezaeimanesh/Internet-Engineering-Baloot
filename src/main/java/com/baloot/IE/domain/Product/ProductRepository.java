@@ -29,7 +29,7 @@ public class ProductRepository {
     }
 
 
-    public List<Product> filterProducts(String category, String priceRange, String name, String id, int supplier_id) {
+    public List<Product> filterProducts(String category, String priceRange, String name, String id, int supplier_id, String available) {
         List<Product> searchResults = new ArrayList<>(products);
         if (category != null)
             searchResults = searchResults.stream().filter(product -> product.getCategories().contains(category)).collect(Collectors.toList());
@@ -50,6 +50,8 @@ public class ProductRepository {
             throw new IllegalArgumentException("No items matched your search.");
         if(supplier_id != -1)
             searchResults = searchResults.stream().filter(product -> product.getProviderId() == supplier_id).collect(Collectors.toList());
+        if(available != null)
+            searchResults = searchResults.stream().filter(product -> product.getInStock() > 0).collect(Collectors.toList());
 
         return searchResults;
     }

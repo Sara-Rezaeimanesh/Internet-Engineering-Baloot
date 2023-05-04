@@ -67,4 +67,8 @@ public class User {
         cart.applyDiscount(discount);
         return cart.calcTotal();
     }
+
+    public void initialize() {
+        this.cart = new Cart();
+    }
 }

@@ -30,6 +30,7 @@ public class ProductController {
                              @RequestParam(name = "id", required = false) String id,
                              @RequestParam(name = "sort", required = false) String sort_param,
                              @RequestParam(name = "provider", required = false) String provider_name,
+                             @RequestParam(name = "available", required = false) String available,
                              @RequestParam(name = "apply") String apply,
                              @RequestParam(name = "page") int page) {
 
@@ -38,7 +39,7 @@ public class ProductController {
             supplier_id = supplierRepository.findSupplierByName(provider_name).getId();
 
         if(Integer.parseInt(apply) == 1) {
-            results = productRepository.filterProducts(category, priceRange, name, id, supplier_id);
+            results = productRepository.filterProducts(category, priceRange, name, id, supplier_id, available);
             if(sort_param != null)
                 results = productRepository.sortProducts(results, sort_param);
         }

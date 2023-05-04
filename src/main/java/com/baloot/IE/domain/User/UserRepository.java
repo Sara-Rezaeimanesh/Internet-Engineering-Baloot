@@ -1,6 +1,7 @@
 package com.baloot.IE.domain.User;
 
 import com.baloot.IE.domain.Initializer.Initializer;
+import com.baloot.IE.domain.Supplier.Supplier;
 
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ public class UserRepository {
     private UserRepository() throws Exception {
         Initializer initializer = new Initializer();
         users = initializer.getUsersFromAPI("users");
+        users.forEach(User::initialize);
     }
     public static UserRepository getInstance() throws Exception {
         if(instance == null)
