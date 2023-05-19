@@ -50,6 +50,7 @@ function Provider() {
                       className="card-img-top"
                       src= {product.image}
                       alt="card"
+                      height={"160"}
                     />
                   </Link>
                   <div className="d-flex justify-content-between align-items-center">
@@ -70,9 +71,9 @@ function Provider() {
           );
         })}
       </div>
-      <footer class="login-footer">
-        <span class="bold footer-text container-fluid">2023 @UT</span>
-      </footer>
+      <footer>
+          <span class="bold footer-text container-fluid">2023 @UT</span>
+        </footer>
     </div>
   );
 }
