@@ -405,6 +405,7 @@ function Product() {
                                 className="card-img-top"
                                 src= {suggestionProsuct.image}
                                 alt="card"
+                                height={"160"}
                               />
                             </Link>
                             <div className="d-flex justify-content-between align-items-center">
