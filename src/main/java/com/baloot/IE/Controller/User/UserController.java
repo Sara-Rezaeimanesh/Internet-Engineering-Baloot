@@ -5,7 +5,7 @@ import com.baloot.IE.domain.Discount.DiscountRepository;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Product.ProductRepository;
 import com.baloot.IE.domain.User.User;
-import com.baloot.IE.domain.User.UserRepository;
+import com.baloot.IE.domain.User.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +15,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserManager userRepository;
     private final ProductRepository productRepository;
 
     private final DiscountRepository discountRepository;
 
     @Autowired
     public UserController() throws Exception {
-        userRepository = UserRepository.getInstance();
+        userRepository = UserManager.getInstance();
         productRepository = ProductRepository.getInstance();
         discountRepository = DiscountRepository.getInstance();
     }
@@ -60,6 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/cart/{product_id}")
+    @ResponseBody
     public void removeFromCart(@PathVariable String id, @PathVariable int product_id) {
         Product product = productRepository.findProductsById(product_id);
         userRepository.findUserById(id).getCart().remove(product);
