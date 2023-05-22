@@ -1,5 +1,6 @@
-package com.baloot.IE.domain.User;
+package com.baloot.IE.repository.User;
 
+import com.baloot.IE.domain.User.User;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
 
@@ -28,11 +29,6 @@ public class UserRepository extends Repository<User, String> {
     }
 
     private UserRepository() throws SQLException {
-        System.out.println(String.format(
-                "CREATE TABLE IF NOT EXISTS %s " +
-                        "(username CHAR(50),\npassword CHAR(225),\nemail CHAR(225),"  +
-                        "\nbirthDate DATE,\n address CHAR(200), credit INTEGER\nPRIMARY KEY(username));",
-                TABLE_NAME));
         Connection con = ConnectionPool.getConnection();
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
@@ -48,7 +44,7 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s u WHERE u.id = ?;", TABLE_NAME);
+        return String.format("SELECT * FROM %s u WHERE u.username = ?;", TABLE_NAME);
     }
 
     @Override
@@ -58,7 +54,7 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT INTO %s(username, password, email, birthDate, address, credit) VALUES(?,?,?,?,?,?)", TABLE_NAME);
+        return String.format("INSERT IGNORE INTO %s(username, password, email, birthDate, address, credit) VALUES(?,?,?,?,?,?)", TABLE_NAME);
     }
 
     @Override

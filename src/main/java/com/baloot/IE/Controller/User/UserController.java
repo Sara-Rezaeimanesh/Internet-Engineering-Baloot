@@ -3,7 +3,7 @@ package com.baloot.IE.Controller.User;
 import com.baloot.IE.domain.Cart.Cart;
 import com.baloot.IE.domain.Discount.DiscountRepository;
 import com.baloot.IE.domain.Product.Product;
-import com.baloot.IE.domain.Product.ProductRepository;
+import com.baloot.IE.domain.Product.ProductManager;
 import com.baloot.IE.domain.User.User;
 import com.baloot.IE.domain.User.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +16,14 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
     private final UserManager userRepository;
-    private final ProductRepository productRepository;
+    private final ProductManager productRepository;
 
     private final DiscountRepository discountRepository;
 
     @Autowired
     public UserController() throws Exception {
         userRepository = UserManager.getInstance();
-        productRepository = ProductRepository.getInstance();
+        productRepository = ProductManager.getInstance();
         discountRepository = DiscountRepository.getInstance();
     }
 

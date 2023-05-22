@@ -1,7 +1,7 @@
 package com.baloot.IE.repository;
 
 
-import com.baloot.IE.domain.User.UserRepository;
+import com.baloot.IE.repository.User.UserRepository;
 
 public class BallotRepository {
     private static BallotRepository instance;

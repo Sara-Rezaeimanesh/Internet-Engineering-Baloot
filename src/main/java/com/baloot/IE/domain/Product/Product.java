@@ -29,13 +29,17 @@ public class Product {
     @JsonIgnore
     private ArrayList<Product> suggestedProducts;
 
+    public Product() {
+
+    }
+
     public void initialize() {
         ratings = new ArrayList<>();
         comments = new ArrayList<>();
     }
 
     public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
-                   @JsonProperty("price") int price, @JsonProperty("categories") ArrayList<String> categories, @JsonProperty("rating") int rating,
+                   @JsonProperty("price") int price, @JsonProperty("categories") ArrayList<String> categories, @JsonProperty("rating") float rating,
                    @JsonProperty("inStock") int inStock, @JsonProperty("image") String image) {
         this.id = id;
         this.name = name;

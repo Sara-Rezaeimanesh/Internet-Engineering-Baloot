@@ -1,8 +1,8 @@
 package com.baloot.IE.Controller.Product;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Product.Product;
-import com.baloot.IE.domain.Product.ProductRepository;
-import com.baloot.IE.domain.Supplier.SupplierRepository;
+import com.baloot.IE.domain.Product.ProductManager;
+import com.baloot.IE.domain.Supplier.SupplierManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -12,13 +12,13 @@ import java.util.*;
 public class ProductController {
 
     private final int ppp;
-    private final ProductRepository productRepository;
-    private final SupplierRepository supplierRepository;
+    private final ProductManager productRepository;
+    private final SupplierManager supplierRepository;
     private List<Product> results;
     @Autowired
     public ProductController() throws Exception {
-        this.productRepository = ProductRepository.getInstance();
-        this.supplierRepository = SupplierRepository.getInstance();
+        this.productRepository = ProductManager.getInstance();
+        this.supplierRepository = SupplierManager.getInstance();
         results = new ArrayList<>();
         ppp = 12;
     }

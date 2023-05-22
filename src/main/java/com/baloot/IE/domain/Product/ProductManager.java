@@ -11,11 +11,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class ProductRepository {
-    private static ProductRepository instance;
+public class ProductManager {
+    private static ProductManager instance;
     List<Product> products;
 
-    public ProductRepository() throws Exception {
+    public ProductManager() throws Exception {
         Initializer initializer = new Initializer();
         products = initializer.getCommoditiesFromAPI("v2/commodities");
         products.forEach(Product::initialize);
@@ -67,9 +67,9 @@ public class ProductRepository {
         return products;
     }
 
-    public static ProductRepository getInstance() throws Exception {
+    public static ProductManager getInstance() throws Exception {
         if(instance == null)
-            instance = new ProductRepository();
+            instance = new ProductManager();
         return instance;
     }
 

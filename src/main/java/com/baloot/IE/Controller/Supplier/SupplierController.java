@@ -1,8 +1,8 @@
 package com.baloot.IE.Controller.Supplier;
 
-import com.baloot.IE.domain.Product.ProductRepository;
+import com.baloot.IE.domain.Product.ProductManager;
 import com.baloot.IE.domain.Supplier.Supplier;
-import com.baloot.IE.domain.Supplier.SupplierRepository;
+import com.baloot.IE.domain.Supplier.SupplierManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,13 +14,13 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {
-    private final SupplierRepository supplierRepository;
-    private final ProductRepository productRepository;
+    private final SupplierManager supplierRepository;
+    private final ProductManager productRepository;
 
     @Autowired
     public SupplierController() throws Exception {
-        supplierRepository = SupplierRepository.getInstance();
-        productRepository = ProductRepository.getInstance();
+        supplierRepository = SupplierManager.getInstance();
+        productRepository = ProductManager.getInstance();
     }
 
     @GetMapping("")

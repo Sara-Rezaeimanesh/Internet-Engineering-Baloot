@@ -1,9 +1,9 @@
 package com.baloot.IE.domain.User;
 
 import com.baloot.IE.domain.Initializer.Initializer;
+import com.baloot.IE.repository.User.UserRepository;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserManager {
     private static UserManager instance;
@@ -57,8 +57,9 @@ public class UserManager {
         catch (Exception e){
             System.out.println("problem in method addUser");
         }
-        if(searchUser != null)
+        if(searchUser != null) {
             throw new IllegalArgumentException("Username already exists. Please Login.");
+        }
         repository.insert(new User(user.getUsername(), user.getPassword(), user.getEmail(), user.getBirthDate(), user.getAddress(), user.getCredit()));
     }
 }

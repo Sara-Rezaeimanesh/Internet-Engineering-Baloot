@@ -3,19 +3,19 @@ package com.baloot.IE.domain.Supplier;
 import com.baloot.IE.domain.Initializer.Initializer;
 import java.util.ArrayList;
 
-public class SupplierRepository {
+public class SupplierManager {
     private final ArrayList<Supplier> suppliers;
-    private static SupplierRepository instance;
+    private static SupplierManager instance;
 
-    public SupplierRepository() throws Exception {
+    public SupplierManager() throws Exception {
         Initializer initializer = new Initializer();
         suppliers = initializer.getProvidersFromAPI("providers");
         suppliers.forEach(Supplier::initialize);
     }
 
-    public static SupplierRepository getInstance() throws Exception {
+    public static SupplierManager getInstance() throws Exception {
         if(instance == null)
-            instance = new SupplierRepository();
+            instance = new SupplierManager();
         return instance;
     }
 
