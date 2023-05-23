@@ -1,16 +1,23 @@
 package com.baloot.IE.domain.Supplier;
 
 import com.baloot.IE.domain.Initializer.Initializer;
+import com.baloot.IE.domain.User.User;
+import com.baloot.IE.repository.Supplier.SupplierRepository;
+import com.baloot.IE.repository.User.UserRepository;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SupplierManager {
-    private final ArrayList<Supplier> suppliers;
     private static SupplierManager instance;
+    private final SupplierRepository repository = SupplierRepository.getInstance();
 
     public SupplierManager() throws Exception {
         Initializer initializer = new Initializer();
-        suppliers = initializer.getProvidersFromAPI("providers");
+        ArrayList<Supplier> suppliers = initializer.getProvidersFromAPI("providers");
         suppliers.forEach(Supplier::initialize);
+        for(Supplier s : suppliers)
+            repository.insert(new Supplier(s.getId(), s.getName(), s.getRegisteryDate()));
     }
 
     public static SupplierManager getInstance() throws Exception {
@@ -20,22 +27,35 @@ public class SupplierManager {
     }
 
     public ArrayList<Supplier> getAll() {
-        return suppliers;
+        try {
+            return repository.findAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Supplier findSupplierById(int id) {
-        for (Supplier s : suppliers)
-            if (id == s.getId())
-                return s;
-
+        Supplier s = null;
+        try {
+            s = repository.findById(String.valueOf(id));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if(s != null)
+            return s;
         throw new IllegalArgumentException("Supplier does not exist.");
     }
 
-    public Supplier findSupplierByName(String name) {
-        for (Supplier s : suppliers)
-            if (name.equalsIgnoreCase(s.getName()))
-                return s;
-
-        throw new IllegalArgumentException("Supplier does not exist.");
-    }
+//    public Supplier findSupplierByName(String name) {
+//        Supplier s = null;
+//        try {
+//            s = repository.findById(String.valueOf(id));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//        if(s != null)
+//            return s;
+//
+//        throw new IllegalArgumentException("Supplier does not exist.");
+//    }
 }

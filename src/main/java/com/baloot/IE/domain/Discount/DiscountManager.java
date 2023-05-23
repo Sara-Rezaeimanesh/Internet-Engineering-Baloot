@@ -5,19 +5,19 @@ import com.baloot.IE.domain.User.User;
 
 import java.util.ArrayList;
 
-public class DiscountRepository {
+public class DiscountManager {
     private final ArrayList<Discount> discounts;
-    private static DiscountRepository instance;
+    private static DiscountManager instance;
 
-    public DiscountRepository() throws Exception {
+    public DiscountManager() throws Exception {
         Initializer initializer = new Initializer();
         discounts = initializer.getDiscountsFromAPI("discount");
         discounts.forEach(Discount::initialize);
     }
 
-    public static DiscountRepository getInstance() throws Exception {
+    public static DiscountManager getInstance() throws Exception {
         if(instance == null)
-            instance = new DiscountRepository();
+            instance = new DiscountManager();
         return instance;
     }
 

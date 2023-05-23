@@ -62,6 +62,10 @@ public abstract class Repository<T, I> {
         }
     }
 
+    public String getFindByNameStatement() {
+        return null;
+    }
+
     public ArrayList<T> findAll() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindAllStatement());

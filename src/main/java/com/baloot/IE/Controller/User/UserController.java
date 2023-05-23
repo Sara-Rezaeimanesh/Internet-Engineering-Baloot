@@ -1,7 +1,7 @@
 package com.baloot.IE.Controller.User;
 
 import com.baloot.IE.domain.Cart.Cart;
-import com.baloot.IE.domain.Discount.DiscountRepository;
+import com.baloot.IE.domain.Discount.DiscountManager;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Product.ProductManager;
 import com.baloot.IE.domain.User.User;
@@ -18,13 +18,13 @@ public class UserController {
     private final UserManager userRepository;
     private final ProductManager productRepository;
 
-    private final DiscountRepository discountRepository;
+    private final DiscountManager discountRepository;
 
     @Autowired
     public UserController() throws Exception {
         userRepository = UserManager.getInstance();
         productRepository = ProductManager.getInstance();
-        discountRepository = DiscountRepository.getInstance();
+        discountRepository = DiscountManager.getInstance();
     }
 
     @GetMapping("")

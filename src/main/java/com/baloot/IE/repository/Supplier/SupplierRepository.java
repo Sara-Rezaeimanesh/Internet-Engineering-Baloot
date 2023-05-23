@@ -51,6 +51,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
         st.setString(1, username);
     }
 
+
     @Override
     protected String getInsertStatement() {
         return String.format("INSERT IGNORE INTO %s(id, name, registeryDate) VALUES(?,?,?)", TABLE_NAME);
@@ -85,5 +86,10 @@ public class SupplierRepository extends Repository<Supplier, String> {
             suppliers.add(this.convertResultSetToDomainModel(rs));
         }
         return suppliers;
+    }
+
+    @Override
+    public String getFindByNameStatement() {
+        return String.format("SELECT * FROM %s s WHERE s.name = ?;", TABLE_NAME);
     }
 }

@@ -22,12 +22,17 @@ public class UserManager {
         return instance;
     }
     public User findUserById(String id) {
+        User user = null;
         try {
-            return repository.findById(id);
+            user = repository.findById(id);
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("User does not exits.");
+            throw new RuntimeException(e);
         }
+        if(user != null)
+            return user;
+        throw new IllegalArgumentException("User does not exits.");
+
     }
     public boolean userExists(String username, String password){
         User user;

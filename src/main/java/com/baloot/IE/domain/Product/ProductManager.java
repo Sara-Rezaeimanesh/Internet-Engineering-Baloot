@@ -3,8 +3,12 @@ package com.baloot.IE.domain.Product;
 import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
+import com.baloot.IE.domain.Supplier.Supplier;
+import com.baloot.IE.repository.Product.ProductRepository;
+import com.baloot.IE.repository.Supplier.SupplierRepository;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -14,6 +18,7 @@ import java.util.stream.Collectors;
 public class ProductManager {
     private static ProductManager instance;
     List<Product> products;
+    private final ProductRepository repository = ProductRepository.getInstance();
 
     public ProductManager() throws Exception {
         Initializer initializer = new Initializer();
@@ -74,14 +79,23 @@ public class ProductManager {
     }
 
     public Product findProductsById(int id) {
-        for (Product p : products)
-            if (id == p.getId())
-                return p;
+        Product p = null;
+        try {
+            p = repository.findById(String.valueOf(id));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if(p != null)
+            return p;
         throw new IllegalArgumentException("Product does not exist!");
     }
 
     public void add(Product product) {
-        products.add(product);
+        try {
+            repository.insert(product);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void voteComment(String userEmail, int productId, int commentId, int vote) {
