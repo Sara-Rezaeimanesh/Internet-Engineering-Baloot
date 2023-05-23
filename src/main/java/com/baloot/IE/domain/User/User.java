@@ -35,7 +35,7 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
-        this.cart = new Cart();
+        this.cart = new Cart(username_);
     }
 
     public boolean userNameEquals(String username) {
@@ -69,6 +69,6 @@ public class User {
     }
 
     public void initialize() {
-        this.cart = new Cart();
+        this.cart = new Cart(this.username);
     }
 }
