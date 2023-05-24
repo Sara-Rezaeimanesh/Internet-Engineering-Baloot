@@ -59,7 +59,7 @@ public class Cart {
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
         no_items += 1;
         cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
-        buyListRepository.insert(new CartItem(p, 1, cartId));
+        buyListRepository.insert(new CartItem(cartId, p, 1));
     }
 
     public void remove(Product p) throws SQLException {
@@ -88,7 +88,7 @@ public class Cart {
         for(CartItem ci : buyList) {
             System.out.println(ci.getCartId());
             System.out.println(ci.getProduct().getId());
-            buyListRepository.delete(String.valueOf(cartId), String.valueOf(ci.getProduct().getId()));
+            buyListRepository.delete(String.valueOf(ci.getCartId()), String.valueOf(ci.getProduct().getId()));
             purchaseListRepository.insert(ci);
             ci.updateProductStock();
         }

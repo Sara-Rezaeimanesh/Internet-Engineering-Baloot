@@ -49,6 +49,7 @@ public abstract class Repository<T, I> {
     }
 
     public void insert(T obj) throws SQLException {
+        System.out.println("hi hi hi hi");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement());
         fillInsertValues(st, obj);
@@ -104,6 +105,8 @@ public abstract class Repository<T, I> {
                 con.setAutoCommit(false);
                 st.executeUpdate();
                 con.commit();
+                st.close();
+                con.close();
             } catch (SQLException ex) {
                 System.out.println("error in update query.");
                 throw ex;

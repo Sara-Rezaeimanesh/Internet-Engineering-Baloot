@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CartItem {
+    private int cartId;
     private Product product;
     private int quantity;
 
-    private int cartId;
 
     public boolean hasProduct(int id) {
         return product.getId() == id;

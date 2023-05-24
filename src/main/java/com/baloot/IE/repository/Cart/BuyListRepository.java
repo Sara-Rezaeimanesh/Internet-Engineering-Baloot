@@ -80,7 +80,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
     @Override
     protected CartItem convertResultSetToDomainModel(ResultSet rs) {
         try{
-            return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(3)));
+            return new CartItem(Integer.parseInt(rs.getString(1)), productRepository.findByField(rs.getString(2), "id"), Integer.parseInt(rs.getString(3)));
         }
         catch (Exception e){
             return null;
@@ -111,6 +111,8 @@ public class BuyListRepository extends Repository<CartItem, String> {
             System.out.println(st);
             try {
                 st.executeUpdate();
+                st.close();
+                con.close();
             } catch (SQLException ex) {
                 System.out.println("error in delete query.");
                 throw ex;
