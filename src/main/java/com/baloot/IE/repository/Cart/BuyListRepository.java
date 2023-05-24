@@ -1,8 +1,6 @@
 package com.baloot.IE.repository.Cart;
 
-import com.baloot.IE.domain.Cart.Cart;
 import com.baloot.IE.domain.Cart.CartItem;
-import com.baloot.IE.domain.Discount.Discount;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Product.ProductRepository;
@@ -14,32 +12,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CartItemRepository extends Repository<CartItem, String> {
-    private static CartItemRepository instance;
+public class BuyListRepository extends Repository<CartItem, String> {
+    private static BuyListRepository instance;
 
     private static final String COLUMNS = " cartId, productId, quantity";
     private static final String TABLE_NAME = "BUYLIST";
     private final ProductRepository productRepository = ProductRepository.getInstance();
 
-    public static CartItemRepository getInstance() {
+    public static BuyListRepository getInstance() {
         if (instance == null) {
             try {
-                instance = new CartItemRepository();
+                instance = new BuyListRepository();
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("error in CartItemRepository.create query.");
+                System.out.println("error in BuyListRepository.create query.");
             }
         }
         return instance;
     }
 
-    private CartItemRepository() throws SQLException {
+    private BuyListRepository() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(username, productId)"
-                        +  "\nforeign key (cartId) references CART(cartId));",
+                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId, productId),"
+                        +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -72,8 +70,8 @@ public class CartItemRepository extends Repository<CartItem, String> {
     }
 
     @Override
-    protected String getFindAllStatement() {
-        return String.format("SELECT * FROM %s;", TABLE_NAME);
+    protected String getFindAllStatement(String searchString) {
+        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
     }
 
     @Override
@@ -93,5 +91,27 @@ public class CartItemRepository extends Repository<CartItem, String> {
             CartItems.add(this.convertResultSetToDomainModel(rs));
         }
         return CartItems;
+    }
+
+    @Override
+    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
+        return String.format("update %s set %s = %s where %s = %s;",
+                TABLE_NAME, varName, newValue, whereField, whereValue);
+    }
+
+    public void delete(String cartId, String productId) {
+        String statement =  String.format("delete from %s where %s.%s = %s and %s.%s = %s ", TABLE_NAME, TABLE_NAME, "cartId", cartId, TABLE_NAME, "productId", productId);
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(statement)
+        ) {
+            try {
+                st.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.delete query.");
+                throw ex;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

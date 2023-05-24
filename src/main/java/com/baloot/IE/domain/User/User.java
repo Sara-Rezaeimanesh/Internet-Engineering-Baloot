@@ -1,5 +1,6 @@
 package com.baloot.IE.domain.User;
 import com.baloot.IE.domain.Cart.Cart;
+import com.baloot.IE.repository.User.UserRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -18,6 +19,9 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
+
+    private final UserRepository repository = UserRepository.getInstance();
+
     @JsonIgnore
     private Cart cart;
 
@@ -42,7 +46,7 @@ public class User {
         return Objects.equals(this.username, username);
     }
 
-    private double calculateCurrBuyListPrice(){
+    private float calculateCurrBuyListPrice(){
         return cart.calcTotal();
     }
 
@@ -50,6 +54,7 @@ public class User {
         if(newCredit <= 0)
             throw new IllegalArgumentException("Credit value must be greater than zero.");
         credit += newCredit;
+        repository.update("credit" ,String.valueOf(credit), "username" ,this.username);
     }
 
     public boolean isPassEqual(String password) {
@@ -60,6 +65,7 @@ public class User {
         if(credit < calculateCurrBuyListPrice())
             throw new Exception("Credit is not enough");
         credit -= calculateCurrBuyListPrice();
+        repository.update("credit" ,String.valueOf(credit),"username" , this.username);
         cart.buy();
     }
 

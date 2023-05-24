@@ -3,6 +3,9 @@ package com.baloot.IE;
 import com.baloot.IE.domain.Product.ProductManager;
 import com.baloot.IE.domain.Supplier.SupplierManager;
 import com.baloot.IE.domain.User.UserManager;
+import com.baloot.IE.repository.Cart.BuyListRepository;
+import com.baloot.IE.repository.Cart.CartRepository;
+import com.baloot.IE.repository.Cart.PurchaseListRepository;
 import com.baloot.IE.repository.Product.ProductRepository;
 import com.baloot.IE.repository.Supplier.SupplierRepository;
 import com.baloot.IE.repository.User.UserRepository;
@@ -15,7 +18,9 @@ public class BalootApplication {
         SupplierManager.getInstance();
         UserManager.getInstance();
         ProductManager.getInstance();
-
+        CartRepository.getInstance();
+        BuyListRepository.getInstance();
+        PurchaseListRepository.getInstance();
         SpringApplication.run(BalootApplication.class, args);
     }
 }

@@ -18,4 +18,6 @@ public class Rating {
         if (rating > 10 || rating < 1) throw new Exception("Rating must be between 1 to 10\n");
         this.score = rating;
     }
+
+    public Rating(){}
 }

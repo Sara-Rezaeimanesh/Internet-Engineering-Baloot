@@ -1,11 +1,8 @@
 package com.baloot.IE.repository.Comment;
 
 import com.baloot.IE.domain.Comment.Comment;
-import com.baloot.IE.domain.CommentVote.CommentVote;
-import com.baloot.IE.domain.Discount.Discount;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +62,7 @@ public class CommentRepository extends Repository<Comment, String> {
     }
 
     @Override
-    protected String getFindAllStatement() {
+    protected String getFindAllStatement(String searchString) {
         return null;
     }
 
@@ -76,6 +73,11 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected ArrayList<Comment> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
+        return null;
+    }
+
+    @Override
+    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
         return null;
     }
 }

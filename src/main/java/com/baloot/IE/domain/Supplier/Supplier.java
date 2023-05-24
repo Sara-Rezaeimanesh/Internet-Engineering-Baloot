@@ -14,10 +14,6 @@ public class Supplier {
     private final String registeryDate;
     private ArrayList<Product> products = new ArrayList<>();
 
-    public void initialize() {
-        products = new ArrayList<>();
-    }
-
     public int getId() {
         return id;
     }

@@ -47,7 +47,7 @@ public class UserManager {
 
     public ArrayList<User> getAllUsers() {
         try{
-            return repository.findAll();
+            return repository.findAll("");
         }
         catch (Exception e){
             return new ArrayList<>();

@@ -25,7 +25,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
                 instance = new PurchaseListRepository();
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("error in CartItemRepository.create query.");
+                System.out.println("error in PurchaseListRepository.create query.");
             }
         }
         return instance;
@@ -36,8 +36,8 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(username, productId)"
-                                +  "\nforeign key (cartId) references CART(cartId));",
+                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId, productId),"
+                                +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -69,8 +69,8 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     }
 
     @Override
-    protected String getFindAllStatement() {
-        return String.format("SELECT * FROM %s;", TABLE_NAME);
+    protected String getFindAllStatement(String searchString) {
+        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
     }
 
     @Override
@@ -90,5 +90,10 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
             CartItems.add(this.convertResultSetToDomainModel(rs));
         }
         return CartItems;
+    }
+    @Override
+    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
+        return String.format("update %s set %s = %s where %s = %s;",
+                TABLE_NAME, varName, newValue, whereField, whereValue);
     }
 }

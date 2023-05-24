@@ -17,62 +17,62 @@ import java.util.Map;
 @RequestMapping("/users")
 @Order(2)
 public class UserController {
-    private final UserManager userRepository;
-    private final ProductManager productRepository;
+    private final UserManager userManager;
+    private final ProductManager productManager;
 
-    private final DiscountManager discountRepository;
+    private final DiscountManager discountManager;
 
     @Autowired
     public UserController() throws Exception {
         System.out.printf("here3");
-        userRepository = UserManager.getInstance();
-        productRepository = ProductManager.getInstance();
-        discountRepository = DiscountManager.getInstance();
+        userManager = UserManager.getInstance();
+        productManager = ProductManager.getInstance();
+        discountManager = DiscountManager.getInstance();
     }
 
     @GetMapping("")
     public List<User> all() {
-        return userRepository.getAllUsers();
+        return userManager.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public User one(@PathVariable String id) {
-        return userRepository.findUserById(id);
+        return userManager.findUserById(id);
     }
 
     @PutMapping("/{id}/credit")
     public void increaseCredit(@PathVariable String id, @RequestBody Map<String, String> body) {
-        userRepository.findUserById(id).increaseCredit(Integer.parseInt(body.get("amount")));
+        userManager.findUserById(id).increaseCredit(Integer.parseInt(body.get("amount")));
     }
 
     @GetMapping("/{id}/cart")
     public Cart getCart(@PathVariable String id) {
-        return userRepository.findUserById(id).getCart();
+        return userManager.findUserById(id).getCart();
     }
 
     @PostMapping("/{id}/cart/buy")
     public void buyCart(@PathVariable String id) throws Exception {
-        userRepository.findUserById(id).pay();
+        userManager.findUserById(id).pay();
     }
 
     @PostMapping("/{id}/cart")
     public void addToCart(@PathVariable String id,
                           @RequestBody Map<String, String> body) throws Exception {
-        Product product = productRepository.findProductsById(Integer.parseInt(body.get("product-id")));
-        userRepository.findUserById(id).getCart().add(product);
+        Product product = productManager.findProductsById(Integer.parseInt(body.get("product-id")));
+        userManager.findUserById(id).getCart().add(product);
     }
 
     @DeleteMapping("/{id}/cart/{product_id}")
     @ResponseBody
     public void removeFromCart(@PathVariable String id, @PathVariable int product_id) {
-        Product product = productRepository.findProductsById(product_id);
-        userRepository.findUserById(id).getCart().remove(product);
+        Product product = productManager.findProductsById(product_id);
+        userManager.findUserById(id).getCart().remove(product);
     }
 
     @PostMapping("/{id}/discounts")
     public double addDiscount(@PathVariable String id,
                             @RequestBody Map<String, String> body) throws Exception {
-        User user = userRepository.findUserById(id);
-        return discountRepository.applyDiscount(body.get("discount-id"), user);
+        User user = userManager.findUserById(id);
+        return discountManager.applyDiscount(body.get("discount-id"), user);
     }
 }

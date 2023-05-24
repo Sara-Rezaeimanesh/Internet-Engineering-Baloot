@@ -15,7 +15,7 @@ public class SupplierManager {
     public SupplierManager() throws Exception {
         Initializer initializer = new Initializer();
         ArrayList<Supplier> suppliers = initializer.getProvidersFromAPI("providers");
-        suppliers.forEach(Supplier::initialize);
+//        suppliers.forEach(Supplier::initialize);
         for(Supplier s : suppliers)
             repository.insert(s);
     }
@@ -28,7 +28,7 @@ public class SupplierManager {
 
     public ArrayList<Supplier> getAll() {
         try {
-            return repository.findAll();
+            return repository.findAll("");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,8 +1,10 @@
 package com.baloot.IE.domain.Discount;
 
+import com.baloot.IE.repository.Discount.UsedDiscountRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -10,16 +12,12 @@ import java.util.Objects;
 public class Discount {
     private final String discountCode;
     private final String discount;
-    @JsonIgnore
-    private ArrayList<String> usedByUsers;
+
+    private final UsedDiscountRepository usedDiscountRepository = UsedDiscountRepository.getInstance();
 
     public Discount(String discountCode, String discount) {
         this.discountCode = discountCode;
         this.discount = discount;
-    }
-
-    public void initialize() {
-        usedByUsers = new ArrayList<>();
     }
 
     public boolean discountCodeEquals(String did) {
@@ -30,11 +28,15 @@ public class Discount {
         return discount;
     }
 
-    public boolean isValidToUse(String username) {
-        return !usedByUsers.contains(username);
+    public boolean isValidToUse(String username) throws SQLException {
+        ArrayList<UsedDiscount> usedDiscount = usedDiscountRepository.findAll("username = " + username);
+        for(UsedDiscount ud : usedDiscount)
+            if(ud.isSameDiscountCode(this.discountCode))
+                return false;
+        return true;
     }
 
-    public void addToUsed(String username) {
-        usedByUsers.add(username);
+    public void addToUsed(String username) throws SQLException {
+        usedDiscountRepository.insert(new UsedDiscount(this.discountCode, username));
     }
 }

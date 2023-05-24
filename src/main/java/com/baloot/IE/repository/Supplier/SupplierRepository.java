@@ -70,7 +70,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
     }
 
     @Override
-    protected String getFindAllStatement() {
+    protected String getFindAllStatement(String searchString) {
         return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
@@ -91,6 +91,11 @@ public class SupplierRepository extends Repository<Supplier, String> {
             suppliers.add(this.convertResultSetToDomainModel(rs));
         }
         return suppliers;
+    }
+
+    @Override
+    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
+        return null;
     }
 
     @Override

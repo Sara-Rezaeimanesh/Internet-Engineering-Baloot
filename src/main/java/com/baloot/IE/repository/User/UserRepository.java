@@ -34,7 +34,7 @@ public class UserRepository extends Repository<User, String> {
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
                          "(username CHAR(50),\npassword CHAR(225),\nemail CHAR(225),"  +
-                         "\nbirthDate DATE,\n address CHAR(200), credit INTEGER,\nPRIMARY KEY(username, email));",
+                         "\nbirthDate DATE,\n address CHAR(200), credit FLOAT,\nPRIMARY KEY(username, email));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -68,7 +68,7 @@ public class UserRepository extends Repository<User, String> {
     }
 
     @Override
-    protected String getFindAllStatement() {
+    protected String getFindAllStatement(String searchString) {
         return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
@@ -90,5 +90,11 @@ public class UserRepository extends Repository<User, String> {
             users.add(this.convertResultSetToDomainModel(rs));
         }
         return users;
+    }
+
+    @Override
+    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
+        return String.format("update %s set %s = %s where %s = %s;",
+                TABLE_NAME, varName, newValue, whereField, whereValue);
     }
 }

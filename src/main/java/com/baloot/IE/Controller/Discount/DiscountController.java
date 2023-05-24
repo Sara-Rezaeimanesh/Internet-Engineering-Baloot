@@ -7,20 +7,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/discounts")
 public class DiscountController {
-    private final DiscountManager discountRepository;
+    private final DiscountManager discountManager;
 
     @Autowired
     public DiscountController() throws Exception {
-        discountRepository = DiscountManager.getInstance();
+        discountManager = DiscountManager.getInstance();
     }
 
     @GetMapping("")
-    public ArrayList<Discount> all() {
-        return discountRepository.getAll();
+    public ArrayList<Discount> all() throws SQLException {
+        return discountManager.getAll();
     }
 }

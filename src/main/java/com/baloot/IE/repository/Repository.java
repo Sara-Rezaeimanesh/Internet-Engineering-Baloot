@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Repository<T, I> {
     abstract protected String getFindByIdStatement(String field_name);
@@ -16,11 +15,13 @@ public abstract class Repository<T, I> {
 
     abstract protected void fillInsertValues(PreparedStatement st, T data) throws SQLException;
 
-    abstract protected String getFindAllStatement();
+    abstract protected String getFindAllStatement(String searchString);
 
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
 
     abstract protected ArrayList<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException;
+
+    abstract protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue);
 
     public T findByField(I id, String field_name) throws SQLException {
         Connection con = ConnectionPool.getConnection();
@@ -66,9 +67,9 @@ public abstract class Repository<T, I> {
         return null;
     }
 
-    public ArrayList<T> findAll() throws SQLException {
+    public ArrayList<T> findAll(String searchString) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement());
+        PreparedStatement st = con.prepareStatement(getFindAllStatement(searchString));
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet == null) {
@@ -88,4 +89,26 @@ public abstract class Repository<T, I> {
             throw e;
         }
     }
+
+    public void update(String varName, String newValue, String whereField, String whereValue) {
+        String statement = getUpdateStatement(varName, newValue, whereField, whereValue);
+        try {
+            Connection con = ConnectionPool.getConnection();
+            PreparedStatement st = con.prepareStatement(statement);
+            try {
+                con.setAutoCommit(false);
+                st.executeUpdate();
+                con.commit();
+            } catch (SQLException ex) {
+                System.out.println("error in increaseCredit query.");
+                throw ex;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
 }

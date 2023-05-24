@@ -1,7 +1,6 @@
 package com.baloot.IE.repository.Product;
 
 import com.baloot.IE.domain.Product.Product;
-import com.baloot.IE.domain.User.User;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
 
@@ -78,7 +77,7 @@ public class ProductRepository extends Repository<Product, String> {
     }
 
     @Override
-    protected String getFindAllStatement() {
+    protected String getFindAllStatement(String searchString) {
         return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
@@ -100,5 +99,10 @@ public class ProductRepository extends Repository<Product, String> {
             products.add(this.convertResultSetToDomainModel(rs));
         }
         return products;
+    }
+
+    @Override
+    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
+        return null;
     }
 }
