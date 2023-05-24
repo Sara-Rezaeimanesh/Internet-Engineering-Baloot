@@ -65,7 +65,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     protected void fillInsertValues(PreparedStatement st, CartItem data) throws SQLException {
         st.setString(1, String.valueOf(data.getCartId()));
         st.setString(2, String.valueOf(data.getProduct().getId()));
-        st.setString(2, String.valueOf(data.getQuantity()));
+        st.setString(3, String.valueOf(data.getQuantity()));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     @Override
     protected CartItem convertResultSetToDomainModel(ResultSet rs) {
         try{
-            return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(2)));
+            return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(3)));
         }
         catch (Exception e){
             return null;

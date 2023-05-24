@@ -27,6 +27,7 @@ public abstract class Repository<T, I> {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindByIdStatement(field_name));
         fillFindByIdValues(st, id);
+        System.out.println(st);
         try {
             ResultSet resultSet = st.executeQuery();
             if (!resultSet.next()) {
@@ -51,6 +52,7 @@ public abstract class Repository<T, I> {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement());
         fillInsertValues(st, obj);
+        System.out.println(st);
         try {
             st.execute();
             st.close();
@@ -70,6 +72,7 @@ public abstract class Repository<T, I> {
     public ArrayList<T> findAll(String searchString) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindAllStatement(searchString));
+        System.out.println(st);
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet == null) {

@@ -80,7 +80,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
     @Override
     protected CartItem convertResultSetToDomainModel(ResultSet rs) {
         try{
-            return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(2)));
+            return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(3)));
         }
         catch (Exception e){
             return null;
@@ -91,6 +91,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
     protected ArrayList<CartItem> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
         ArrayList<CartItem> CartItems = new ArrayList<>();
         while (rs.next()) {
+            System.out.println("x-x");
             CartItems.add(this.convertResultSetToDomainModel(rs));
         }
         return CartItems;
@@ -103,14 +104,15 @@ public class BuyListRepository extends Repository<CartItem, String> {
     }
 
     public void delete(String cartId, String productId) {
-        String statement =  String.format("delete from %s where %s.%s = %s and %s.%s = %s ", TABLE_NAME, TABLE_NAME, "cartId", cartId, TABLE_NAME, "productId", productId);
-        try (Connection con = ConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(statement)
-        ) {
+        String statement =  String.format("delete from %s b where b.%s = %s and b.%s = %s ", TABLE_NAME, "cartId", cartId, "productId", productId);
+        try {
+            Connection con = ConnectionPool.getConnection();
+            PreparedStatement st = con.prepareStatement(statement);
+            System.out.println(st);
             try {
                 st.executeUpdate();
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.delete query.");
+                System.out.println("error in delete query.");
                 throw ex;
             }
         } catch (SQLException e) {

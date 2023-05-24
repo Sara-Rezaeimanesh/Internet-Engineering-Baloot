@@ -5,6 +5,7 @@ import com.baloot.IE.repository.Cart.BuyListRepository;
 import com.baloot.IE.repository.Cart.CartRepository;
 import com.baloot.IE.repository.Cart.PurchaseListRepository;
 import com.baloot.IE.utitlity.StringUtility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,9 +23,11 @@ public class Cart {
     private int discount;
     private double total;
     private int no_items;
-
+    @JsonIgnore
     private final CartRepository cartRepository = CartRepository.getInstance();
+    @JsonIgnore
     private final BuyListRepository buyListRepository = BuyListRepository.getInstance();
+    @JsonIgnore
     private final PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
 
     public void applyDiscount(String discount) {
@@ -80,16 +83,18 @@ public class Cart {
     }
 
     public void buy() throws SQLException {
-        ArrayList<CartItem> buyList = buyListRepository.findAll("username = " + username);
+        ArrayList<CartItem> buyList = buyListRepository.findAll("cartId = " + cartId);
+        System.out.println("hello " + buyList.size());
         for(CartItem ci : buyList) {
+            System.out.println(ci.getCartId());
+            System.out.println(ci.getProduct().getId());
+            buyListRepository.delete(String.valueOf(cartId), String.valueOf(ci.getProduct().getId()));
+            purchaseListRepository.insert(ci);
             ci.updateProductStock();
         }
-        for(CartItem pl : buyList)
-            purchaseListRepository.insert(pl);
-
         total = 0;
         no_items = 0;
-        cartRepository.update("total", String.valueOf(total), "username", username);
-        cartRepository.update("no_items", String.valueOf(no_items), "username", username);
+        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
     }
 }

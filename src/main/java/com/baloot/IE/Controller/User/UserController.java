@@ -25,7 +25,6 @@ public class UserController {
 
     @Autowired
     public UserController() throws Exception {
-        System.out.printf("here3");
         userManager = UserManager.getInstance();
         productManager = ProductManager.getInstance();
         discountManager = DiscountManager.getInstance();

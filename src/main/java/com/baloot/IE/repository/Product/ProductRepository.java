@@ -104,6 +104,7 @@ public class ProductRepository extends Repository<Product, String> {
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return null;
+        return  String.format("update %s set %s = %s where %s = %s;",
+                TABLE_NAME, varName, newValue, whereField, whereValue);
     }
 }
