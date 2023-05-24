@@ -60,8 +60,8 @@ public class BuyListRepository extends Repository<CartItem, String> {
     @Override
     protected String getInsertStatement() {
         return String.format("INSERT INTO %s (cartId, productId, quantity)\n" +
-                "VALUES (?, ?, ?)\n" +
-                "ON DUPLICATE KEY UPDATE productId = ?;", TABLE_NAME);
+                                "VALUES (?, ?, ?)\n" +
+                            "ON DUPLICATE KEY UPDATE quantity = ?;", TABLE_NAME);
     }
 
     @Override

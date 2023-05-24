@@ -1,11 +1,13 @@
 package com.baloot.IE.domain.User;
 import com.baloot.IE.domain.Cart.Cart;
+import com.baloot.IE.repository.Cart.CartRepository;
 import com.baloot.IE.repository.User.UserRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,7 @@ public class User {
     private int credit;
 
     private final UserRepository repository = UserRepository.getInstance();
+    private final CartRepository cartRepository = CartRepository.getInstance();
 
     @JsonIgnore
     private Cart cart;
@@ -39,7 +42,7 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
-        this.cart = new Cart(username_);
+        this.cart = cartRepository.findByField(this.username,"username");
     }
 
     public boolean userNameEquals(String username) {
@@ -74,7 +77,19 @@ public class User {
         return cart.calcTotal();
     }
 
-    public void initialize() {
-        this.cart = new Cart(this.username);
+    public void initialize()  {
+        try {
+            Cart cart = null;
+            cart = cartRepository.findByField(this.username,"username");
+            if(cart == null) {
+                this.cart = new Cart(this.username);
+                cartRepository.insert(this.cart);
+            }
+            else{
+                this.cart = cart;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

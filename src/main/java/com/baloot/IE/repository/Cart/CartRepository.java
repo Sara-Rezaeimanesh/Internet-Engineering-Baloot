@@ -46,7 +46,7 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-            return String.format("SELECT * FROM %s c WHERE c.cartId = ?;", TABLE_NAME);
+            return String.format("SELECT * FROM %s c WHERE c.%s = ?;", TABLE_NAME,field_name);
     }
 
     @Override
@@ -61,6 +61,8 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected void fillInsertValues(PreparedStatement st, Cart data) throws SQLException {
+        System.out.println(data.getUsername());
+        System.out.println(data.getCartId());
         st.setString(1, String.valueOf(data.getUsername()));
         st.setString(2, String.valueOf(data.getCartId()));
         st.setString(3, String.valueOf(data.getDiscount()));
@@ -75,11 +77,11 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected Cart convertResultSetToDomainModel(ResultSet rs) {
-        try{//public Cart(String username_, ArrayList<CartItem> buyList_, ArrayList<CartItem> purchaseList_, int discount_, int total_, int no_items_) {
-            int discount = Integer.parseInt(rs.getString(2));
-            int total = Integer.parseInt(rs.getString(3));
-            int no_items = Integer.parseInt(rs.getString(4));
-            return new Cart(rs.getString(1), discount, total, no_items);
+        try{
+            int discount = Integer.parseInt(rs.getString(3));
+            int total = Integer.parseInt(rs.getString(4));
+            int no_items = Integer.parseInt(rs.getString(5));
+            return new Cart(rs.getString(1), Integer.parseInt(rs.getString(2)),discount, total, no_items);
         }
         catch (Exception e){
             return null;

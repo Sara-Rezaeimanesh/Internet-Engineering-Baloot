@@ -14,7 +14,7 @@ public class UserManager {
         ArrayList<User> users = initializer.getUsersFromAPI("users");
         users.forEach(User::initialize);
         for(User u : users)
-            repository.insert(new User(u.getUsername(), u.getPassword(), u.getEmail(), u.getBirthDate(), u.getAddress(), u.getCredit()));
+            repository.insert(u);
     }
     public static UserManager getInstance() throws Exception {
         if(instance == null)

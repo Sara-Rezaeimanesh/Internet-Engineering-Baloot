@@ -27,10 +27,6 @@ public class Cart {
     private final BuyListRepository buyListRepository = BuyListRepository.getInstance();
     private final PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
 
-    public void initialize() {
-        this.cartId = count.incrementAndGet();
-    }
-
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
         total = calcTotal();
@@ -39,13 +35,14 @@ public class Cart {
     }
 
     public Cart(String username_) {
+        this.cartId = count.incrementAndGet();
         total = 0;
         no_items = 0;
         username = username_;
-
     }
 
-    public Cart(String username_, int discount_, int total_, int no_items_) {
+    public Cart(String username_, int cartId_ , int discount_, int total_, int no_items_) {
+        cartId = cartId_;
         total = total_;
         discount = discount_;
         no_items = no_items_;
@@ -58,8 +55,8 @@ public class Cart {
         total += p.getPrice();
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
         no_items += 1;
-        cartRepository.update("no_items", String.valueOf(no_items), "username", username);
-//        buyListRepository.insert(new CartItem(p, 1, cartId));
+        cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+        buyListRepository.insert(new CartItem(p, 1, cartId));
     }
 
     public void remove(Product p) throws SQLException {
