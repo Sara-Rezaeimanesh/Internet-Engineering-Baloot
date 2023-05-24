@@ -38,10 +38,6 @@ public class Product {
     private ProductRepository productRepository = ProductRepository.getInstance();
 
 
-    public Product() {
-
-    }
-
     public void initialize() {
         ratings = new ArrayList<>();
         comments = new ArrayList<>();
@@ -94,6 +90,7 @@ public class Product {
 
     public void updateStock(int i) {
         this.inStock += i;
+        productRepository.update("inStock", String.valueOf(inStock), "id", String.valueOf(id));
     }
 
     public void voteComment(String userEmail, int commentId, int vote) {

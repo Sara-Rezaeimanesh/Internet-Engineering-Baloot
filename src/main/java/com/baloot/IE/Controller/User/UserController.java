@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class UserController {
 
     @DeleteMapping("/{id}/cart/{product_id}")
     @ResponseBody
-    public void removeFromCart(@PathVariable String id, @PathVariable int product_id) {
+    public void removeFromCart(@PathVariable String id, @PathVariable int product_id) throws SQLException {
         Product product = productManager.findProductsById(product_id);
         userManager.findUserById(id).getCart().remove(product);
     }

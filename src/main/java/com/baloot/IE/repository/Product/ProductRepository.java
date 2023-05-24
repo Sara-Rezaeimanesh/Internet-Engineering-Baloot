@@ -3,6 +3,7 @@ package com.baloot.IE.repository.Product;
 import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,8 +57,8 @@ public class ProductRepository extends Repository<Product, String> {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
-        st.setString(1, username);
+    protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
+        st.setString(1, id);
     }
 
     @Override
@@ -85,10 +86,11 @@ public class ProductRepository extends Repository<Product, String> {
     protected Product convertResultSetToDomainModel(ResultSet rs) {
         try{
             return new Product(Integer.parseInt(rs.getString(1)), rs.getString(2), Integer.parseInt(rs.getString(3)),
-                    Integer.parseInt(rs.getString(4)),new ArrayList<>(), Float.parseFloat(rs.getString(5)), Integer.parseInt(rs.getString(6)), rs.getString(7));
+                    Integer.parseInt(rs.getString(4)),new ArrayList<>(), Float.parseFloat(rs.getString(6)), Integer.parseInt(rs.getString(5)), rs.getString(7));
         }
         catch (Exception e){
-            return new Product();
+            System.out.println(e.getMessage());
+            return new Product(-1, "-1", -1,-1,new ArrayList<>(),-1,-1,"-1");
         }
     }
 

@@ -4,10 +4,7 @@ import com.baloot.IE.domain.Rating.Rating;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class RatingRepository extends Repository<Rating, String> {
@@ -56,10 +53,9 @@ public class RatingRepository extends Repository<Rating, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("IF EXISTS (SELECT 1 FROM %s WHERE username = ? and productId = ?)" +
-                                "UPDATE yourTable SET score = ? WHERE username = ? and productId = ?;" +
-                            "ELSE" +
-                                "INSERT INTO %s (username, productId, score) VALUES (?, ?, ?)", TABLE_NAME, TABLE_NAME);
+        return String.format("INSERT INTO %s (username, productId, score)\n" +
+                            "VALUES (?, ?, ?)\n" +
+                            "ON DUPLICATE KEY UPDATE score = ?;", TABLE_NAME);
     }
 
     @Override
@@ -67,12 +63,8 @@ public class RatingRepository extends Repository<Rating, String> {
         st.setString(1, String.valueOf(data.getUsername()));
         st.setString(2, String.valueOf(data.getProductId()));
         st.setString(3, String.valueOf(data.getScore()));
-        st.setString(4, String.valueOf(data.getUsername()));
-        st.setString(5, String.valueOf(data.getProductId()));
 
-        st.setString(6, String.valueOf(data.getUsername()));
-        st.setString(7, String.valueOf(data.getProductId()));
-        st.setString(8, String.valueOf(data.getScore()));
+        st.setString(4, String.valueOf(data.getScore()));
     }
 
     @Override
@@ -105,18 +97,27 @@ public class RatingRepository extends Repository<Rating, String> {
     }
 
     public float calculateRating(int id) {
-        String statement =  String.format("select avg(rating) from %s r where r.id = %s", TABLE_NAME, id);
-        try {
-            Connection con = ConnectionPool.getConnection();
-            PreparedStatement st = con.prepareStatement(statement);
+        String query = String.format("SELECT avg(r.score) FROM %s r WHERE r.productId = %s", TABLE_NAME, id);
+        if (query != null && !query.isEmpty()) {
             try {
-                return st.executeUpdate();
-            } catch (SQLException ex) {
-                System.out.println("error in Mapper.delete query.");
-                throw ex;
+                Connection con = ConnectionPool.getConnection();
+                Statement statement = con.createStatement();
+                ResultSet resultSet = statement.executeQuery(query);
+
+                // Move the cursor to the first row
+                if (resultSet.next()) {
+                    return resultSet.getFloat(1);
+                }
+
+                resultSet.close();
+                statement.close();
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } else {
+            System.out.println("Invalid SQL query");
         }
+        return 0;
     }
 }
