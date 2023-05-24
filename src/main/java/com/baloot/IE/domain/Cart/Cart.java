@@ -4,6 +4,7 @@ import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.repository.Cart.BuyListRepository;
 import com.baloot.IE.repository.Cart.CartRepository;
 import com.baloot.IE.repository.Cart.PurchaseListRepository;
+import com.baloot.IE.utitlity.StringUtility;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,10 +56,10 @@ public class Cart {
         if(!p.isInStock())
             throw new Exception("Product is not in stock!");
         total += p.getPrice();
-        cartRepository.update("total", String.valueOf(total), "username", username);
+        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
         no_items += 1;
         cartRepository.update("no_items", String.valueOf(no_items), "username", username);
-        buyListRepository.insert(new CartItem(p, 1, cartId));
+//        buyListRepository.insert(new CartItem(p, 1, cartId));
     }
 
     public void remove(Product p) throws SQLException {
