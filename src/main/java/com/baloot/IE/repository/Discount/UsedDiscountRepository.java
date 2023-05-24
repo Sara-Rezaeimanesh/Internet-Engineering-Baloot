@@ -75,7 +75,7 @@ public class UsedDiscountRepository extends Repository<UsedDiscount, String> {
             return new UsedDiscount(rs.getString(1), rs.getString(2));
         }
         catch (Exception e){
-            return new UsedDiscount("-1","-1");
+            return null;
         }
     }
 

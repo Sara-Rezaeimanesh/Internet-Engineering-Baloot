@@ -89,8 +89,7 @@ public class ProductRepository extends Repository<Product, String> {
                     Integer.parseInt(rs.getString(4)),new ArrayList<>(), Float.parseFloat(rs.getString(6)), Integer.parseInt(rs.getString(5)), rs.getString(7));
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
-            return new Product(-1, "-1", -1,-1,new ArrayList<>(),-1,-1,"-1");
+            return null;
         }
     }
 

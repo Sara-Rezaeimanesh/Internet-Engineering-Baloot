@@ -79,7 +79,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
             return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(2)));
         }
         catch (Exception e){
-            return new CartItem(new Product(-1, "-1", -1,-1,new ArrayList<>(),-1,-1,"-1"),-1,-1);
+            return null;
         }
     }
 

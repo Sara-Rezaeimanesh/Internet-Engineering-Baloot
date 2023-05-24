@@ -78,7 +78,7 @@ public class RatingRepository extends Repository<Rating, String> {
             return new Rating(rs.getString(1), Integer.parseInt(rs.getString(2)), Float.parseFloat(rs.getString(3)));
         }
         catch (Exception e){
-            return new Rating();
+            return null;
         }
     }
 

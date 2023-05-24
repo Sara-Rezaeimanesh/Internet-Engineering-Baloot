@@ -92,15 +92,17 @@ public abstract class Repository<T, I> {
 
     public void update(String varName, String newValue, String whereField, String whereValue) {
         String statement = getUpdateStatement(varName, newValue, whereField, whereValue);
+        System.out.println(statement);
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
+
             try {
                 con.setAutoCommit(false);
                 st.executeUpdate();
                 con.commit();
             } catch (SQLException ex) {
-                System.out.println("error in increaseCredit query.");
+                System.out.println("error in update query.");
                 throw ex;
             }
         } catch (SQLException e) {

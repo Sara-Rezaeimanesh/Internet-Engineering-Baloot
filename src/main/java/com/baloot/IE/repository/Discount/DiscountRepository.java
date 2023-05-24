@@ -73,7 +73,7 @@ public class DiscountRepository extends Repository<Discount, String> {
             return new Discount(rs.getString(1), rs.getString(2));
         }
         catch (Exception e){
-            return new Discount("-1","-1");
+            return null;
         }
     }
 

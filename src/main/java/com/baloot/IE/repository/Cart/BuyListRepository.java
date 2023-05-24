@@ -59,23 +59,17 @@ public class BuyListRepository extends Repository<CartItem, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("IF EXISTS (SELECT 1 FROM %s WHERE cartId = ? and productId = ?)\n" +
-                                " UPDATE %s SET quantity = ? WHERE cartId = ? and productId = ?;\n" +
-                             "ELSE \n" +
-                                " INSERT INTO %s (cartId, productId, quantity) VALUES (?, ?, ?)\n", TABLE_NAME, TABLE_NAME, TABLE_NAME);
+        return String.format("INSERT INTO %s (cartId, productId, quantity)\n" +
+                "VALUES (?, ?, ?)\n" +
+                "ON DUPLICATE KEY UPDATE productId = ?;", TABLE_NAME);
     }
 
     @Override
     protected void fillInsertValues(PreparedStatement st, CartItem data) throws SQLException {
         st.setString(1, String.valueOf(data.getCartId()));
         st.setString(2, String.valueOf(data.getProduct().getId()));
-        st.setString(3, String.valueOf(data.getQuantity()+1));
-        st.setString(4, String.valueOf(data.getCartId()));
-        st.setString(5, String.valueOf(data.getProduct().getId()));
-
-        st.setString(6, String.valueOf(data.getCartId()));
-        st.setString(7, String.valueOf(data.getProduct().getId()));
-        st.setString(8, String.valueOf(data.getQuantity()));
+        st.setString(3, String.valueOf(data.getQuantity()));
+        st.setString(4, String.valueOf(data.getQuantity()+1));
     }
 
     @Override
@@ -89,7 +83,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
             return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(2)));
         }
         catch (Exception e){
-            return new CartItem(new Product(-1, "-1", -1,-1,new ArrayList<>(),-1,-1,"-1"),-1,-1);
+            return null;
         }
     }
 

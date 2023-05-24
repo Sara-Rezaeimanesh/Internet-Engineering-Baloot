@@ -26,7 +26,6 @@ public class Cart {
     private final BuyListRepository buyListRepository = BuyListRepository.getInstance();
     private final PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
 
-
     public void initialize() {
         this.cartId = count.incrementAndGet();
     }
@@ -42,9 +41,10 @@ public class Cart {
         total = 0;
         no_items = 0;
         username = username_;
+
     }
 
-    public Cart(String username_, ArrayList<CartItem> buyList_, ArrayList<CartItem> purchaseList_, int discount_, int total_, int no_items_) {
+    public Cart(String username_, int discount_, int total_, int no_items_) {
         total = total_;
         discount = discount_;
         no_items = no_items_;

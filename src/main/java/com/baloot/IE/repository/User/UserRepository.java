@@ -79,7 +79,7 @@ public class UserRepository extends Repository<User, String> {
                     rs.getString(4), rs.getString(5), Integer.parseInt(rs.getString(6)));
         }
         catch (Exception e){
-            return new User();
+            return null;
         }
     }
 

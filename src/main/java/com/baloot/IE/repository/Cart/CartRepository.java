@@ -54,7 +54,6 @@ public class CartRepository extends Repository<Cart, String> {
         st.setString(1, username);
     }
 
-
     @Override
     protected String getInsertStatement() {
         return String.format("INSERT IGNORE INTO %s(username, cartId, discount, total, no_items) VALUES(?,?,?,?,?)", TABLE_NAME);
@@ -77,15 +76,13 @@ public class CartRepository extends Repository<Cart, String> {
     @Override
     protected Cart convertResultSetToDomainModel(ResultSet rs) {
         try{//public Cart(String username_, ArrayList<CartItem> buyList_, ArrayList<CartItem> purchaseList_, int discount_, int total_, int no_items_) {
-            ArrayList<CartItem> buyList = buyListRepository.findAll(rs.getString(1));
-            ArrayList<CartItem> purchaseList = purchaseListRepository.findAll(rs.getString(1));
             int discount = Integer.parseInt(rs.getString(2));
             int total = Integer.parseInt(rs.getString(3));
             int no_items = Integer.parseInt(rs.getString(4));
-            return new Cart(rs.getString(1), buyList, purchaseList, discount, total, no_items);
+            return new Cart(rs.getString(1), discount, total, no_items);
         }
         catch (Exception e){
-            return new Cart("temp");
+            return null;
         }
     }
 

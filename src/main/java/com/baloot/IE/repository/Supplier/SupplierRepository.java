@@ -80,7 +80,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
             return new Supplier(Integer.parseInt(rs.getString(1)), rs.getString(2), rs.getString(3));
         }
         catch (Exception e){
-            return new Supplier(-1, "-1","-1");
+            return null;
         }
     }
 
