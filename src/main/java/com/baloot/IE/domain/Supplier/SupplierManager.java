@@ -17,7 +17,7 @@ public class SupplierManager {
         ArrayList<Supplier> suppliers = initializer.getProvidersFromAPI("providers");
         suppliers.forEach(Supplier::initialize);
         for(Supplier s : suppliers)
-            repository.insert(new Supplier(s.getId(), s.getName(), s.getRegisteryDate()));
+            repository.insert(s);
     }
 
     public static SupplierManager getInstance() throws Exception {
@@ -37,7 +37,7 @@ public class SupplierManager {
     public Supplier findSupplierById(int id) {
         Supplier s = null;
         try {
-            s = repository.findById(String.valueOf(id));
+            s = repository.findByField(String.valueOf(id), "id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -46,16 +46,16 @@ public class SupplierManager {
         throw new IllegalArgumentException("Supplier does not exist.");
     }
 
-//    public Supplier findSupplierByName(String name) {
-//        Supplier s = null;
-//        try {
-//            s = repository.findById(String.valueOf(id));
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        if(s != null)
-//            return s;
-//
-//        throw new IllegalArgumentException("Supplier does not exist.");
-//    }
+    public Supplier findSupplierByName(String name) {
+        Supplier s = null;
+        try {
+            s = repository.findByField(name, "name");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if(s != null)
+            return s;
+
+        throw new IllegalArgumentException("Supplier does not exist.");
+    }
 }

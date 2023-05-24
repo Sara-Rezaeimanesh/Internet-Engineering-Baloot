@@ -24,6 +24,10 @@ public class ProductManager {
         Initializer initializer = new Initializer();
         products = initializer.getCommoditiesFromAPI("v2/commodities");
         products.forEach(Product::initialize);
+        System.out.println("hello " + products.size());
+        for(Product p : products)
+            repository.insert(p);
+
         ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
         comments.forEach(Comment::initialize);
         for(Comment c : comments){
@@ -33,7 +37,7 @@ public class ProductManager {
         }
     }
 
-
+    // TODO
     public List<Product> filterProducts(String category, String priceRange, String name, String id, int supplier_id, String available) {
         List<Product> searchResults = new ArrayList<>(products);
         if (category != null)
@@ -61,6 +65,7 @@ public class ProductManager {
         return searchResults;
     }
 
+    // TODO
     public List<Product> sortProducts(List<Product> products, String sort_param) {
         if(Objects.equals(sort_param, "price"))
             products.sort(Comparator.comparingDouble(Product::getPrice));
@@ -81,7 +86,7 @@ public class ProductManager {
     public Product findProductsById(int id) {
         Product p = null;
         try {
-            p = repository.findById(String.valueOf(id));
+            p = repository.findByField(String.valueOf(id), "id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -98,11 +103,13 @@ public class ProductManager {
         }
     }
 
+    // TODO
     public void voteComment(String userEmail, int productId, int commentId, int vote) {
         Product p = findProductsById(productId);
         p.voteComment(userEmail, commentId, vote);
     }
 
+    // TODO
     public void updateRating(String username, String quantity, int id) throws Exception {
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);

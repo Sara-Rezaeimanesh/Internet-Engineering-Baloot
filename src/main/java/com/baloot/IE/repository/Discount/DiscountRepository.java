@@ -42,8 +42,8 @@ public class DiscountRepository extends Repository<Discount, String> {
     }
 
     @Override
-    protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s d WHERE d.discountCode = ?;", TABLE_NAME);
+    protected String getFindByIdStatement(String field_name) {
+        return String.format("SELECT * FROM %s d WHERE d.%s = ?;", TABLE_NAME, field_name);
     }
 
     @Override

@@ -4,11 +4,14 @@ import com.baloot.IE.domain.Product.Product;
 import com.baloot.IE.domain.Product.ProductManager;
 import com.baloot.IE.domain.Supplier.SupplierManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
 @RequestMapping("/products")
+@Order(3)
 public class ProductController {
 
     private final int ppp;

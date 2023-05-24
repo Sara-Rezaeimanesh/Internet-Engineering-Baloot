@@ -47,8 +47,8 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     @Override
-    protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s c WHERE c.discountCode = ?;", TABLE_NAME);
+    protected String getFindByIdStatement(String field_name) {
+        return null;
     }
 
     @Override
@@ -83,6 +83,7 @@ public class CartRepository extends Repository<Cart, String> {
 //        catch (Exception e){
 //            return new Cart();
 //        }
+        return null;
     }
 
     @Override
@@ -92,5 +93,6 @@ public class CartRepository extends Repository<Cart, String> {
 //            CartItems.add(this.convertResultSetToDomainModel(rs));
 //        }
 //        return CartItems;
+        return null;
     }
 }

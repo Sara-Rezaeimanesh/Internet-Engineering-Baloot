@@ -24,7 +24,7 @@ public class UserManager {
     public User findUserById(String id) {
         User user = null;
         try {
-            user = repository.findById(id);
+            user = repository.findByField(id, "username");
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -37,7 +37,7 @@ public class UserManager {
     public boolean userExists(String username, String password){
         User user;
         try {
-            user = repository.findById(username);
+            user = repository.findByField(username, "username");
         }
         catch (Exception e) {
             throw new IllegalArgumentException("User does not exits.");
@@ -57,7 +57,7 @@ public class UserManager {
     public void addUser(User user) throws Exception {
         User searchUser = null;
         try{
-            searchUser = repository.findById(user.getUsername());
+            searchUser = repository.findByField(user.getUsername(), "username");
         }
         catch (Exception e){
             System.out.println("problem in method addUser");

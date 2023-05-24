@@ -33,17 +33,17 @@ public class ProductRepository extends Repository<Product, String> {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
-                        "\"CREATE TABLE IF NOT EXISTS %s (\\n\" +\n" +
-                                "\"    id varchar(255),\\n\" +\n" +
-                                "\"    name varchar(255),\\n\" +\n" +
-                                "\"    providerId varchar(255) not null,\\n\" +\n" +
-                                "\"    price varchar(255) not null,\\n\" +\n" +
-                                "\"    inStock varchar(255),\\n\" +\n" +
-                                "\"    rating varchar(255),\\n\" +\n" +
-                                "\"    image text,\\n\" +\n" +
-                                "\"    primary key(id),\\n\" +\n" +
-                                "\"    foreign key (providerId) references PROVIDER(pid)\\n\" +\n" +
-                                "\");\",",
+                        "CREATE TABLE IF NOT EXISTS %s (\n" +
+                                "    id varchar(255),\n " +
+                                "    name varchar(255),\n" +
+                                "    providerId CHAR(50) not null,\n" +
+                                "    price varchar(255) not null,\n" +
+                                "    inStock varchar(255),\n" +
+                                "    rating varchar(255),\n" +
+                                "    image text,\n" +
+                                "    primary key(id),\n" +
+                                "    foreign key (providerId) references PROVIDERS(id)\n" +
+                                ");",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -52,8 +52,8 @@ public class ProductRepository extends Repository<Product, String> {
     }
 
     @Override
-    protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s p WHERE p.id = ?;", TABLE_NAME);
+    protected String getFindByIdStatement(String field_name) {
+        return String.format("SELECT * FROM %s p WHERE p.%s = ?;", TABLE_NAME, field_name);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ProductRepository extends Repository<Product, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(id, name, providerId, price, inStock, rating, image) VALUES(?,?,?,?,?,?)", TABLE_NAME);
+        return String.format("INSERT IGNORE INTO %s(id, name, providerId, price, inStock, rating, image) VALUES(?,?,?,?,?,?,?);", TABLE_NAME);
     }
 
     @Override
@@ -73,7 +73,8 @@ public class ProductRepository extends Repository<Product, String> {
         st.setString(3, String.valueOf(data.getProviderId()));
         st.setString(4, String.valueOf(data.getPrice()));
         st.setString(5, String.valueOf(data.getInStock()));
-        st.setString(6, data.getImage());
+        st.setString(6, String.valueOf(data.getRating()));
+        st.setString(7, data.getImage());
     }
 
     @Override

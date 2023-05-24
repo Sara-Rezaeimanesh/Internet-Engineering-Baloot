@@ -48,8 +48,9 @@ public class CartItemRepository extends Repository<CartItem, String> {
     }
 
     @Override
-    protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s c WHERE c.discountCode = ?;", TABLE_NAME);
+    protected String getFindByIdStatement(String field_name) {
+        // discountCode
+        return String.format("SELECT * FROM %s c WHERE c.%s = ?;", TABLE_NAME, field_name);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class CartItemRepository extends Repository<CartItem, String> {
     @Override
     protected CartItem convertResultSetToDomainModel(ResultSet rs) {
         try{
-            return new CartItem(productRepository.findById(rs.getString(1)), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(2)));
+            return new CartItem(productRepository.findByField(rs.getString(1), "id"), Integer.parseInt(rs.getString(2)), Integer.parseInt(rs.getString(2)));
         }
         catch (Exception e){
             return new CartItem(new Product(),-1,-1);

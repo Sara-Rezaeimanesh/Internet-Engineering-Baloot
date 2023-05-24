@@ -33,7 +33,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(username CHAR(50),\nname CHAR(225),\nregisteryDate CHAR(225),",
+                                "(id CHAR(50),\nname CHAR(225),\nregisteryDate CHAR(225), primary key(id));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -41,9 +41,14 @@ public class SupplierRepository extends Repository<Supplier, String> {
         con.close();
     }
 
+//    @Override
+//    protected String getFindByIdStatement() {
+//        return String.format("SELECT * FROM %s s WHERE s.%s = ?;", TABLE_NAME, name);
+//    }
+
     @Override
-    protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s s WHERE s.username = ?;", TABLE_NAME);
+    protected String getFindByIdStatement(String field_name) {
+        return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Repository<T, I> {
-    abstract protected String getFindByIdStatement();
+    abstract protected String getFindByIdStatement(String field_name);
 
     abstract protected void fillFindByIdValues(PreparedStatement st, I id) throws SQLException;
 
@@ -22,9 +22,9 @@ public abstract class Repository<T, I> {
 
     abstract protected ArrayList<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException;
 
-    public T findById(I id) throws SQLException {
+    public T findByField(I id, String field_name) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindByIdStatement());
+        PreparedStatement st = con.prepareStatement(getFindByIdStatement(field_name));
         fillFindByIdValues(st, id);
         try {
             ResultSet resultSet = st.executeQuery();

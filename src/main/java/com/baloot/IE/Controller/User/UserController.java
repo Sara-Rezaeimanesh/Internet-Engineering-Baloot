@@ -7,6 +7,7 @@ import com.baloot.IE.domain.Product.ProductManager;
 import com.baloot.IE.domain.User.User;
 import com.baloot.IE.domain.User.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@Order(2)
 public class UserController {
     private final UserManager userRepository;
     private final ProductManager productRepository;
@@ -22,6 +24,7 @@ public class UserController {
 
     @Autowired
     public UserController() throws Exception {
+        System.out.printf("here3");
         userRepository = UserManager.getInstance();
         productRepository = ProductManager.getInstance();
         discountRepository = DiscountManager.getInstance();

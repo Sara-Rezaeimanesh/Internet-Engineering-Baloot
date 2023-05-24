@@ -13,11 +13,10 @@ public class ConnectionPool {
 
     static {
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        // remote db
         ds.setUrl("jdbc:mysql://localhost:3306/balootDB?useUnicode=true&characterEncoding=UTF-8");
-        //ds.setUsername("rasta");
         ds.setUsername("root");
-        ds.setPassword("1234");
+//        ds.setPassword("1234");
+        ds.setPassword("sara.44094290");
         ds.setMinIdle(1);
         ds.setMaxIdle(2000);
         ds.setMaxOpenPreparedStatements(2000);

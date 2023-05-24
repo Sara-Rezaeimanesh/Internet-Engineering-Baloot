@@ -34,7 +34,7 @@ public class UserRepository extends Repository<User, String> {
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
                          "(username CHAR(50),\npassword CHAR(225),\nemail CHAR(225),"  +
-                          "\nbirthDate DATE,\n address CHAR(200), credit INTEGER,\nPRIMARY KEY(username, email));",
+                         "\nbirthDate DATE,\n address CHAR(200), credit INTEGER,\nPRIMARY KEY(username, email));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -43,8 +43,8 @@ public class UserRepository extends Repository<User, String> {
     }
 
     @Override
-    protected String getFindByIdStatement() {
-        return String.format("SELECT * FROM %s u WHERE u.username = ?;", TABLE_NAME);
+    protected String getFindByIdStatement(String field_name) {
+        return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
     }
 
     @Override
