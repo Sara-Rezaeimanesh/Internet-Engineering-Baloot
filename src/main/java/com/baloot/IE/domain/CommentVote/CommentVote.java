@@ -7,6 +7,7 @@ import lombok.Getter;
 public class CommentVote {
     private String userEmail;
     private int vote;
+    private int commentId;
 
     public void updateVote(int newVote) {
         if(vote != 1 && vote != -1 && vote != 0)

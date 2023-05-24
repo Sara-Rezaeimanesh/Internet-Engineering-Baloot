@@ -6,6 +6,8 @@ import com.baloot.IE.domain.User.UserManager;
 import com.baloot.IE.repository.Cart.BuyListRepository;
 import com.baloot.IE.repository.Cart.CartRepository;
 import com.baloot.IE.repository.Cart.PurchaseListRepository;
+import com.baloot.IE.repository.Comment.CommentRepository;
+import com.baloot.IE.repository.Comment.CommentVoteRepository;
 import com.baloot.IE.repository.Product.ProductRepository;
 import com.baloot.IE.repository.Supplier.SupplierRepository;
 import com.baloot.IE.repository.User.UserRepository;
@@ -21,6 +23,8 @@ public class BalootApplication {
         CartRepository.getInstance();
         BuyListRepository.getInstance();
         PurchaseListRepository.getInstance();
+        CommentRepository.getInstance();
+        CommentVoteRepository.getInstance();
         SpringApplication.run(BalootApplication.class, args);
     }
 }

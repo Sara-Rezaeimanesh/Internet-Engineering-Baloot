@@ -1,5 +1,6 @@
 package com.baloot.IE.domain.Product;
 
+import com.baloot.IE.domain.Comment.CommentManager;
 import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
@@ -19,22 +20,14 @@ public class ProductManager {
     private static ProductManager instance;
     List<Product> products;
     private final ProductRepository repository = ProductRepository.getInstance();
+    private final CommentManager commentManager = CommentManager.getInstance();
 
     public ProductManager() throws Exception {
         Initializer initializer = new Initializer();
         products = initializer.getCommoditiesFromAPI("v2/commodities");
         products.forEach(Product::initialize);
-        System.out.println("hello " + products.size());
         for(Product p : products)
             repository.insert(p);
-
-        ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
-        comments.forEach(Comment::initialize);
-        for(Comment c : comments){
-            Product p = findProductsById(c.getCommodityId());
-            if(p == null) continue;
-            p.addComment(c);
-        }
     }
 
     // TODO
@@ -104,9 +97,8 @@ public class ProductManager {
     }
 
     // TODO
-    public void voteComment(String userEmail, int productId, int commentId, int vote) {
-        Product p = findProductsById(productId);
-        p.voteComment(userEmail, commentId, vote);
+    public void voteComment(String userEmail, int productId, int commentId, int vote) throws SQLException {
+        commentManager.voteComment(userEmail, commentId, vote);
     }
 
     // TODO
@@ -116,11 +108,10 @@ public class ProductManager {
         product.updateRating(rating);
     }
 
-    public void addComment(String userEmail, int id, String commentTxt) {
+    public void addComment(String userEmail, int id, String commentTxt) throws Exception {
         String todayDate = getTodayDate();
         Comment comment = new Comment(userEmail, id, commentTxt, todayDate);
-        Product product = findProductsById(id);
-        product.addComment(comment);
+        commentManager.addComment(comment);
     }
 
     private String getTodayDate() {
