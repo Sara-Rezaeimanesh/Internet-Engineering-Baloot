@@ -58,8 +58,8 @@ public class DiscountRepository extends Repository<Discount, String> {
 
     @Override
     protected void fillInsertValues(PreparedStatement st, Discount data) throws SQLException {
-        st.setString(1, String.valueOf(data.getDiscount()));
-        st.setString(2, data.getDiscountCode());
+        st.setString(1, data.getDiscountCode());
+        st.setString(2, String.valueOf(data.getDiscount()) );
     }
 
     @Override

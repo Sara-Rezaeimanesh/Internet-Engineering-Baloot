@@ -1,6 +1,7 @@
 package com.baloot.IE.domain.Discount;
 
 import com.baloot.IE.repository.Discount.UsedDiscountRepository;
+import com.baloot.IE.utitlity.StringUtility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
@@ -29,11 +30,8 @@ public class Discount {
     }
 
     public boolean isValidToUse(String username) throws SQLException {
-        ArrayList<UsedDiscount> usedDiscount = usedDiscountRepository.findAll("username = " + username);
-        for(UsedDiscount ud : usedDiscount)
-            if(ud.isSameDiscountCode(this.discountCode))
-                return false;
-        return true;
+        ArrayList<UsedDiscount> usedDiscount = usedDiscountRepository.findAll("username = " + StringUtility.quoteWrapper(username) + " and " + "discountCode = " + StringUtility.quoteWrapper(discountCode) );
+        return usedDiscount.size() == 0;
     }
 
     public void addToUsed(String username) throws SQLException {

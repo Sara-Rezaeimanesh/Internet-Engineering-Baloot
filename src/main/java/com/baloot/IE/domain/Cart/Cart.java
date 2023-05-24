@@ -33,8 +33,8 @@ public class Cart {
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
         total = calcTotal();
-        cartRepository.update("discount", discount, "username", username);
-        cartRepository.update("total", String.valueOf(total), "username", username);
+        cartRepository.update("discount", discount, "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
     }
 
     public Cart(String username_) {
@@ -70,9 +70,9 @@ public class Cart {
                 buyListRepository.delete(String.valueOf(cartId), String.valueOf(ci.getProduct().getId()));
             }
             total -= p.getPrice();
-            cartRepository.update("total", String.valueOf(total), "username", username);
+            cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
             no_items -= 1;
-            cartRepository.update("no_items", String.valueOf(no_items), "username", username);
+            cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
             return;
         }
         throw new IllegalArgumentException("Item not available in cart!");

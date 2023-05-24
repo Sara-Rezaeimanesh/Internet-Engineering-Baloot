@@ -33,7 +33,7 @@ public class UsedDiscountRepository extends Repository<UsedDiscount, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(discountCode CHAR(50),\nusername CHAR(225),\nPRIMARY KEY(discountCode, username)"
+                                "(discountCode CHAR(50),\nusername CHAR(225),\nPRIMARY KEY(discountCode, username),"
                                 +  "\nforeign key (discountCode) references DISCOUNTS(discountCode),\n foreign key (username) references USERS(username));",
                         TABLE_NAME)
         );
