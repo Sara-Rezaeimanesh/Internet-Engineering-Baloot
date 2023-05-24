@@ -34,7 +34,8 @@ public class UserRepository extends Repository<User, String> {
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
                          "(username CHAR(50),\npassword CHAR(225),\nemail CHAR(225),"  +
-                         "\nbirthDate DATE,\n address CHAR(200), credit FLOAT,\nPRIMARY KEY(username, email));",
+                         "\nbirthDate DATE,\n address CHAR(200), credit FLOAT,\nPRIMARY KEY(username, email),\n" +
+                                "unique (email));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();

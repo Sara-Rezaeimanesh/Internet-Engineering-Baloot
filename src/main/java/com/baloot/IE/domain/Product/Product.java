@@ -93,11 +93,7 @@ public class Product {
         productRepository.update("inStock", String.valueOf(inStock), "id", String.valueOf(id));
     }
 
-    public void voteComment(String userEmail, int commentId, int vote) {
-        for(Comment c : comments)
-            if(c.idMatches(commentId))
-                c.updateVote(userEmail, vote);
-    }
+
 
     public boolean isSameCategory(String category) {
         return categories.contains(category);

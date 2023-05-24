@@ -1,6 +1,7 @@
 package com.baloot.IE.repository.Comment;
 
 import com.baloot.IE.domain.Comment.Comment;
+import com.baloot.IE.domain.User.User;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
 
@@ -14,7 +15,7 @@ public class CommentRepository extends Repository<Comment, String> {
     private static CommentRepository instance;
     private static final String TABLE_NAME = "COMMENTS";
 
-    public CommentRepository getInstance() throws SQLException {
+    public static CommentRepository getInstance() throws SQLException {
         if(instance == null)
             instance = new CommentRepository();
         return instance;
@@ -26,7 +27,9 @@ public class CommentRepository extends Repository<Comment, String> {
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
                                 "(id CHAR(50),\nuserEmail CHAR(225),\ncommodityId CHAR(225),"  +
-                                "\ntext CHAR VARYING(500),\n date DATE, likes INTEGER, dislikes INTEGER\nPRIMARY KEY(id));",
+                                "\ntext CHAR VARYING(500),\n date DATE, likes INTEGER, dislikes INTEGER,\n"+
+                                "PRIMARY KEY(id),\nforeign key (userEmail) references USERS(email),\n" +
+                                "foreign key (commodityId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -63,21 +66,29 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return null;
+        return String.format("SELECT * FROM %s WHERE " + searchString + ";", TABLE_NAME);
     }
 
     @Override
     protected Comment convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return null;
+        return new Comment(Integer.parseInt(rs.getString(1)), rs.getString(2),
+                            Integer.parseInt(rs.getString(3)), rs.getString(4),
+                            rs.getString(5), Integer.parseInt(rs.getString(6)),
+                            Integer.parseInt(rs.getString(7)));
     }
 
     @Override
     protected ArrayList<Comment> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
-        return null;
+        ArrayList<Comment> comments = new ArrayList<>();
+        while (rs.next()) {
+            comments.add(this.convertResultSetToDomainModel(rs));
+        }
+        return comments;
     }
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return null;
+        return String.format("update %s set %s = %s where %s = %s;",
+                TABLE_NAME, varName, newValue, whereField, whereValue);
     }
 }
