@@ -39,6 +39,7 @@ public class Cart {
 
     public Cart(String username_) {
         this.cartId = count.incrementAndGet();
+        System.out.println("cartId " + cartId);
         total = 0;
         no_items = 0;
         username = username_;
@@ -93,6 +94,7 @@ public class Cart {
             ci.updateProductStock();
         }
         cartRepository.delete(this.username);
+        cartRepository.insert(new Cart(this.username));
         total = 0;
         no_items = 0;
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));

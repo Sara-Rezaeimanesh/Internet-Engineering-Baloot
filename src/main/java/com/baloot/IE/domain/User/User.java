@@ -83,6 +83,7 @@ public class User {
     public void initialize()  {
         try {
             Cart cart = null;
+            cartRepository = CartRepository.getInstance();
             cart = cartRepository.findByField(this.username,"username");
             if(cart == null) {
                 this.cart = new Cart(this.username);

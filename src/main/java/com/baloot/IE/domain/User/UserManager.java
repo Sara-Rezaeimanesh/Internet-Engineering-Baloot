@@ -1,6 +1,7 @@
 package com.baloot.IE.domain.User;
 
 import com.baloot.IE.domain.Initializer.Initializer;
+import com.baloot.IE.repository.Cart.CartRepository;
 import com.baloot.IE.repository.User.UserRepository;
 
 import java.sql.SQLException;
@@ -15,13 +16,11 @@ public class UserManager {
         ArrayList<User> users = initializer.getUsersFromAPI("users");
         for(User u : users)
             repository.insert(u);
+        CartRepository.getInstance();
+        initialize(users);
     }
 
-    public static void initialize() throws SQLException {
-        ArrayList<User> users = repository.findAll("");
-        System.out.println(users);
-        for(User u : users)
-            System.out.println(u.getUsername());
+    public static void initialize(ArrayList<User> users) throws SQLException {
         users.forEach(User::initialize);
     }
     public static UserManager getInstance() throws Exception {

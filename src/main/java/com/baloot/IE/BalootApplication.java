@@ -21,12 +21,10 @@ public class BalootApplication {
         SupplierManager.getInstance();
         UserManager.getInstance();
         ProductManager.getInstance();
-        CartRepository.getInstance();
         BuyListRepository.getInstance();
         PurchaseListRepository.getInstance();
         CommentRepository.getInstance();
         CommentVoteRepository.getInstance();
-        UserManager.initialize();
         SpringApplication.run(BalootApplication.class, args);
     }
 }
