@@ -34,7 +34,7 @@ public class CartRepository extends Repository<Cart, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(username CHAR(50),\n cartId CHAR(50),\ndiscount INTEGER,\n total INTEGER,\n no_items INTEGER,\nPRIMARY KEY(cartId),"
+                                "(username CHAR(50),\n cartId MEDIUMINT NOT NULL AUTO_INCREMENT,\ndiscount INTEGER,\n total INTEGER,\n no_items INTEGER,\nPRIMARY KEY(cartId),"
                                 +  "\nforeign key (username) references USERS(username));",
                         TABLE_NAME)
         );
@@ -55,7 +55,7 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(username, cartId, discount, total, no_items) VALUES(?,?,?,?,?)", TABLE_NAME);
+        return String.format("INSERT IGNORE INTO %s(username, discount, total, no_items) VALUES(?,?,?,?)", TABLE_NAME);
     }
 
     @Override
@@ -63,10 +63,9 @@ public class CartRepository extends Repository<Cart, String> {
         System.out.println(data.getUsername());
         System.out.println(data.getCartId());
         st.setString(1, String.valueOf(data.getUsername()));
-        st.setString(2, String.valueOf(data.getCartId()));
-        st.setString(3, String.valueOf(data.getDiscount()));
-        st.setString(4, String.valueOf(data.getTotal()));
-        st.setString(5, String.valueOf(data.getNo_items()));
+        st.setString(2, String.valueOf(data.getDiscount()));
+        st.setString(3, String.valueOf(data.getTotal()));
+        st.setString(4, String.valueOf(data.getNo_items()));
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter
 @Setter
 public class Cart {
-    private static final AtomicInteger count = new AtomicInteger(0);
+//    private static final AtomicInteger count = new AtomicInteger(0);
 
     private String username;
     private int cartId;
@@ -38,7 +38,7 @@ public class Cart {
     }
 
     public Cart(String username_) {
-        this.cartId = count.incrementAndGet();
+//        this.cartId = count.incrementAndGet();
         System.out.println("cartId " + cartId);
         total = 0;
         no_items = 0;

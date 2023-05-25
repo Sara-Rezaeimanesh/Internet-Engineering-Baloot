@@ -36,7 +36,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId, productId),"
+                                "(cartId MEDIUMINT,\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId, productId),"
                         +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
