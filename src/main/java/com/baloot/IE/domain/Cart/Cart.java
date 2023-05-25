@@ -23,6 +23,10 @@ public class Cart {
     private int discount;
     private double total;
     private int no_items;
+
+    private ArrayList<CartItem> buyList;
+
+    private ArrayList<CartItem> purchaseList;
     @JsonIgnore
     private final CartRepository cartRepository = CartRepository.getInstance();
     @JsonIgnore
@@ -38,7 +42,6 @@ public class Cart {
     }
 
     public Cart(String username_) {
-//        this.cartId = count.incrementAndGet();
         System.out.println("cartId " + cartId);
         total = 0;
         no_items = 0;
@@ -60,16 +63,20 @@ public class Cart {
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
         no_items += 1;
         cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+//        CartItem cartItem = buyListRepository.findByField(String.valueOf(p.getId()), "productId");
+//        if(cartItem == null)
         buyListRepository.insert(new CartItem(cartId, p, 1));
+
     }
 
     public void remove(Product p) throws SQLException {
         CartItem ci = buyListRepository.findByField(String.valueOf(p.getId()), "productId");
         if(ci != null) {
             ci.updateQuantity(-1);
-            if(ci.isOut()) {
+            if(ci.isOut())
                 buyListRepository.delete(String.valueOf(cartId), String.valueOf(ci.getProduct().getId()));
-            }
+            else
+                buyListRepository.update("quantity", String.valueOf(ci.getQuantity()), "cartId", String.valueOf(ci.getCartId()));
             total -= p.getPrice();
             cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
             no_items -= 1;

@@ -36,7 +36,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(cartId MEDIUMINT,\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId, productId),"
+                                "(cartId MEDIUMINT,\nproductId CHAR(225),\n quantity INT,\nPRIMARY KEY(cartId, productId),"
                         +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
@@ -61,7 +61,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
     protected String getInsertStatement() {
         return String.format("INSERT INTO %s (cartId, productId, quantity)\n" +
                                 "VALUES (?, ?, ?)\n" +
-                            "ON DUPLICATE KEY UPDATE quantity = ?;", TABLE_NAME);
+                            "ON DUPLICATE KEY UPDATE quantity = quantity + 1;", TABLE_NAME);
     }
 
     @Override
@@ -69,7 +69,6 @@ public class BuyListRepository extends Repository<CartItem, String> {
         st.setString(1, String.valueOf(data.getCartId()));
         st.setString(2, String.valueOf(data.getProduct().getId()));
         st.setString(3, String.valueOf(data.getQuantity()));
-        st.setString(4, String.valueOf(data.getQuantity()+1));
     }
 
     @Override

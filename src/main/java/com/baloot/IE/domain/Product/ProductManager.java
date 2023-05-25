@@ -10,6 +10,7 @@ import com.baloot.IE.repository.Product.CategoryRepository;
 import com.baloot.IE.repository.Product.ProductRepository;
 import com.baloot.IE.repository.Rating.RatingRepository;
 import com.baloot.IE.repository.Supplier.SupplierRepository;
+import com.baloot.IE.utitlity.StringUtility;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -53,7 +54,7 @@ public class ProductManager {
         }
         if (name != null) {
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";
-            searchString += "LOWER("+name+") LIKE CONCAT('%', LOWER(name), '%')";
+            searchString += "LOWER("+ StringUtility.quoteWrapper(name)+") LIKE CONCAT('%', LOWER(name), '%')";
         }
         if(id != null) {
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";
@@ -123,7 +124,7 @@ public class ProductManager {
         Product product = findProductsById(id);
         ratingRepository.insert(rating);
         product.setRating(ratingRepository.calculateRating(id));
-        repository.update("rating", String.valueOf(rating), "id", String.valueOf(id));
+        repository.update("rating", String.valueOf(rating.getScore()), "id", String.valueOf(id));
     }
 
     public void addComment(String userId, int id, String commentTxt) throws Exception {

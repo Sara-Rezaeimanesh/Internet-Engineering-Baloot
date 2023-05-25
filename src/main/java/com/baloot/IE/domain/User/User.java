@@ -1,6 +1,9 @@
 package com.baloot.IE.domain.User;
 import com.baloot.IE.domain.Cart.Cart;
+import com.baloot.IE.domain.Cart.CartItem;
+import com.baloot.IE.repository.Cart.BuyListRepository;
 import com.baloot.IE.repository.Cart.CartRepository;
+import com.baloot.IE.repository.Cart.PurchaseListRepository;
 import com.baloot.IE.repository.User.UserRepository;
 import com.baloot.IE.utitlity.StringUtility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -29,6 +33,16 @@ public class User {
 
     @JsonIgnore
     private Cart cart;
+
+    public Cart getCart() throws SQLException {
+        BuyListRepository buyListRepository = BuyListRepository.getInstance();
+        PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
+        ArrayList<CartItem> buyList = buyListRepository.findAll("1=1");
+        ArrayList<CartItem> purchaseList = purchaseListRepository.findAll("1=1");
+        cart.setBuyList(buyList);
+        cart.setPurchaseList(purchaseList);
+        return cart;
+    }
 
     public User(@JsonProperty("username") String username_,
                 @JsonProperty("password") String password_,
