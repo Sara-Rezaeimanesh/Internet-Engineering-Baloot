@@ -21,7 +21,7 @@ public class CartItem {
         quantity += value;
     }
     public boolean isOut() {
-        return quantity == 0;
+        return quantity <= 0;
     }
 
     public void updateProductStock() {

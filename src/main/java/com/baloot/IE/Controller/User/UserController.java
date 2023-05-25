@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/cart")
-    public Cart getCart(@PathVariable String id) {
+    public Cart getCart(@PathVariable String id) throws SQLException {
         return userManager.findUserById(id).getCart();
     }
 

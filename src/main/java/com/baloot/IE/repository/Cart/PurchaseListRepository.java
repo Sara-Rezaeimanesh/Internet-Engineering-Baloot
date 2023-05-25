@@ -78,7 +78,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     @Override
     protected CartItem convertResultSetToDomainModel(ResultSet rs) {
         try{
-            return new CartItem(Integer.parseInt(rs.getString(1)),productRepository.findByField(rs.getString(2), "id"),  Integer.parseInt(rs.getString(3)));
+            return new CartItem(Integer.parseInt(rs.getString(1)),productRepository.findByField(rs.getString(3), "id"),  Integer.parseInt(rs.getString(4)));
         }
         catch (Exception e){
             return null;
