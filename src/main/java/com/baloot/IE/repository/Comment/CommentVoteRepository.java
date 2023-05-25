@@ -40,7 +40,7 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
+        return String.format("SELECT * FROM %s u WHERE "+field_name+";", TABLE_NAME);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s;", TABLE_NAME);
+        return String.format("SELECT * FROM %s WHERE %s;", TABLE_NAME, searchString);
     }
 
     @Override

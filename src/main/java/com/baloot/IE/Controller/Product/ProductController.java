@@ -40,7 +40,7 @@ public class ProductController {
                              @RequestParam(name = "provider", required = false) String provider_name,
                              @RequestParam(name = "available", required = false) String available,
                              @RequestParam(name = "apply") String apply,
-                             @RequestParam(name = "page") int page) {
+                             @RequestParam(name = "page") int page) throws SQLException {
 
         int supplier_id = -1;
         if(provider_name != null)
@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product one(@PathVariable int id){
+    public Product one(@PathVariable int id) throws SQLException {
         Product p = productManager.findProductsById(id);
         productManager.setSuggestedProducts(p);
         return p;
@@ -87,7 +87,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/suggestions")
-    public ArrayList<Product> getSuggestions(@PathVariable int id) {
+    public ArrayList<Product> getSuggestions(@PathVariable int id) throws SQLException {
         return productManager.findProductsById(id).getSuggestedProducts();
     }
 }

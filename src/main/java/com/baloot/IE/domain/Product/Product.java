@@ -23,6 +23,7 @@ public class Product {
     private String name;
     private int providerId;
     private int price;
+    private ArrayList<Category> categoriesObjects;
     private ArrayList<String> categories;
     private int inStock;
     private float rating;
@@ -50,9 +51,9 @@ public class Product {
         this.name = name;
         this.providerId = providerId;
         this.price = price;
-        this.categories = categories;
         this.rating = rating;
         this.inStock = inStock;
+        this.categories = categories;
         this.image = image;
         this.ratings = new ArrayList<>();
         this.comments = new ArrayList<>();
@@ -65,20 +66,6 @@ public class Product {
     }
 
     public void updateRating(Rating newRating) throws SQLException {
-//        float sumRating = ratings.size() * rating;
-//        boolean alreadyRated = false;
-//        for (Rating r : this.ratings)
-//            if (Objects.equals(newRating.getUsername(), r.getUsername())) {
-//                float diff = newRating.getScore() - r.getScore();
-//                r.setScore(newRating.getScore());
-//                sumRating = sumRating + diff;
-//                alreadyRated = true;
-//            }
-//        if (!alreadyRated) {
-//            sumRating = sumRating + newRating.getScore();
-//            ratings.add(newRating);
-//        }
-//        setRating(sumRating / ratings.size());
         ratingRepository.insert(newRating);
         setRating(ratingRepository.calculateRating(id));
         productRepository.update("rating", String.valueOf(rating), "id", String.valueOf(id));
