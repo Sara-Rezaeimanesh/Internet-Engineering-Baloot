@@ -26,8 +26,7 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(userEmail CHAR(225),\nvote CHAR(225),\ncommentId CHAR(225),"  +
-                                "\ntext CHAR VARYING(500),\n date DATE, likes INTEGER, dislikes INTEGER,\n" +
+                                "(userEmail CHAR(225),\nvote CHAR(225),\ncommentId MEDIUMINT,"  +
                                 "PRIMARY KEY(userEmail, commentId),\n"+
                                 "foreign key (userEmail) references USERS(email),\n" +
                                 "foreign key (commentId) references COMMENTS(id));",
@@ -50,7 +49,7 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(id, userEmail, commodityId, text, date, likes, dislikes) VALUES(?,?,?,?,?,?,?)", TABLE_NAME);
+        return String.format("INSERT IGNORE INTO %s(userEmail, vote, commentId) VALUES(?,?,?)", TABLE_NAME);
     }
 
     @Override

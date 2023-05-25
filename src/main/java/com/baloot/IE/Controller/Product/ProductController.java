@@ -53,6 +53,8 @@ public class ProductController {
         }
         int result_size = results.size();
         int end = Math.min(results.size(), (page + 1) * ppp);
+        if(page*ppp > result_size)
+            return null;
         return new SearchResult(results.subList(page*ppp, end), result_size);
     }
 

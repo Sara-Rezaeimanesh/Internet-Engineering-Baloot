@@ -79,7 +79,7 @@ public class ProductRepository extends Repository<Product, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s %s", TABLE_NAME, searchString);
+        return String.format("SELECT * FROM %s %s;", TABLE_NAME, searchString);
     }
 
     @Override

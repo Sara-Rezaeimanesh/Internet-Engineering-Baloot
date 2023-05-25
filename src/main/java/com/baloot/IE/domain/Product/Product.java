@@ -23,7 +23,6 @@ public class Product {
     private String name;
     private int providerId;
     private int price;
-    private ArrayList<Category> categoriesObjects;
     private ArrayList<String> categories;
     private int inStock;
     private float rating;
@@ -34,14 +33,18 @@ public class Product {
     private ArrayList<Comment> comments;
     @JsonIgnore
     private ArrayList<Product> suggestedProducts;
-
-    private final RatingRepository ratingRepository = RatingRepository.getInstance();
+    @JsonIgnore
     private ProductRepository productRepository = ProductRepository.getInstance();
 
 
     public void initialize() {
         ratings = new ArrayList<>();
         comments = new ArrayList<>();
+    }
+
+    public void setCategoriesObjects(ArrayList<Category> categories) {
+        for(Category c : categories)
+            this.categories.add(c.getCategory());
     }
 
     public Product(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("providerId") int providerId,
@@ -59,18 +62,6 @@ public class Product {
         this.comments = new ArrayList<>();
     }
 
-    public void addComment(Comment comment){
-        if(comments == null)
-            comments = new ArrayList<>();
-        comments.add(comment);
-    }
-
-    public void updateRating(Rating newRating) throws SQLException {
-        ratingRepository.insert(newRating);
-        setRating(ratingRepository.calculateRating(id));
-        productRepository.update("rating", String.valueOf(rating), "id", String.valueOf(id));
-    }
-
     public boolean isInStock() {
         return inStock > 0;
     }
@@ -78,15 +69,5 @@ public class Product {
     public void updateStock(int i) {
         this.inStock += i;
         productRepository.update("inStock", String.valueOf(inStock), "id", String.valueOf(id));
-    }
-
-
-
-    public boolean isSameCategory(String category) {
-        return categories.contains(category);
-    }
-
-    public void addSuggestedProducts(ArrayList<Product> suggestedProducts) {
-        this.suggestedProducts = suggestedProducts;
     }
 }

@@ -35,7 +35,6 @@ public class CommentManager {
     private CommentManager() throws Exception {
         Initializer initializer = new Initializer();
         ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
-        comments.forEach(Comment::initialize);
         for(Comment c : comments) {
             repository.insert(c);
         }
@@ -74,7 +73,7 @@ public class CommentManager {
     }
 
     public void voteComment(String userEmail, int commentId, int vote) throws SQLException {
-        ArrayList<CommentVote> votes = commentVoteRepository.findAll("userEmail = " + userEmail);
+        ArrayList<CommentVote> votes = commentVoteRepository.findAll("userEmail = \"" + userEmail + "\" and commentId = " + commentId);
         Comment comment = repository.findByField(String.valueOf(commentId), "id");
         if(comment == null)
             throw new IllegalArgumentException("Comment does not exist.");
@@ -82,21 +81,17 @@ public class CommentManager {
         int likes = comment.getLikes();
         int dislikes = comment.getDislikes();
 
-        boolean exists = false;
-        for(CommentVote cv : votes)
-            if(Objects.equals(cv.getUserEmail(), userEmail)) {
-                exists = true;
-                int previous_vote = cv.getVote();
-                commentVoteRepository.update("vote", String.valueOf(vote),
-                        "", "userEmail = "+userEmail+" and commentId = "+commentId);
-                if(previous_vote == 1)
-                    likes -= 1;
-                else if(previous_vote == -1)
-                    dislikes -= 1;
-            }
-        if(!exists)
+        if(votes.size() == 0)
             commentVoteRepository.insert(new CommentVote(userEmail, vote, commentId));
-
+        else {
+            int previous_vote = votes.get(0).getVote();
+            commentVoteRepository.update("vote", String.valueOf(vote),
+                        "", "userEmail = \""+userEmail+"\" and commentId = "+commentId);
+            if(previous_vote == 1)
+                likes -= 1;
+            else if(previous_vote == -1)
+                dislikes -= 1;
+        }
         if(vote == 1)
             likes += 1;
         else if(vote == -1)

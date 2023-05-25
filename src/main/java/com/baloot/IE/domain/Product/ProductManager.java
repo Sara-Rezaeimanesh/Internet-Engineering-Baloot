@@ -5,8 +5,10 @@ import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
 import com.baloot.IE.domain.Supplier.Supplier;
+import com.baloot.IE.domain.User.UserManager;
 import com.baloot.IE.repository.Product.CategoryRepository;
 import com.baloot.IE.repository.Product.ProductRepository;
+import com.baloot.IE.repository.Rating.RatingRepository;
 import com.baloot.IE.repository.Supplier.SupplierRepository;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,9 @@ public class ProductManager {
     private final ProductRepository repository = ProductRepository.getInstance();
     private final CommentManager commentManager = CommentManager.getInstance();
     private final CategoryRepository categoryRepository = CategoryRepository.getInstance();
+    private final UserManager userManager = UserManager.getInstance();
 
+    private final RatingRepository ratingRepository = RatingRepository.getInstance();
     public ProductManager() throws Exception {
         Initializer initializer = new Initializer();
         products = initializer.getCommoditiesFromAPI("v2/commodities");
@@ -40,7 +44,8 @@ public class ProductManager {
         List<Product> searchResults = new ArrayList<>(products);
         String searchString = "";
         if (category != null)
-            searchString = "p inner join CATEGORIES c on p.id = c.productId\nwhere c.category = "+category;
+            searchString = "p inner join CATEGORIES c on p.id = c.productId\nwhere c.category = \""+category+"\"";
+        System.out.println("sara "+searchString);
         if (priceRange != null) {
             String[] priceRangeArray = priceRange.split("-");
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";
@@ -108,18 +113,22 @@ public class ProductManager {
         }
     }
 
-    public void voteComment(String userEmail, int productId, int commentId, int vote) throws SQLException {
+    public void voteComment(String userId, int productId, int commentId, int vote) throws SQLException {
+        String userEmail = userManager.findUserById(userId).getEmail();
         commentManager.voteComment(userEmail, commentId, vote);
     }
 
     public void updateRating(String username, String quantity, int id) throws Exception {
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);
-        product.updateRating(rating);
+        ratingRepository.insert(rating);
+        product.setRating(ratingRepository.calculateRating(id));
+        repository.update("rating", String.valueOf(rating), "id", String.valueOf(id));
     }
 
-    public void addComment(String userEmail, int id, String commentTxt) throws Exception {
+    public void addComment(String userId, int id, String commentTxt) throws Exception {
         String todayDate = getTodayDate();
+        String userEmail = userManager.findUserById(userId).getEmail();
         Comment comment = new Comment(userEmail, id, commentTxt, todayDate);
         commentManager.addComment(comment);
     }

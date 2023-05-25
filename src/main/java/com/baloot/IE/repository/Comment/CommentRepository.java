@@ -26,8 +26,8 @@ public class CommentRepository extends Repository<Comment, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(id CHAR(50),\nuserEmail CHAR(225),\ncommodityId CHAR(225),"  +
-                                "\ntext CHAR VARYING(500),\n date DATE, likes INTEGER, dislikes INTEGER,\n"+
+                                "(id MEDIUMINT NOT NULL AUTO_INCREMENT,\nuserEmail CHAR(225),\ncommodityId CHAR(225),"  +
+                                "\ntext CHAR VARYING(500),\n date CHAR(20), likes INTEGER, dislikes INTEGER,\n"+
                                 "PRIMARY KEY(id),\nforeign key (userEmail) references USERS(email),\n" +
                                 "foreign key (commodityId) references PRODUCTS(id));",
                         TABLE_NAME)
@@ -49,12 +49,12 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(id, userEmail, commodityId, text, date, likes, dislikes) VALUES(?,?,?,?,?,?,?)", TABLE_NAME);
+        return String.format("INSERT INTO %s(userEmail, commodityId, text, date, likes, dislikes) VALUES(?,?,?,?,?,?);", TABLE_NAME);
     }
 
     @Override
     protected void fillInsertValues(PreparedStatement st, Comment data) throws SQLException {
-        Object[] values = new Object[]{data.getId(), data.getUserEmail(),
+        Object[] values = new Object[]{data.getUserEmail(),
                                         data.getCommodityId(), data.getText(),
                                         data.getDate(), data.getLikes(),
                                         data.getDislikes()};
@@ -66,12 +66,12 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s " + searchString + ";", TABLE_NAME);
+        return String.format("SELECT * FROM %s WHERE " + searchString + ";", TABLE_NAME);
     }
 
     @Override
     protected Comment convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Comment(Integer.parseInt(rs.getString(1)), rs.getString(2),
+        return new Comment(rs.getString(2),
                             Integer.parseInt(rs.getString(3)), rs.getString(4),
                             rs.getString(5), Integer.parseInt(rs.getString(6)),
                             Integer.parseInt(rs.getString(7)));

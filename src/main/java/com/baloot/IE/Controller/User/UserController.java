@@ -20,7 +20,6 @@ import java.util.Map;
 public class UserController {
     private final UserManager userManager;
     private final ProductManager productManager;
-
     private final DiscountManager discountManager;
 
     @Autowired
