@@ -107,28 +107,4 @@ public class ProductRepository extends Repository<Product, String> {
         return  String.format("update %s set %s = %s where %s = %s;",
                 TABLE_NAME, varName, newValue, whereField, whereValue);
     }
-
-    public ArrayList<Product> findAll(String searchString) throws SQLException {
-        Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement(searchString));
-        System.out.println(st);
-        try {
-            ResultSet resultSet = st.executeQuery();
-            if (resultSet == null) {
-                st.close();
-                con.close();
-                return new ArrayList<>();
-            }
-            ArrayList<T> result = convertResultSetToDomainModelList(resultSet);
-            st.close();
-            con.close();
-            return result;
-        } catch (Exception e) {
-            st.close();
-            con.close();
-            System.out.println("error in Repository.findAll query.");
-            e.printStackTrace();
-            throw e;
-        }
-    }
 }
