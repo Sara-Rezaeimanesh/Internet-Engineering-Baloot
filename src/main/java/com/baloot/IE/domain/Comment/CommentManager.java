@@ -27,24 +27,19 @@ public class CommentManager {
     private final CommentVoteRepository commentVoteRepository = CommentVoteRepository.getInstance();
 
     public static CommentManager getInstance() throws Exception {
-        System.out.println("sara here");
         if(instance == null)
             instance = new CommentManager();
         return instance;
     }
 
     private CommentManager() throws Exception {
-        System.out.println("sara here2");
         Initializer initializer = new Initializer();
         ArrayList<Comment> comments = initializer.getCommentsFromAPI("comments");
         comments.forEach(Comment::initialize);
         for(Comment c : comments) {
-            System.out.println("sara" + c.getUserEmail());
             repository.insert(c);
         }
-
     }
-
 
     public Comment findCommentById(String id) {
         Comment comment;
@@ -65,9 +60,9 @@ public class CommentManager {
         return comment != null;
     }
 
-    public ArrayList<Comment> getAllComments() {
+    public ArrayList<Comment> getAllComments(String search_string) {
         try{
-            return repository.findAll("");
+            return repository.findAll(search_string);
         }
         catch (Exception e){
             return new ArrayList<>();
@@ -79,7 +74,7 @@ public class CommentManager {
     }
 
     public void voteComment(String userEmail, int commentId, int vote) throws SQLException {
-        ArrayList<CommentVote> votes = commentVoteRepository.findAll("userEmail ==" + userEmail);
+        ArrayList<CommentVote> votes = commentVoteRepository.findAll("userEmail = " + userEmail);
         Comment comment = repository.findByField(String.valueOf(commentId), "id");
         if(comment == null)
             throw new IllegalArgumentException("Comment does not exist.");
@@ -93,7 +88,7 @@ public class CommentManager {
                 exists = true;
                 int previous_vote = cv.getVote();
                 commentVoteRepository.update("vote", String.valueOf(vote),
-                        "", "userEmail == "+userEmail+"and commentId == "+commentId);
+                        "", "userEmail = "+userEmail+" and commentId = "+commentId);
                 if(previous_vote == 1)
                     likes -= 1;
                 else if(previous_vote == -1)

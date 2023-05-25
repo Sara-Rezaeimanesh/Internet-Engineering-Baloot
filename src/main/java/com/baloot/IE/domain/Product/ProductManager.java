@@ -5,6 +5,7 @@ import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
 import com.baloot.IE.domain.Supplier.Supplier;
+import com.baloot.IE.repository.Product.CategoryRepository;
 import com.baloot.IE.repository.Product.ProductRepository;
 import com.baloot.IE.repository.Supplier.SupplierRepository;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class ProductManager {
     List<Product> products;
     private final ProductRepository repository = ProductRepository.getInstance();
     private final CommentManager commentManager = CommentManager.getInstance();
+    private final CategoryRepository categoryRepository = CategoryRepository.getInstance();
 
     public ProductManager() throws Exception {
         Initializer initializer = new Initializer();
@@ -28,34 +30,41 @@ public class ProductManager {
         products.forEach(Product::initialize);
         for(Product p : products)
             repository.insert(p);
+        for(Product p : products)
+            for(String cat : p.getCategories())
+                categoryRepository.insert(new Category(p.getId(), cat));
     }
 
     // TODO
-    public List<Product> filterProducts(String category, String priceRange, String name, String id, int supplier_id, String available) {
+    public List<Product> filterProducts(String category, String priceRange, String name, String id, int supplier_id, String available) throws SQLException {
         List<Product> searchResults = new ArrayList<>(products);
+        String searchString = "";
         if (category != null)
-            searchResults = searchResults.stream().filter(product -> product.getCategories().contains(category)).collect(Collectors.toList());
+            searchString = "p inner join CATEGORIES c on p.id = c.productId\nwhere c.category = "+category;
         if (priceRange != null) {
             String[] priceRangeArray = priceRange.split("-");
-            System.out.println(priceRangeArray[0] + " " + priceRangeArray[1]);
-            double minPrice = Double.parseDouble(priceRangeArray[0]);
-            double maxPrice = Double.parseDouble(priceRangeArray[1]);
-            searchResults = searchResults.stream()
-                    .filter(product -> product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
-                    .collect(Collectors.toList());
+            searchString += (searchString.equals("")) ? "\nwhere " : " and ";
+            searchString += "price < " + priceRangeArray[1] + " and " + "price > " + priceRangeArray[0];
         }
-        if (name != null)
-            searchResults = searchResults.stream().filter(product -> product.getName().contains(name)).collect(Collectors.toList());
-        if(id != null)
-            searchResults = searchResults.stream().filter(product -> product.getId() == Integer.parseInt(id)).collect(Collectors.toList());
+        if (name != null) {
+            searchString += (searchString.equals("")) ? "\nwhere " : " and ";
+            searchString += "LOWER("+name+") LIKE CONCAT('%', LOWER(name), '%')";
+        }
+        if(id != null) {
+            searchString += (searchString.equals("")) ? "\nwhere " : " and ";
+            searchString += "id = " + id;
+        }
         if(searchResults.size() == 0)
             throw new IllegalArgumentException("No items matched your search.");
-        if(supplier_id != -1)
-            searchResults = searchResults.stream().filter(product -> product.getProviderId() == supplier_id).collect(Collectors.toList());
-        if(available != null)
-            searchResults = searchResults.stream().filter(product -> product.getInStock() > 0).collect(Collectors.toList());
-
-        return searchResults;
+        if(supplier_id != -1) {
+            searchString += (searchString.equals("")) ? "\nwhere " : " and ";
+            searchString += "providerId = " + supplier_id;
+        }
+        if(available != null) {
+            searchString += (searchString.equals("")) ? "\nwhere " : " and ";
+            searchString += "inStock > 0";
+        }
+        return repository.findAll(searchString);
     }
 
     // TODO
@@ -76,15 +85,18 @@ public class ProductManager {
         return instance;
     }
 
-    public Product findProductsById(int id) {
+    public Product findProductsById(int id) throws SQLException {
         Product p = null;
         try {
             p = repository.findByField(String.valueOf(id), "id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if(p != null)
+        if(p != null) {
+            p.setCategoriesObjects(categoryRepository.findAll("productId = " + id));
             return p;
+        }
+
         throw new IllegalArgumentException("Product does not exist!");
     }
 
@@ -96,12 +108,10 @@ public class ProductManager {
         }
     }
 
-    // TODO
     public void voteComment(String userEmail, int productId, int commentId, int vote) throws SQLException {
         commentManager.voteComment(userEmail, commentId, vote);
     }
 
-    // TODO
     public void updateRating(String username, String quantity, int id) throws Exception {
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);
@@ -121,8 +131,7 @@ public class ProductManager {
     }
 
     public ArrayList<Comment> getProductComments(int id) {
-        Product p = findProductsById(id);
-        return p.getComments();
+        return commentManager.getAllComments("commodityId = " + id);
     }
 
     public ArrayList<Product> getProductsBySupplierId(int supplierId) {
@@ -142,28 +151,28 @@ public class ProductManager {
     }
 
     public void setSuggestedProducts(Product product){
-        ArrayList<Product> suggestedProducts = new ArrayList<>();
-        int id = product.getId();
-        HashMap<Product, Float> ratedProduct = new HashMap<>();
-        for(Product p : products){
-            float score = 0;
-            if(id != p.getId())
-                for(String category : p.getCategories())
-                    if(product.isSameCategory(category))
-                        score += 11;
-            score += p.getRating();
-            ratedProduct.put(p, score);
-        }
-        HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
-        int i = 0;
-        for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
-            if(product.getId() != set.getKey().getId()) {
-                suggestedProducts.add(set.getKey());
-                i ++;
-            }
-            if(i == 5)
-                break;
-        }
-        product.addSuggestedProducts(suggestedProducts);
+//        ArrayList<Product> suggestedProducts = new ArrayList<>();
+//        int id = product.getId();
+//        HashMap<Product, Float> ratedProduct = new HashMap<>();
+//        for(Product p : products){
+//            float score = 0;
+//            if(id != p.getId())
+//                for(String category : p.getCategories())
+//                    if(product.isSameCategory(category))
+//                        score += 11;
+//            score += p.getRating();
+//            ratedProduct.put(p, score);
+//        }
+//        HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
+//        int i = 0;
+//        for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
+//            if(product.getId() != set.getKey().getId()) {
+//                suggestedProducts.add(set.getKey());
+//                i ++;
+//            }
+//            if(i == 5)
+//                break;
+//        }
+//        product.addSuggestedProducts(suggestedProducts);
     }
 }

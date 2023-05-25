@@ -66,7 +66,7 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s WHERE " + searchString + ";", TABLE_NAME);
+        return String.format("SELECT * FROM %s " + searchString + ";", TABLE_NAME);
     }
 
     @Override
