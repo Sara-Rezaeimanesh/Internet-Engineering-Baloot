@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 public class Comment {
+    int id;
     private static final AtomicInteger count = new AtomicInteger(0);
     private final String userEmail;
     private final int commodityId;
@@ -27,7 +28,8 @@ public class Comment {
         this.date = date;
     }
 
-    public Comment(String userEmail, int commodityId, String text, String date, int likes, int dislikes) {
+    public Comment(int id, String userEmail, int commodityId, String text, String date, int likes, int dislikes) {
+        this.id = id;
         this.userEmail = userEmail;
         this.commodityId = commodityId;
         this.text = text;

@@ -71,7 +71,7 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected Comment convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Comment(rs.getString(2),
+        return new Comment(Integer.parseInt(rs.getString(1)),rs.getString(2),
                             Integer.parseInt(rs.getString(3)), rs.getString(4),
                             rs.getString(5), Integer.parseInt(rs.getString(6)),
                             Integer.parseInt(rs.getString(7)));
