@@ -1,5 +1,7 @@
 package com.baloot.IE.repository;
 
+import com.baloot.IE.domain.Product.Product;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -114,8 +116,27 @@ public abstract class Repository<T, I> {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
+    public ArrayList<T> executeQuery(String query) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(query);
+        System.out.println(st);
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if (resultSet == null) {
+                st.close();
+                con.close();
+                return new ArrayList<>();
+            }
+            ArrayList<T> result = convertResultSetToDomainModelList(resultSet);
+            st.close();
+            con.close();
+            return result;
+        } catch (Exception e) {
+            st.close();
+            con.close();
+            System.out.println("error in Repository.findAll query.");
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

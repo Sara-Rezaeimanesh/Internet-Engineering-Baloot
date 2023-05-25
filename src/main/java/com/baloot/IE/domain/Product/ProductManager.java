@@ -160,29 +160,18 @@ public class ProductManager {
                         (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    public void setSuggestedProducts(Product product){
-//        ArrayList<Product> suggestedProducts = new ArrayList<>();
-//        int id = product.getId();
-//        HashMap<Product, Float> ratedProduct = new HashMap<>();
-//        for(Product p : products){
-//            float score = 0;
-//            if(id != p.getId())
-//                for(String category : p.getCategories())
-//                    if(product.isSameCategory(category))
-//                        score += 11;
-//            score += p.getRating();
-//            ratedProduct.put(p, score);
-//        }
-//        HashMap<Product, Float> sortedProduct = sortByValue(ratedProduct);
-//        int i = 0;
-//        for (Map.Entry<Product, Float> set : sortedProduct.entrySet()) {
-//            if(product.getId() != set.getKey().getId()) {
-//                suggestedProducts.add(set.getKey());
-//                i ++;
-//            }
-//            if(i == 5)
-//                break;
-//        }
-//        product.addSuggestedProducts(suggestedProducts);
+    public void setSuggestedProducts(Product product) throws SQLException {
+        int id = product.getId();
+        ArrayList<Product> suggestedProducts =
+                repository.executeQuery("SELECT *, (CASE WHEN exists (select * \n" +
+                                                    "from categories c\n" +
+                                                    "where c.productId = p.id and c.category in" +
+                                                    "(select c1.category from categories c1 where c1.productId = "+id+")) \n" +
+                                                    "THEN 11+CAST(p.rating AS FLOAT) ELSE CAST(p.rating AS FLOAT) END)" +
+                                                    "as score FROM products p\n" +
+                                                    "where p.id != "+id+"\n" +
+                                                    "ORDER BY score desc\n" +
+                                                    "limit 5;");
+        product.setSuggestedProducts(suggestedProducts);
     }
 }
