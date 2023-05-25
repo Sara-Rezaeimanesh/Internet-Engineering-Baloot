@@ -37,8 +37,8 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(id MEDIUMINT NOT NULL AUTO_INCREMENT,username CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(id),"
-                                +  "\nforeign key (username) references USERS(username),\nforeign key (productId) references PRODUCTS(id));",
+                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId),"
+                                +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -64,8 +64,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
 
     @Override
     protected void fillInsertValues(PreparedStatement st, CartItem data) throws SQLException {
-        String username = cartRepository.findByField(String.valueOf(data.getCartId()),"cartId").getUsername();
-        st.setString(1, username);
+        st.setString(1, String.valueOf(data.getCartId()));
         st.setString(2, String.valueOf(data.getProduct().getId()));
         st.setString(3, String.valueOf(data.getQuantity()));
     }

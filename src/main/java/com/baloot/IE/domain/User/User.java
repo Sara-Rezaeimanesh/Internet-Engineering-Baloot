@@ -22,10 +22,10 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
+    private int cartId;
+
     @JsonIgnore
     private final UserRepository repository = UserRepository.getInstance();;
-    @JsonIgnore
-    private CartRepository cartRepository;
 
     @JsonIgnore
     private Cart cart;
@@ -44,8 +44,6 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
-        cartRepository = CartRepository.getInstance();
-        this.cart = cartRepository.findByField(this.username,"username");
     }
 
     public boolean userNameEquals(String username) {
@@ -78,21 +76,5 @@ public class User {
     public double applyDiscount(String discount) {
         cart.applyDiscount(discount);
         return cart.calcTotal();
-    }
-
-    public void initialize()  {
-        try {
-            Cart cart = null;
-            cart = cartRepository.findByField(this.username,"username");
-            if(cart == null) {
-                this.cart = new Cart(this.username);
-                cartRepository.insert(this.cart);
-            }
-            else{
-                this.cart = cart;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

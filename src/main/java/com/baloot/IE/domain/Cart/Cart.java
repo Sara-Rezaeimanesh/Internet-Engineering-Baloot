@@ -17,8 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Setter
 public class Cart {
     private static final AtomicInteger count = new AtomicInteger(0);
-
-    private String username;
     private int cartId;
     private int discount;
     private double total;
@@ -33,32 +31,30 @@ public class Cart {
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
         total = calcTotal();
-        cartRepository.update("discount", discount, "username", StringUtility.quoteWrapper(username));
-        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("discount", discount, "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
+        cartRepository.update("total", String.valueOf(total), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
     }
 
-    public Cart(String username_) {
+    public Cart() {
         this.cartId = count.incrementAndGet();
         total = 0;
         no_items = 0;
-        username = username_;
     }
 
-    public Cart(String username_, int cartId_ , int discount_, int total_, int no_items_) {
+    public Cart(int cartId_ , int discount_, int total_, int no_items_) {
         cartId = cartId_;
         total = total_;
         discount = discount_;
         no_items = no_items_;
-        username = username_;
     }
 
     public void add(Product p) throws Exception {
         if(!p.isInStock())
             throw new Exception("Product is not in stock!");
         total += p.getPrice();
-        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("total", String.valueOf(total), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
         no_items += 1;
-        cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("no_items", String.valueOf(no_items), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
         buyListRepository.insert(new CartItem(cartId, p, 1));
     }
 
@@ -70,9 +66,9 @@ public class Cart {
                 buyListRepository.delete(String.valueOf(cartId), String.valueOf(ci.getProduct().getId()));
             }
             total -= p.getPrice();
-            cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
+            cartRepository.update("total", String.valueOf(total), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
             no_items -= 1;
-            cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+            cartRepository.update("no_items", String.valueOf(no_items), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
             return;
         }
         throw new IllegalArgumentException("Item not available in cart!");
@@ -92,10 +88,10 @@ public class Cart {
             purchaseListRepository.insert(ci);
             ci.updateProductStock();
         }
-        cartRepository.delete(this.username);
+        cartRepository.delete(String.valueOf(cartId));
         total = 0;
         no_items = 0;
-        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
-        cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("total", String.valueOf(total), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
+        cartRepository.update("no_items", String.valueOf(no_items), "cartId", StringUtility.quoteWrapper(String.valueOf(cartId)));
     }
 }

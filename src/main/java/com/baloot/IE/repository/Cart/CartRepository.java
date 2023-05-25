@@ -34,8 +34,7 @@ public class CartRepository extends Repository<Cart, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(username CHAR(50),\n cartId CHAR(50),\ndiscount INTEGER,\n total INTEGER,\n no_items INTEGER,\nPRIMARY KEY(cartId),"
-                                +  "\nforeign key (username) references USERS(username));",
+                                "(cartId CHAR(50),\ndiscount INTEGER,\n total INTEGER,\n no_items INTEGER,\nPRIMARY KEY(cartId));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -55,18 +54,16 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(username, cartId, discount, total, no_items) VALUES(?,?,?,?,?)", TABLE_NAME);
+        return String.format("INSERT IGNORE INTO %s(cartId, discount, total, no_items) VALUES(?,?,?,?,?)", TABLE_NAME);
     }
 
     @Override
     protected void fillInsertValues(PreparedStatement st, Cart data) throws SQLException {
-        System.out.println(data.getUsername());
         System.out.println(data.getCartId());
-        st.setString(1, String.valueOf(data.getUsername()));
-        st.setString(2, String.valueOf(data.getCartId()));
-        st.setString(3, String.valueOf(data.getDiscount()));
-        st.setString(4, String.valueOf(data.getTotal()));
-        st.setString(5, String.valueOf(data.getNo_items()));
+        st.setString(1, String.valueOf(data.getCartId()));
+        st.setString(2, String.valueOf(data.getDiscount()));
+        st.setString(3, String.valueOf(data.getTotal()));
+        st.setString(4, String.valueOf(data.getNo_items()));
     }
 
     @Override
@@ -76,11 +73,11 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected Cart convertResultSetToDomainModel(ResultSet rs) {
-        try{
-            int discount = Integer.parseInt(rs.getString(3));
-            int total = Integer.parseInt(rs.getString(4));
-            int no_items = Integer.parseInt(rs.getString(5));
-            return new Cart(rs.getString(1), Integer.parseInt(rs.getString(2)),discount, total, no_items);
+        try{ // " username,cartId, discount, total, no_items"
+            int discount = Integer.parseInt(rs.getString(2));
+            int total = Integer.parseInt(rs.getString(3));
+            int no_items = Integer.parseInt(rs.getString(4));
+            return new Cart(Integer.parseInt(rs.getString(1)),discount, total, no_items);
         }
         catch (Exception e){
             return null;
@@ -103,7 +100,7 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     public void delete(String username) {
-        String statement =  String.format("delete from %s b where b.%s = %s", TABLE_NAME, "username", StringUtility.quoteWrapper(username));
+        String statement =  String.format("delete from %s b where b.%s = %s", TABLE_NAME, "cartId", StringUtility.quoteWrapper(username));
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);

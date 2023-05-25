@@ -17,13 +17,6 @@ public class UserManager {
             repository.insert(u);
     }
 
-    public static void initialize() throws SQLException {
-        ArrayList<User> users = repository.findAll("");
-        System.out.println(users);
-        for(User u : users)
-            System.out.println(u.getUsername());
-        users.forEach(User::initialize);
-    }
     public static UserManager getInstance() throws Exception {
         if(instance == null)
             instance = new UserManager();
