@@ -60,8 +60,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
     @Override
     protected String getInsertStatement() {
         return String.format("INSERT INTO %s (cartId, productId, quantity)\n" +
-                                "VALUES (?, ?, ?)\n" +
-                            "ON DUPLICATE KEY UPDATE quantity = quantity + 1;", TABLE_NAME);
+                                "VALUES (?, ?, ?)\n", TABLE_NAME);
     }
 
     @Override
@@ -90,16 +89,15 @@ public class BuyListRepository extends Repository<CartItem, String> {
     protected ArrayList<CartItem> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
         ArrayList<CartItem> CartItems = new ArrayList<>();
         while (rs.next()) {
-            System.out.println("x-x");
             CartItems.add(this.convertResultSetToDomainModel(rs));
         }
         return CartItems;
     }
 
     @Override
-    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return String.format("update %s set %s = %s where %s = %s;",
-                TABLE_NAME, varName, newValue, whereField, whereValue);
+    protected String getUpdateStatement(String varName, String newValue, String productId, String cartId) {
+        return String.format("update %s set %s = %s where productId = %s and cartId = %s;",
+                TABLE_NAME, varName, newValue, productId, cartId);
     }
 
     public void delete(String cartId, String productId) {

@@ -54,7 +54,7 @@ public abstract class Repository<T, I> {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement());
         fillInsertValues(st, obj);
-        System.out.println(st);
+//        System.out.println(st);
         try {
             st.execute();
             st.close();
