@@ -25,6 +25,7 @@ public class BalootApplication {
         PurchaseListRepository.getInstance();
         CommentRepository.getInstance();
         CommentVoteRepository.getInstance();
+        UserManager.initialize();
         SpringApplication.run(BalootApplication.class, args);
     }
 }

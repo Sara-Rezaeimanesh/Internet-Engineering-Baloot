@@ -4,6 +4,7 @@ import com.baloot.IE.domain.Cart.Cart;
 import com.baloot.IE.domain.Cart.CartItem;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
+import com.baloot.IE.utitlity.StringUtility;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,8 +17,6 @@ public class CartRepository extends Repository<Cart, String> {
 
     private static final String COLUMNS = " username,cartId, discount, total, no_items";
     private static final String TABLE_NAME = "CART";
-    private final BuyListRepository buyListRepository = BuyListRepository.getInstance();
-    private final PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
     public static CartRepository getInstance() {
         if (instance == null) {
             try {
@@ -101,5 +100,24 @@ public class CartRepository extends Repository<Cart, String> {
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
         return String.format("update %s set %s = %s where %s = %s;",
                 TABLE_NAME, varName, newValue, whereField, whereValue);
+    }
+
+    public void delete(String username) {
+        String statement =  String.format("delete from %s b where b.%s = %s", TABLE_NAME, "username", StringUtility.quoteWrapper(username));
+        try {
+            Connection con = ConnectionPool.getConnection();
+            PreparedStatement st = con.prepareStatement(statement);
+            System.out.println(st);
+            try {
+                st.executeUpdate();
+                st.close();
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("error in cart.delete query.");
+                throw ex;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -49,7 +49,6 @@ public abstract class Repository<T, I> {
     }
 
     public void insert(T obj) throws SQLException {
-        System.out.println("hi hi hi hi");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement());
         fillInsertValues(st, obj);

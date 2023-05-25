@@ -3,18 +3,26 @@ package com.baloot.IE.domain.User;
 import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.repository.User.UserRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserManager {
     private static UserManager instance;
-    private final UserRepository repository = UserRepository.getInstance();
+    private static final UserRepository repository = UserRepository.getInstance();
 
     private UserManager() throws Exception {
         Initializer initializer = new Initializer();
         ArrayList<User> users = initializer.getUsersFromAPI("users");
-        users.forEach(User::initialize);
         for(User u : users)
             repository.insert(u);
+    }
+
+    public static void initialize() throws SQLException {
+        ArrayList<User> users = repository.findAll("");
+        System.out.println(users);
+        for(User u : users)
+            System.out.println(u.getUsername());
+        users.forEach(User::initialize);
     }
     public static UserManager getInstance() throws Exception {
         if(instance == null)

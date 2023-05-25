@@ -15,9 +15,10 @@ import java.util.ArrayList;
 public class PurchaseListRepository extends Repository<CartItem, String> {
     private static PurchaseListRepository instance;
 
-    private static final String COLUMNS = " cartId, productId, quantity";
+    private static final String COLUMNS = " username, productId, quantity";
     private static final String TABLE_NAME = "PURCHASELIST";
     private final ProductRepository productRepository = ProductRepository.getInstance();
+    private final CartRepository cartRepository = CartRepository.getInstance();
 
     public static PurchaseListRepository getInstance() {
         if (instance == null) {
@@ -36,8 +37,8 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
         PreparedStatement createTableStatement = con.prepareStatement(
                 String.format(
                         "CREATE TABLE IF NOT EXISTS %s " +
-                                "(cartId CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(cartId, productId),"
-                                +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
+                                "(id MEDIUMINT NOT NULL AUTO_INCREMENT,username CHAR(50),\nproductId CHAR(225),\n quantity CHAR(225),\nPRIMARY KEY(id),"
+                                +  "\nforeign key (username) references USERS(username),\nforeign key (productId) references PRODUCTS(id));",
                         TABLE_NAME)
         );
         createTableStatement.executeUpdate();
@@ -58,12 +59,13 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(cartId, productId, quantity) VALUES(?,?,?)", TABLE_NAME);
+        return String.format("INSERT IGNORE INTO %s(username, productId, quantity) VALUES(?,?,?)", TABLE_NAME);
     }
 
     @Override
     protected void fillInsertValues(PreparedStatement st, CartItem data) throws SQLException {
-        st.setString(1, String.valueOf(data.getCartId()));
+        String username = cartRepository.findByField(String.valueOf(data.getCartId()),"cartId").getUsername();
+        st.setString(1, username);
         st.setString(2, String.valueOf(data.getProduct().getId()));
         st.setString(3, String.valueOf(data.getQuantity()));
     }

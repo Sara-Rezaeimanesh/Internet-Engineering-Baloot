@@ -77,9 +77,10 @@ public class UserRepository extends Repository<User, String> {
     protected User convertResultSetToDomainModel(ResultSet rs) {
         try{
             return new User(rs.getString(1), rs.getString(2), rs.getString(3),
-                    rs.getString(4), rs.getString(5), Integer.parseInt(rs.getString(6)));
+                    rs.getString(4), rs.getString(5),(int) Double.parseDouble((rs.getString(6))));
         }
         catch (Exception e){
+            System.out.println(e.getMessage());
             return null;
         }
     }

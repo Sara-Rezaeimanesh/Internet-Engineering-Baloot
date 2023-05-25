@@ -22,9 +22,10 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
-
-    private final UserRepository repository = UserRepository.getInstance();
-    private final CartRepository cartRepository = CartRepository.getInstance();
+    @JsonIgnore
+    private final UserRepository repository = UserRepository.getInstance();;
+    @JsonIgnore
+    private CartRepository cartRepository;
 
     @JsonIgnore
     private Cart cart;
@@ -43,6 +44,7 @@ public class User {
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
+        cartRepository = CartRepository.getInstance();
         this.cart = cartRepository.findByField(this.username,"username");
     }
 

@@ -22,7 +22,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
                 instance = new SupplierRepository();
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("error in UserManager.create query.");
+                System.out.println("error in SupplierRepository.create query.");
             }
         }
         return instance;

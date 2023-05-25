@@ -92,6 +92,7 @@ public class Cart {
             purchaseListRepository.insert(ci);
             ci.updateProductStock();
         }
+        cartRepository.delete(this.username);
         total = 0;
         no_items = 0;
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
