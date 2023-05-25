@@ -61,7 +61,6 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product one(@PathVariable int id) throws SQLException {
         Product p = productManager.findProductsById(id);
-        productManager.setSuggestedProducts(p);
         return p;
     }
 
@@ -90,6 +89,7 @@ public class ProductController {
 
     @GetMapping("/{id}/suggestions")
     public ArrayList<Product> getSuggestions(@PathVariable int id) throws SQLException {
-        return productManager.findProductsById(id).getSuggestedProducts();
+        Product p = productManager.findProductsById(id);
+        return productManager.getSuggestedProducts(p);
     }
 }

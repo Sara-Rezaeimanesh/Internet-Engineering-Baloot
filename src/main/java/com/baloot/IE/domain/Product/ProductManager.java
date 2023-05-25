@@ -4,12 +4,10 @@ import com.baloot.IE.domain.Comment.CommentManager;
 import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.domain.Comment.Comment;
 import com.baloot.IE.domain.Rating.Rating;
-import com.baloot.IE.domain.Supplier.Supplier;
 import com.baloot.IE.domain.User.UserManager;
 import com.baloot.IE.repository.Product.CategoryRepository;
 import com.baloot.IE.repository.Product.ProductRepository;
 import com.baloot.IE.repository.Rating.RatingRepository;
-import com.baloot.IE.repository.Supplier.SupplierRepository;
 import com.baloot.IE.utitlity.StringUtility;
 import org.springframework.stereotype.Component;
 
@@ -160,18 +158,16 @@ public class ProductManager {
                         (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    public void setSuggestedProducts(Product product) throws SQLException {
+    public ArrayList<Product> getSuggestedProducts(Product product) throws SQLException {
         int id = product.getId();
-        ArrayList<Product> suggestedProducts =
-                repository.executeQuery("SELECT *, (CASE WHEN exists (select * \n" +
-                                                    "from categories c\n" +
-                                                    "where c.productId = p.id and c.category in" +
-                                                    "(select c1.category from categories c1 where c1.productId = "+id+")) \n" +
-                                                    "THEN 11+CAST(p.rating AS FLOAT) ELSE CAST(p.rating AS FLOAT) END)" +
-                                                    "as score FROM products p\n" +
-                                                    "where p.id != "+id+"\n" +
-                                                    "ORDER BY score desc\n" +
-                                                    "limit 5;");
-        product.setSuggestedProducts(suggestedProducts);
+        return repository.executeQuery("SELECT *, (CASE WHEN exists (select * \n" +
+                                            "from categories c\n" +
+                                            "where c.productId = p.id and c.category in" +
+                                            "(select c1.category from categories c1 where c1.productId = "+id+")) \n" +
+                                            "THEN 11+CAST(p.rating AS FLOAT) ELSE CAST(p.rating AS FLOAT) END)" +
+                                            "as score FROM products p\n" +
+                                            "where p.id != "+id+"\n" +
+                                            "ORDER BY score desc\n" +
+                                            "limit 5;");
     }
 }
