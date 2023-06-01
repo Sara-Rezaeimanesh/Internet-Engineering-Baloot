@@ -10,8 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -38,7 +36,6 @@ public class User {
 
     private String token;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @JsonIgnore
     private final UserRepository repository = UserRepository.getInstance();
     @JsonIgnore
@@ -48,7 +45,6 @@ public class User {
     private Cart cart;
 
     public Cart getCart() throws SQLException {
-        System.out.println("x-x");
         BuyListRepository buyListRepository = BuyListRepository.getInstance();
         PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
         ArrayList<CartItem> buyList = buyListRepository.findAll("1=1");
@@ -71,7 +67,7 @@ public class User {
         if(!Pattern.matches("^[._a-zA-Z0-9]+$", username_))
             throw new Exception("Username cannot contain especial characters.\n");
         this.username = username_;
-        this.password = bCryptPasswordEncoder.encode(password_);
+        this.password = hashPassword(password_);
         this.email = email_;
         this.address = address_;
         this.credit = credit_;
