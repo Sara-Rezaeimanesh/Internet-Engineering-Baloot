@@ -55,17 +55,21 @@ public class UserController {
     }
 
     @PostMapping("/{id}/cart")
-    public void addToCart(@PathVariable String id,
+    public int addToCart(@PathVariable String id,
                           @RequestBody Map<String, String> body) throws Exception {
         Product product = productManager.findProductsById(Integer.parseInt(body.get("product-id")));
-        userManager.findUserById(id).getCart().add(product);
+        Cart cart = userManager.findUserById(id).getCart();
+        cart.add(product);
+        return cart.getNo_items();
     }
 
     @DeleteMapping("/{id}/cart/{product_id}")
     @ResponseBody
-    public void removeFromCart(@PathVariable String id, @PathVariable int product_id) throws SQLException {
+    public int removeFromCart(@PathVariable String id, @PathVariable int product_id) throws SQLException {
         Product product = productManager.findProductsById(product_id);
-        userManager.findUserById(id).getCart().remove(product);
+        Cart cart = userManager.findUserById(id).getCart();
+        cart.remove(product);
+        return cart.getNo_items();
     }
 
     @PostMapping("/{id}/discounts")
