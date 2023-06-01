@@ -36,6 +36,8 @@ public class User {
     private String address;
     private int credit;
 
+    private String token;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @JsonIgnore
     private final UserRepository repository = UserRepository.getInstance();
@@ -54,6 +56,10 @@ public class User {
         cart.setBuyList(buyList);
         cart.setPurchaseList(purchaseList);
         return cart;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public User(@JsonProperty("username") String username_,

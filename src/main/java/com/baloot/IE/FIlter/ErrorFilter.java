@@ -25,8 +25,10 @@ public class ErrorFilter implements Filter {
             if (statusCode >= 400 && statusCode < 600) {
                 response.setStatus(statusCode);
             } else {
-                if (e instanceof IllegalArgumentException) {
+                if (e instanceof UnauthorizedException) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                } else if(e instanceof IllegalArgumentException) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 } else {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
