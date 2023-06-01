@@ -44,7 +44,6 @@ public class ProductManager {
         String searchString = "";
         if (category != null)
             searchString = "p inner join CATEGORIES c on p.id = c.productId\nwhere c.category = \""+category+"\"";
-        System.out.println("sara "+searchString);
         if (priceRange != null) {
             String[] priceRangeArray = priceRange.split("-");
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";

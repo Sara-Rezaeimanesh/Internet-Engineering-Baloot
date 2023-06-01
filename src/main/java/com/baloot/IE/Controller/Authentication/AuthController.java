@@ -17,6 +17,7 @@ public class AuthController {
         UserManager userRepository = UserManager.getInstance();
         if(userRepository.userExists(body.get("username"), body.get("password"))) {
             String token = JwtUtils.createJWT(body.get("username"));
+            System.out.println(token);
             User user = userRepository.findUserById(body.get("username"));
             user.setToken(token);
             return user;
