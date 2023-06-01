@@ -42,7 +42,6 @@ public class Cart {
     }
 
     public Cart(String username_) {
-        System.out.println("cartId " + cartId);
         total = 0;
         no_items = 0;
         username = username_;
@@ -93,10 +92,7 @@ public class Cart {
 
     public void buy() throws SQLException {
         ArrayList<CartItem> buyList = buyListRepository.findAll("cartId = " + cartId);
-        System.out.println("hello " + buyList.size());
         for(CartItem ci : buyList) {
-            System.out.println(ci.getCartId());
-            System.out.println(ci.getProduct().getId());
             buyListRepository.delete(String.valueOf(ci.getCartId()), String.valueOf(ci.getProduct().getId()));
             purchaseListRepository.insert(ci);
             ci.updateProductStock();

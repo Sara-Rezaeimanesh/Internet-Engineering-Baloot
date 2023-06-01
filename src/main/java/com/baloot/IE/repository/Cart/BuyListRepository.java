@@ -105,7 +105,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
-            System.out.println(st);
+//            System.out.println(st);
             try {
                 st.executeUpdate();
                 st.close();

@@ -60,8 +60,7 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected void fillInsertValues(PreparedStatement st, Cart data) throws SQLException {
-        System.out.println(data.getUsername());
-        System.out.println(data.getCartId());
+
         st.setString(1, String.valueOf(data.getUsername()));
         st.setString(2, String.valueOf(data.getDiscount()));
         st.setString(3, String.valueOf(data.getTotal()));
@@ -106,7 +105,7 @@ public class CartRepository extends Repository<Cart, String> {
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
-            System.out.println(st);
+//            System.out.println(st);
             try {
                 st.executeUpdate();
                 st.close();

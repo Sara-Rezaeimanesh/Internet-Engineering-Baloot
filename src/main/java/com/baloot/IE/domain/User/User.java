@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -90,7 +92,6 @@ public class User {
         credit += newCredit;
         repository.update("credit" ,String.valueOf(credit), "username" , StringUtility.quoteWrapper(this.username));
     }
-
     public boolean isPassEqual(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String hashPass = hashPassword(password);
         return Objects.equals(this.password, hashPass);
@@ -126,14 +127,13 @@ public class User {
         }
     }
 
-    private String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-        return Arrays.toString(factory.generateSecret(spec).getEncoded());
+    private String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hashBytes) {
+            hexString.append(String.format("%02x", b));
+        }
+        return hexString.toString();
     }
-
 }
