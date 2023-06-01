@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/authentication")
 public class AuthController {
     @PostMapping("/login")
     public User login(HttpServletResponse response,
@@ -21,9 +21,6 @@ public class AuthController {
             throw new Exception("Invalid username or password!");
         }
     }
-
-    @GetMapping("/logout")
-    public void logout() {}
 
     @PostMapping("/signup")
     public User signUp(HttpServletResponse response,

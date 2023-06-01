@@ -4,6 +4,8 @@ import com.baloot.IE.domain.Initializer.Initializer;
 import com.baloot.IE.repository.Cart.CartRepository;
 import com.baloot.IE.repository.User.UserRepository;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -41,7 +43,7 @@ public class UserManager {
         throw new IllegalArgumentException("User does not exits.");
 
     }
-    public boolean userExists(String username, String password){
+    public boolean userExists(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         User user;
         try {
             user = repository.findByField(username, "username");
@@ -61,6 +63,7 @@ public class UserManager {
         }
     }
 
+
     public void addUser(User user) throws Exception {
         User searchUser = null;
         try{
@@ -72,6 +75,6 @@ public class UserManager {
         if(searchUser != null) {
             throw new IllegalArgumentException("Username already exists. Please Login.");
         }
-        repository.insert(new User(user.getUsername(), user.getPassword(), user.getEmail(), user.getBirthDate(), user.getAddress(), user.getCredit()));
+        repository.insert(user);
     }
 }

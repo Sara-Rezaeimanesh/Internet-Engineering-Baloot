@@ -10,9 +10,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -26,8 +35,10 @@ public class User {
     private String birthDate;
     private String address;
     private int credit;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @JsonIgnore
-    private final UserRepository repository = UserRepository.getInstance();;
+    private final UserRepository repository = UserRepository.getInstance();
     @JsonIgnore
     private CartRepository cartRepository;
 
@@ -54,7 +65,7 @@ public class User {
         if(!Pattern.matches("^[._a-zA-Z0-9]+$", username_))
             throw new Exception("Username cannot contain especial characters.\n");
         this.username = username_;
-        this.password = password_;
+        this.password = bCryptPasswordEncoder.encode(password_);
         this.email = email_;
         this.address = address_;
         this.credit = credit_;
@@ -78,8 +89,9 @@ public class User {
         repository.update("credit" ,String.valueOf(credit), "username" , StringUtility.quoteWrapper(this.username));
     }
 
-    public boolean isPassEqual(String password) {
-        return Objects.equals(this.password, password);
+    public boolean isPassEqual(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        String hashPass = hashPassword(password);
+        return Objects.equals(this.password, hashPass);
     }
 
     public void pay() throws Exception {
@@ -111,4 +123,15 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
+    private String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+        return Arrays.toString(factory.generateSecret(spec).getEncoded());
+    }
+
 }
