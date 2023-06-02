@@ -39,13 +39,13 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        // username,
-        return "SELECT * FROM USERS u WHERE u.username = ?;";
+        return "SELECT * FROM USERS u WHERE u.? = ?;";
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
-        st.setString(1, username);
+    protected void fillFindByIdValues(PreparedStatement st, String username, String field_name) throws SQLException {
+        st.setString(1, field_name);
+        st.setString(2, username);
     }
 
     @Override

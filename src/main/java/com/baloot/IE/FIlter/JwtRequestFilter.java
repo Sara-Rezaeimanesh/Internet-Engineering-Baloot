@@ -26,13 +26,10 @@ public class JwtRequestFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String url = request.getRequestURI();
-        System.out.println("url: " + url);
         if(url.equals("/login") || url.equals("/signup"))
             chain.doFilter(request, response);
         else {
-            System.out.println("request: " + request.getQueryString());
             String token = request.getHeader("Authorization");
-            System.out.println("token: " + token);
             if(token == null)
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             else {

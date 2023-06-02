@@ -41,8 +41,21 @@ public class UserManager {
         if(user != null)
             return user;
         throw new IllegalArgumentException("User does not exits.");
-
     }
+
+    public User findUserByEmail(String id) {
+        User user = null;
+        try {
+            user = repository.findByField(id, "email");
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if(user != null)
+            return user;
+        throw new IllegalArgumentException("User does not exits.");
+    }
+
     public boolean userExists(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         User user;
         try {
@@ -74,6 +87,21 @@ public class UserManager {
         }
         if(searchUser != null) {
             throw new IllegalArgumentException("Username already exists. Please Login.");
+        }
+        repository.insert(user);
+    }
+
+    public void addGithubUser(User user) throws Exception {
+        User searchUser = null;
+        try{
+            searchUser = repository.findByField(user.getEmail(), "email");
+        }
+        catch (Exception e){
+            System.out.println("problem in method addUser");
+        }
+        if(searchUser != null) {
+            repository.update("username", user.getUsername(), "email", user.getEmail());
+            return;
         }
         repository.insert(user);
     }

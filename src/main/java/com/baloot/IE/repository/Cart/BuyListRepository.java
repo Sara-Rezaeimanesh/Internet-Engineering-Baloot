@@ -34,12 +34,9 @@ public class BuyListRepository extends Repository<CartItem, String> {
     private BuyListRepository() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement createTableStatement = con.prepareStatement(
-                String.format(
-                        "CREATE TABLE IF NOT EXISTS %s " +
-                                "(cartId MEDIUMINT,\nproductId CHAR(225),\n quantity INT,\nPRIMARY KEY(cartId, productId),"
-                        +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));",
-                        TABLE_NAME)
-        );
+                "CREATE TABLE IF NOT EXISTS BUYLIST " +
+                        "(cartId MEDIUMINT,\nproductId CHAR(225),\n quantity INT,\nPRIMARY KEY(cartId, productId),"
+                +  "\nforeign key (cartId) references CART(cartId),\nforeign key (productId) references PRODUCTS(id));");
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -48,19 +45,19 @@ public class BuyListRepository extends Repository<CartItem, String> {
     @Override
     protected String getFindByIdStatement(String field_name) {
         // discountCode
-        return String.format("SELECT * FROM %s c WHERE c.%s = ?;", TABLE_NAME, field_name);
+        return "SELECT * FROM BUYLIST c WHERE c.productId = ?;";
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
+    protected void fillFindByIdValues(PreparedStatement st, String username, String field_name) throws SQLException {
         st.setString(1, username);
     }
 
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT INTO %s (cartId, productId, quantity)\n" +
-                                "VALUES (?, ?, ?)\n", TABLE_NAME);
+        return "INSERT INTO BUYLIST (cartId, productId, quantity)\n" +
+                                "VALUES (?, ?, ?)\n";
     }
 
     @Override
@@ -72,7 +69,7 @@ public class BuyListRepository extends Repository<CartItem, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
+        return String.format("SELECT * FROM BUYLIST where "+ searchString + ";");
     }
 
     @Override

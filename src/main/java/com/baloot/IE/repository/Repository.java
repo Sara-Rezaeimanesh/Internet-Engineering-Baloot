@@ -2,6 +2,7 @@ package com.baloot.IE.repository;
 
 import com.baloot.IE.domain.Product.Product;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public abstract class Repository<T, I> {
     abstract protected String getFindByIdStatement(String field_name);
 
-    abstract protected void fillFindByIdValues(PreparedStatement st, I id) throws SQLException;
+    abstract protected void fillFindByIdValues(PreparedStatement st, I id, String field_name) throws SQLException;
 
     abstract protected String getInsertStatement();
 
@@ -28,8 +29,7 @@ public abstract class Repository<T, I> {
     public T findByField(I id, String field_name) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindByIdStatement(field_name));
-        fillFindByIdValues(st, id);
-//        System.out.println(st);
+        fillFindByIdValues(st, id, field_name);
         try {
             ResultSet resultSet = st.executeQuery();
             if (!resultSet.next()) {

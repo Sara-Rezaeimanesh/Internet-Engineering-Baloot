@@ -49,7 +49,7 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
+    protected void fillFindByIdValues(PreparedStatement st, String username, String field_name) throws SQLException {
         st.setString(1, username);
     }
 

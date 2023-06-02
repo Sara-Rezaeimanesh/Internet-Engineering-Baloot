@@ -52,7 +52,7 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
+    protected void fillFindByIdValues(PreparedStatement st, String username, String field_name) throws SQLException {
         st.setString(1, username);
     }
 

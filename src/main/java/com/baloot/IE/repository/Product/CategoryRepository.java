@@ -45,7 +45,7 @@ public class CategoryRepository extends Repository<Category, String>  {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
+    protected void fillFindByIdValues(PreparedStatement st, String id, String field_name) throws SQLException {
     }
 
     @Override
