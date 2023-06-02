@@ -12,23 +12,25 @@ import java.security.Key;
 import java.util.Date;
 
 public class JwtUtils {
-    private static String SECRET_KEY = "baloot";
-    private static long EXPIRE_PERIOD = 24*60*60*1000;
+    private static final String SECRET_KEY = "baloot";
+    private static final String ISSUER = "Baloot.com";
 
     private static Date expirationDate() {
         long curTime = System.currentTimeMillis();
+        long EXPIRE_PERIOD = 24 * 60 * 60 * 1000;
         return new Date(curTime + (EXPIRE_PERIOD));
     }
 
-    public static String createJWT(String userMail) {
+    public static String createJWT(String username) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         JwtBuilder builder = Jwts.builder();
-        builder.setIssuer(userMail);
+        builder.setIssuer(ISSUER);
         builder.setIssuedAt(new Date(System.currentTimeMillis()));
         builder.setExpiration(expirationDate());
+        builder.setAudience(username);
         builder.signWith(signatureAlgorithm, signingKey);
 
         return builder.compact();
