@@ -43,9 +43,8 @@ public class UserRepository extends Repository<User, String> {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username, String field_name) throws SQLException {
-        st.setString(1, field_name);
-        st.setString(2, username);
+    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
+        st.setString(1, username);
     }
 
     @Override

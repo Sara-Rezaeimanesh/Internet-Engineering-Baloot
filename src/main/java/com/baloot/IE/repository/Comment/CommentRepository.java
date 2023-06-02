@@ -43,7 +43,7 @@ public class CommentRepository extends Repository<Comment, String> {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String id, String field_name) throws SQLException {
+    protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
         st.setString(1, id);
     }
 
