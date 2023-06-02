@@ -13,9 +13,6 @@ import java.util.ArrayList;
 public class DiscountRepository extends Repository<Discount, String> {
     private static DiscountRepository instance;
 
-    private static final String COLUMNS = " discountCode, discount";
-    private static final String TABLE_NAME = "DISCOUNTS";
-
     public static DiscountRepository getInstance() {
         if (instance == null) {
             try {
@@ -31,11 +28,8 @@ public class DiscountRepository extends Repository<Discount, String> {
     private DiscountRepository() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement createTableStatement = con.prepareStatement(
-                String.format(
-                        "CREATE TABLE IF NOT EXISTS %s " +
-                                "(discountCode CHAR(50),\ndiscount CHAR(225),\nPRIMARY KEY(discountCode));",
-                        TABLE_NAME)
-        );
+                "CREATE TABLE IF NOT EXISTS DISCOUNTS " +
+                        "(discountCode CHAR(50),\ndiscount CHAR(225),\nPRIMARY KEY(discountCode));");
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -43,7 +37,7 @@ public class DiscountRepository extends Repository<Discount, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s d WHERE d.%s = ?;", TABLE_NAME, field_name);
+        return "SELECT * FROM DISCOUNTS d WHERE d.discountCode = ?;";
     }
 
     @Override
@@ -53,7 +47,7 @@ public class DiscountRepository extends Repository<Discount, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(discountCode, discount) VALUES(?,?)", TABLE_NAME);
+        return "INSERT IGNORE INTO USERS (discountCode, discount) VALUES(?,?)";
     }
 
     @Override
@@ -64,7 +58,7 @@ public class DiscountRepository extends Repository<Discount, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s;", TABLE_NAME);
+        return "SELECT * FROM USERS;";
     }
 
     @Override

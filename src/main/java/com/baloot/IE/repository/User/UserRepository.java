@@ -13,9 +13,6 @@ import java.util.ArrayList;
 public class UserRepository extends Repository<User, String> {
     private static UserRepository instance;
 
-    private static final String COLUMNS = " username, password, email, birthDate, address, credit";
-    private static final String TABLE_NAME = "USERS";
-
     public static UserRepository getInstance() {
         if (instance == null) {
             try {
@@ -31,13 +28,10 @@ public class UserRepository extends Repository<User, String> {
     private UserRepository() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement createTableStatement = con.prepareStatement(
-                String.format(
-                        "CREATE TABLE IF NOT EXISTS %s " +
-                         "(username CHAR(50),\npassword CHAR(225),\nemail CHAR(225),"  +
-                         "\nbirthDate DATE,\n address CHAR(200), credit FLOAT,\nPRIMARY KEY(username, email),\n" +
-                                "unique (email));",
-                        TABLE_NAME)
-        );
+                "CREATE TABLE IF NOT EXISTS USERS " +
+                 "(username CHAR(50),\npassword CHAR(225),\nemail CHAR(225),"  +
+                 "\nbirthDate DATE,\n address CHAR(200), credit FLOAT,\nPRIMARY KEY(username, email),\n" +
+                        "unique (email));");
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -45,7 +39,8 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
+        // username,
+        return "SELECT * FROM USERS u WHERE u.username = ?;";
     }
 
     @Override
@@ -55,7 +50,7 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT IGNORE INTO %s(username, password, email, birthDate, address, credit) VALUES(?,?,?,?,?,?)", TABLE_NAME);
+        return "INSERT IGNORE INTO USERS (username, password, email, birthDate, address, credit) VALUES(?,?,?,?,?,?)";
     }
 
     @Override
@@ -70,7 +65,7 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s;", TABLE_NAME);
+        return "SELECT * FROM USERS;";
     }
 
     @Override
@@ -96,7 +91,6 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return String.format("update %s set %s = %s where %s = %s;",
-                TABLE_NAME, varName, newValue, whereField, whereValue);
+        return null;
     }
 }

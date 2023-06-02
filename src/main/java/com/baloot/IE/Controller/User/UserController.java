@@ -11,7 +11,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,11 +26,6 @@ public class UserController {
         userManager = UserManager.getInstance();
         productManager = ProductManager.getInstance();
         discountManager = DiscountManager.getInstance();
-    }
-
-    @GetMapping("")
-    public List<User> all() {
-        return userManager.getAllUsers();
     }
 
     @GetMapping("/{id}")
