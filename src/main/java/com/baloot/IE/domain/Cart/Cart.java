@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
@@ -70,7 +71,7 @@ public class Cart {
     }
 
     public void remove(Product p) throws SQLException {
-        CartItem ci = buyListRepository.findByField(String.valueOf(p.getId()), "productId");
+        CartItem ci = buyListRepository.findByField(new ArrayList<>(Arrays.asList(String.valueOf(p.getId()), String.valueOf(cartId))), "productId");
         if(ci != null) {
             ci.updateQuantity(-1);
             if(ci.isOut())

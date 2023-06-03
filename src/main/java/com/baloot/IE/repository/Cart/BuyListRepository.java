@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class BuyListRepository extends Repository<CartItem, String> {
+public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
     private static BuyListRepository instance;
 
     private static final String COLUMNS = " cartId, productId, quantity";
@@ -45,12 +45,13 @@ public class BuyListRepository extends Repository<CartItem, String> {
     @Override
     protected String getFindByIdStatement(String field_name) {
         // discountCode
-        return "SELECT * FROM BUYLIST c WHERE c.productId = ?;";
+        return "SELECT * FROM BUYLIST c WHERE c.productId = ? and c.cartId = ?;";
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
-        st.setString(1, username);
+    protected void fillFindByIdValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+        st.setString(1, fields.get(0));
+        st.setString(2, fields.get(1));
     }
 
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public abstract class Repository<T, I> {
     abstract protected String getFindByIdStatement(String field_name);
 
-    abstract protected void fillFindByIdValues(PreparedStatement st, I id) throws SQLException;
+    abstract protected void fillFindByIdValues(PreparedStatement st, I fields) throws SQLException;
 
     abstract protected String getInsertStatement();
 
