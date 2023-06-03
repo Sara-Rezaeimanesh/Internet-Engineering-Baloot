@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CartRepository extends Repository<Cart, String> {
     private static CartRepository instance;
@@ -44,8 +45,20 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     @Override
-    protected String getFindByIdStatement(String field_name) {
+    protected String getFindByIdStatement(String field_name) {//check
+        if(Objects.equals(field_name, "cartId") || Objects.equals(field_name, "username"))
             return String.format("SELECT * FROM %s c WHERE c.%s = ?;", TABLE_NAME,field_name);
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
     }
 
     @Override
@@ -60,7 +73,6 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected void fillInsertValues(PreparedStatement st, Cart data) throws SQLException {
-
         st.setString(1, String.valueOf(data.getUsername()));
         st.setString(2, String.valueOf(data.getDiscount()));
         st.setString(3, String.valueOf(data.getTotal()));
@@ -68,8 +80,8 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
+    protected String getFindAllStatement() {
+        return null;
     }
 
     @Override
@@ -100,12 +112,12 @@ public class CartRepository extends Repository<Cart, String> {
                 TABLE_NAME, varName, newValue, whereField, whereValue);
     }
 
-    public void delete(String username) {
-        String statement =  String.format("delete from %s b where b.%s = %s", TABLE_NAME, "username", StringUtility.quoteWrapper(username));
+    public void delete(String username) { //check
+        String statement =  String.format("delete from %s c where b.username = %s", TABLE_NAME, StringUtility.quoteWrapper(username));
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
-//            System.out.println(st);
+            System.out.println(st);
             try {
                 st.executeUpdate();
                 st.close();
@@ -118,4 +130,6 @@ public class CartRepository extends Repository<Cart, String> {
             throw new RuntimeException(e);
         }
     }
+
+
 }

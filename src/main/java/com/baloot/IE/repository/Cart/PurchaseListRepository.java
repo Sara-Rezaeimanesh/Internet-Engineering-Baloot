@@ -52,6 +52,16 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     }
 
     @Override
+    protected String getSearchStatement(String field_name) {
+        return "";
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
+    }
+
+    @Override
     protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
         st.setString(1, username);
     }
@@ -71,8 +81,8 @@ public class PurchaseListRepository extends Repository<CartItem, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override

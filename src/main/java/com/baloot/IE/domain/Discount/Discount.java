@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Getter
@@ -30,7 +31,7 @@ public class Discount {
     }
 
     public boolean isValidToUse(String username) throws SQLException {
-        ArrayList<UsedDiscount> usedDiscount = usedDiscountRepository.findAll("username = " + StringUtility.quoteWrapper(username) + " and " + "discountCode = " + StringUtility.quoteWrapper(discountCode) );
+        ArrayList<UsedDiscount> usedDiscount = usedDiscountRepository.search(new ArrayList<>(Arrays.asList(username, discountCode)), "alaki");
         return usedDiscount.size() == 0;
     }
 

@@ -44,6 +44,16 @@ public class RatingRepository extends Repository<Rating, String> {
         return String.format("SELECT * FROM %s d WHERE d.%s = ?;", TABLE_NAME, field_name);
     }
 
+    @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
+    }
+
 
     @Override
     protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
@@ -68,7 +78,7 @@ public class RatingRepository extends Repository<Rating, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
+    protected String getFindAllStatement() {
         return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 

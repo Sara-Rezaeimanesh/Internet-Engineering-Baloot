@@ -1,7 +1,6 @@
 package com.baloot.IE.repository;
 
 import com.baloot.IE.domain.Product.Product;
-import jdk.internal.foreign.ArenaAllocator;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -56,7 +55,7 @@ public abstract class Repository<T, I> {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement());
         fillInsertValues(st, obj);
-//        System.out.println(st);
+        System.out.println(st);
         try {
             st.execute();
             st.close();
@@ -122,7 +121,7 @@ public abstract class Repository<T, I> {
 
     public void update(String varName, String newValue, String whereField, String whereValue) {
         String statement = getUpdateStatement(varName, newValue, whereField, whereValue);
-//        System.out.println(statement);
+        System.out.println(statement);
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
@@ -144,8 +143,8 @@ public abstract class Repository<T, I> {
     public ArrayList<T> executeQuery(String query) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(query);
-//        System.out.println(st);
-        try {
+        System.out.println(st);
+        try{
             ResultSet resultSet = st.executeQuery();
             if (resultSet == null) {
                 st.close();

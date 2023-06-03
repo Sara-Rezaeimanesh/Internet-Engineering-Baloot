@@ -47,6 +47,16 @@ public class UserRepository extends Repository<User, String> {
     }
 
     @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
+    }
+
+    @Override
     protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
         st.setString(1, username);
     }
@@ -69,7 +79,7 @@ public class UserRepository extends Repository<User, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
+    protected String getFindAllStatement() {
         return "SELECT * FROM USERS;";
     }
 
