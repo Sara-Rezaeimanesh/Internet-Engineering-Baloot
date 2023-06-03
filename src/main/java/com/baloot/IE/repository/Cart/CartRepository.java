@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CartRepository extends Repository<Cart, String> {
     private static CartRepository instance;
@@ -45,7 +46,19 @@ public class CartRepository extends Repository<Cart, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
+        if(Objects.equals(field_name, "cartId") || Objects.equals(field_name, "username"))
             return String.format("SELECT * FROM %s c WHERE c.%s = ?;", TABLE_NAME,field_name);
+        else
+            throw new IllegalArgumentException("Bad input for sql findById");
+    }
+
+    @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
     }
 
     @Override
@@ -68,8 +81,8 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override
