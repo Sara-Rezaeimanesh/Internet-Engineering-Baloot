@@ -45,8 +45,8 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getSearchStatement(String field_name) {
-        if(Objects.equals(field_name, "productId"))
-            return String.format("SELECT * FROM %s u WHERE u.productId = ?;", TABLE_NAME);
+        if(Objects.equals(field_name, "commodityId"))
+            return String.format("SELECT * FROM %s u WHERE u.commodityId = ?;", TABLE_NAME);
         else
             throw new IllegalArgumentException("Bad field name for search in Comments");
     }
