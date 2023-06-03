@@ -1,6 +1,7 @@
 package com.baloot.IE.repository;
 
 import com.baloot.IE.domain.Product.Product;
+import jdk.internal.foreign.ArenaAllocator;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -11,14 +12,15 @@ import java.util.ArrayList;
 
 public abstract class Repository<T, I> {
     abstract protected String getFindByIdStatement(String field_name);
-
+    abstract protected String getSearchStatement(String field_name);
+    abstract protected void fillSearchValues(PreparedStatement st, I fields) throws SQLException;
     abstract protected void fillFindByIdValues(PreparedStatement st, I fields) throws SQLException;
 
     abstract protected String getInsertStatement();
 
     abstract protected void fillInsertValues(PreparedStatement st, T data) throws SQLException;
 
-    abstract protected String getFindAllStatement(String searchString);
+    abstract protected String getFindAllStatement();
 
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
 
@@ -71,10 +73,33 @@ public abstract class Repository<T, I> {
         return null;
     }
 
-    public ArrayList<T> findAll(String searchString) throws SQLException {
+    public ArrayList<T> findAll() throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement(searchString));
-//        System.out.println(st);
+        PreparedStatement st = con.prepareStatement(getFindAllStatement());
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if (resultSet == null) {
+                st.close();
+                con.close();
+                return new ArrayList<>();
+            }
+            ArrayList<T> result = convertResultSetToDomainModelList(resultSet);
+            st.close();
+            con.close();
+            return result;
+        } catch (Exception e) {
+            st.close();
+            con.close();
+            System.out.println("error in Repository.findAll query.");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public ArrayList<T> search(I id, String field_name) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getSearchStatement(field_name));
+        fillSearchValues(st, id);
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet == null) {

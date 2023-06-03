@@ -49,8 +49,8 @@ public class User {
     public Cart getCart() throws SQLException {
         BuyListRepository buyListRepository = BuyListRepository.getInstance();
         PurchaseListRepository purchaseListRepository = PurchaseListRepository.getInstance();
-        ArrayList<CartItem> buyList = buyListRepository.findAll("1=1");
-        ArrayList<CartItem> purchaseList = purchaseListRepository.findAll("1=1");
+        ArrayList<CartItem> buyList = buyListRepository.findAll();
+        ArrayList<CartItem> purchaseList = purchaseListRepository.findAll();
         cart.setBuyList(buyList);
         cart.setPurchaseList(purchaseList);
         return cart;

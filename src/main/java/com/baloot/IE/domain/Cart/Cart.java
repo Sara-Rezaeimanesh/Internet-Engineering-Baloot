@@ -63,11 +63,11 @@ public class Cart {
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
         no_items += 1;
         cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
-        ArrayList<CartItem> cartItem = buyListRepository.findAll("productId = " + String.valueOf(p.getId()) + " and cartId = " + String.valueOf(cartId) );
-        if(cartItem.size() == 0)
+        CartItem cartItem = buyListRepository.findByField(new ArrayList<>(Arrays.asList(String.valueOf(p.getId()), String.valueOf(cartId))), "productId");
+        if(cartItem == null)
             buyListRepository.insert(new CartItem(cartId, p, 1));
         else
-            buyListRepository.update("quantity", "quantity + 1", String.valueOf(cartItem.get(0).getProduct().getId()), String.valueOf(cartItem.get(0).getCartId()));
+            buyListRepository.update("quantity", "quantity + 1", String.valueOf(cartItem.getProduct().getId()), String.valueOf(cartItem.getCartId()));
     }
 
     public void remove(Product p) throws SQLException {
@@ -92,7 +92,7 @@ public class Cart {
     }
 
     public void buy() throws SQLException {
-        ArrayList<CartItem> buyList = buyListRepository.findAll("cartId = " + cartId);
+        ArrayList<CartItem> buyList = buyListRepository.search(new ArrayList<>(Arrays.asList(String.valueOf(cartId))), "cartId");
         System.out.println(buyList.toString());
         for(CartItem ci : buyList) {
             buyListRepository.delete(String.valueOf(ci.getCartId()), String.valueOf(ci.getProduct().getId()));

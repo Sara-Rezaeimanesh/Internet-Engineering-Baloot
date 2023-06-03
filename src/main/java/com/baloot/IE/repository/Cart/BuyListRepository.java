@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
     private static BuyListRepository instance;
@@ -49,6 +50,19 @@ public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
     }
 
     @Override
+    protected String getSearchStatement(String field_name) {
+        if(Objects.equals(field_name, "cartId"))
+            return "SELECT * FROM BUYLIST where cartId = ?;";
+        else
+            throw new IllegalArgumentException("YOU CAN'T SQL INJECT ME YOU MORON!");
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+
+    }
+
+    @Override
     protected void fillFindByIdValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
         st.setString(1, fields.get(0));
         st.setString(2, fields.get(1));
@@ -69,8 +83,8 @@ public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM BUYLIST where "+ searchString + ";");
+    protected String getFindAllStatement() {
+        return "SELECT * FROM BUYLIST;";
     }
 
     @Override
