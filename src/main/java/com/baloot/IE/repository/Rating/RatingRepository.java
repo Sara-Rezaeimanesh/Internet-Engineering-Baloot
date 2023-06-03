@@ -48,7 +48,7 @@ public class RatingRepository extends Repository<Rating, ArrayList<String>> {
 
     @Override
     protected String getSearchStatement(String field_name) {
-        return String.format("SELECT * FROM %s where username =  ? and productId = ?;", TABLE_NAME);
+        return String.format("SELECT * FROM %s where username = ? and productId = ?;", TABLE_NAME);
     }
 
     @Override
@@ -66,8 +66,7 @@ public class RatingRepository extends Repository<Rating, ArrayList<String>> {
 
     @Override
     protected String getInsertStatement() {
-        return String.format("INSERT INTO %s (username, productId, score)\n" +
-                            "VALUES (?, ?, ?);", TABLE_NAME);
+        return String.format("INSERT INTO %s (username, productId, score) VALUES (?, ?, ?);", TABLE_NAME);
     }
 
     @Override
@@ -104,7 +103,7 @@ public class RatingRepository extends Repository<Rating, ArrayList<String>> {
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, ArrayList<String> whereValue) {
         if(Objects.equals(varName, "rating"))
-            return String.format("update %s set score = ? where username =  ? and productId = ?;",
+            return String.format("update %s set score = ? where username = ? and productId = ?;",
                     TABLE_NAME);
         throw new IllegalArgumentException("Bad argument in buy list repository");
     }
@@ -117,7 +116,7 @@ public class RatingRepository extends Repository<Rating, ArrayList<String>> {
     }
 
     public float calculateRating(int id) {
-        String query = String.format("SELECT avg(r.score) FROM %s r WHERE r.productId = %s", TABLE_NAME, id);
+        String query = String.format("SELECT avg(r.score) FROM %s r WHERE r.productId = %s;", TABLE_NAME, id);
         if (query != null && !query.isEmpty()) {
             try {
                 Connection con = ConnectionPool.getConnection();

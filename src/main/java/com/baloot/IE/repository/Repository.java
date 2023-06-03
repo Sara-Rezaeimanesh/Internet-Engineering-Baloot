@@ -58,7 +58,6 @@ public abstract class Repository<T, I> {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement());
         fillInsertValues(st, obj);
-        System.out.println(st);
         try {
             st.execute();
             st.close();
@@ -130,7 +129,6 @@ public abstract class Repository<T, I> {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
             fillUpdateValues(st, newValue, whereValue);
-            System.out.println(st);
             try {
                 con.setAutoCommit(false);
                 st.executeUpdate();
@@ -150,7 +148,6 @@ public abstract class Repository<T, I> {
     public ArrayList<T> executeQuery(String query) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(query);
-        System.out.println(st);
         try{
             ResultSet resultSet = st.executeQuery();
             if (resultSet == null) {

@@ -22,7 +22,9 @@ public class CorsFilter implements Filter {
         System.out.println("hi 2");
         if (httpServletRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-        } else chain.doFilter(request, response);
+        } else {
+            chain.doFilter(request, response);
+        }
     }
     public void init(FilterConfig filterConfig) throws ServletException {
     }
