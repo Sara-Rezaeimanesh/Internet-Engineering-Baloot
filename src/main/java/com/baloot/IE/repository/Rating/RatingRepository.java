@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RatingRepository extends Repository<Rating, String> {
+public class RatingRepository extends Repository<Rating, ArrayList<String>> {
     private static RatingRepository instance;
 
     private static final String COLUMNS = " username, productId, score";
@@ -48,26 +48,26 @@ public class RatingRepository extends Repository<Rating, String> {
 
     @Override
     protected String getSearchStatement(String field_name) {
-        return null;
+        return String.format("SELECT * FROM %s where username =  ? and productId = ?;", TABLE_NAME);
     }
 
     @Override
-    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
-
+    protected void fillSearchValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+        st.setString(1, fields.get(0));
+        st.setString(2, fields.get(1));
     }
 
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
-        st.setString(1, username);
+    protected void fillFindByIdValues(PreparedStatement st, ArrayList<String> username) throws SQLException {
+        st.setString(1, username.get(0));
     }
 
 
     @Override
     protected String getInsertStatement() {
         return String.format("INSERT INTO %s (username, productId, score)\n" +
-                            "VALUES (?, ?, ?)\n" +
-                            "ON DUPLICATE KEY UPDATE score = ?;", TABLE_NAME);
+                            "VALUES (?, ?, ?);", TABLE_NAME);
     }
 
     @Override
@@ -75,8 +75,6 @@ public class RatingRepository extends Repository<Rating, String> {
         st.setString(1, String.valueOf(data.getUsername()));
         st.setString(2, String.valueOf(data.getProductId()));
         st.setString(3, String.valueOf(data.getScore()));
-
-        st.setString(4, String.valueOf(data.getScore()));
     }
 
     @Override
@@ -104,12 +102,18 @@ public class RatingRepository extends Repository<Rating, String> {
     }
 
     @Override
-    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return null;
+    protected String getUpdateStatement(String varName, String newValue, String whereField, ArrayList<String> whereValue) {
+        if(Objects.equals(varName, "rating"))
+            return String.format("update %s set score = ? where username =  ? and productId = ?;",
+                    TABLE_NAME);
+        throw new IllegalArgumentException("Bad argument in buy list repository");
     }
 
     @Override
-    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+    protected void fillUpdateValues(PreparedStatement st, String field, ArrayList<String> where) throws SQLException {
+        st.setInt(1, Integer.parseInt(field));
+        st.setString(2, where.get(0));
+        st.setString(3, where.get(1));
     }
 
     public float calculateRating(int id) {

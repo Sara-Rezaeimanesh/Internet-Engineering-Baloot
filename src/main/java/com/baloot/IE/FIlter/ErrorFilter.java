@@ -17,6 +17,7 @@ public class ErrorFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+            System.out.println("hi 3");
             filterChain.doFilter(servletRequest, servletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {

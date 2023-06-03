@@ -41,6 +41,7 @@ public class ProductController {
                              @RequestParam(name = "available", required = false) String available,
                              @RequestParam(name = "apply") String apply,
                              @RequestParam(name = "page") int page) throws SQLException {
+        System.out.println("hi 0");
 
         int supplier_id = -1;
         if(provider_name != null)
@@ -66,6 +67,7 @@ public class ProductController {
 
     @PostMapping("/{id}/ratings")
     public void rate(@PathVariable int id, @RequestBody Map<String, String> body) throws Exception {
+        System.out.println("hi 1");
       productManager.updateRating(body.get("username"), body.get("rate"), id);
     }
 

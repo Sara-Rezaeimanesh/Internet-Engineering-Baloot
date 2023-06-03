@@ -127,7 +127,7 @@ public abstract class Repository<T, I> {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
             fillUpdateValues(st, newValue, whereValue);
-
+            System.out.println(st);
             try {
                 con.setAutoCommit(false);
                 st.executeUpdate();
@@ -135,6 +135,8 @@ public abstract class Repository<T, I> {
                 st.close();
                 con.close();
             } catch (SQLException ex) {
+                st.close();
+                con.close();
                 System.out.println("error in update query.");
                 throw ex;
             }
