@@ -110,8 +110,8 @@ public class CartRepository extends Repository<Cart, String> {
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
         if(Objects.equals(varName, "total") || Objects.equals(varName, "no_items") || Objects.equals(varName, "discount"))
-            return String.format("update %s set %s = ? where %s = ?;",
-                    TABLE_NAME, varName, StringUtility.quoteWrapper(whereField));
+            return String.format("update %s set %s = ? where username = ?;",
+                    TABLE_NAME, varName);
         throw new IllegalArgumentException("Bad argument in cart repository");
     }
 
@@ -122,7 +122,7 @@ public class CartRepository extends Repository<Cart, String> {
     }
 
     public void delete(String username) {
-        String statement =  String.format("delete from USERS b where b.username = %s", StringUtility.quoteWrapper(username));
+        String statement =  String.format("delete from CART b where b.username = %s", StringUtility.quoteWrapper(username));
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);

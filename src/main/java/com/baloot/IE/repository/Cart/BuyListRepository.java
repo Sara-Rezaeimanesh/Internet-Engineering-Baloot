@@ -59,7 +59,7 @@ public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
 
     @Override
     protected void fillSearchValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
-
+        st.setString(1, fields.get(0));
     }
 
     @Override
@@ -109,14 +109,14 @@ public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
     @Override
     protected String getUpdateStatement(String varName, String newValue, String productId, ArrayList<String> cartId) {
         if(Objects.equals(varName, "quantity"))
-            return String.format("update %s set %s = ? where productId = %s and cartId = %s;",
-                TABLE_NAME, varName, newValue, productId, cartId.get(0));
+            return String.format("update %s set quantity = quantity + ? where productId = ? and cartId = ?;",
+                TABLE_NAME);
         throw new IllegalArgumentException("Bad argument in buy list repository");
     }
 
     @Override
     protected void fillUpdateValues(PreparedStatement st, String field, ArrayList<String> where) throws SQLException {
-        st.setString(1, field);
+        st.setInt(1, Integer.parseInt(field));
         st.setString(2, where.get(0));
         st.setString(3, where.get(1));
     }
