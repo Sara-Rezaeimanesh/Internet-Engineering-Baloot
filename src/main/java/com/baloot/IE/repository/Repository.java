@@ -13,7 +13,7 @@ public abstract class Repository<T, I> {
     abstract protected String getFindByIdStatement(String field_name);
     abstract protected String getSearchStatement(String field_name);
     abstract protected void fillSearchValues(PreparedStatement st, I fields) throws SQLException;
-    abstract protected void fillUpdateValues(PreparedStatement st, String fields) throws SQLException;
+    abstract protected void fillUpdateValues(PreparedStatement st, String field, I where) throws SQLException;
     abstract protected void fillFindByIdValues(PreparedStatement st, I fields) throws SQLException;
 
     abstract protected String getInsertStatement();
@@ -26,7 +26,7 @@ public abstract class Repository<T, I> {
 
     abstract protected ArrayList<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException;
 
-    abstract protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue);
+    abstract protected String getUpdateStatement(String varName, String newValue, String whereField, I whereValue);
 
 
     public T findByField(I id, String field_name) throws SQLException {
@@ -121,12 +121,12 @@ public abstract class Repository<T, I> {
         }
     }
 
-    public void update(String varName, String newValue, String whereField, String whereValue) {
+    public void update(String varName, String newValue, String whereField, I whereValue) {
         String statement = getUpdateStatement(varName, newValue, whereField, whereValue);
         try {
             Connection con = ConnectionPool.getConnection();
             PreparedStatement st = con.prepareStatement(statement);
-            fillUpdateValues(st, newValue);
+            fillUpdateValues(st, newValue, whereValue);
 
             try {
                 con.setAutoCommit(false);

@@ -45,6 +45,21 @@ public class CategoryRepository extends Repository<Category, String>  {
     }
 
     @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+
+    }
+
+    @Override
     protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
     }
 
@@ -63,8 +78,8 @@ public class CategoryRepository extends Repository<Category, String>  {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s WHERE %s;", TABLE_NAME, searchString);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override

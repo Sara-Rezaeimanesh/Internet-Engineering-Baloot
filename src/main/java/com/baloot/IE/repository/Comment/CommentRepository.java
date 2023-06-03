@@ -57,11 +57,6 @@ public class CommentRepository extends Repository<Comment, String> {
     }
 
     @Override
-    protected void fillUpdateValues(PreparedStatement st, String fields) throws SQLException {
-        st.setString(1, fields);
-    }
-
-    @Override
     protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
         st.setString(1, id);
     }
@@ -111,5 +106,11 @@ public class CommentRepository extends Repository<Comment, String> {
             return String.format("update %s set %s = ? where id = ?;", TABLE_NAME, varName);
         else
             throw new IllegalArgumentException("Bad field name for update in Comments");
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+        st.setString(1, field);
+        st.setString(2, where);
     }
 }

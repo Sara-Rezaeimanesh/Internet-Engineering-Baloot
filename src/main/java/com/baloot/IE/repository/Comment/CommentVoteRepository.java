@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CommentVoteRepository extends Repository<CommentVote, String> {
+public class CommentVoteRepository extends Repository<CommentVote, ArrayList<String>> {
     private static CommentVoteRepository instance;
     private static final String TABLE_NAME = "COMMENT_VOTES";
 
@@ -39,12 +39,23 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s u WHERE "+field_name+";", TABLE_NAME);
+        return String.format("SELECT * FROM %s u WHERE u.userEmail = ? and u.commentId = ?;", TABLE_NAME);
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
-        st.setString(1, id);
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+
+    }
+
+    @Override
+    protected void fillFindByIdValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+        st.setString(1, fields.get(0));
+        st.setString(2, fields.get(1));
     }
 
     @Override
@@ -62,8 +73,8 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s WHERE %s;", TABLE_NAME, searchString);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override
@@ -82,8 +93,14 @@ public class CommentVoteRepository extends Repository<CommentVote, String> {
     }
 
     @Override
-    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return String.format("update %s set %s = %s where %s;",
-                TABLE_NAME, varName, newValue, whereValue);
+    protected String getUpdateStatement(String varName, String newValue, String whereField, ArrayList<String> whereValue) {
+        return String.format("update %s set vote = ? where userEmail = ? and commentId = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, ArrayList<String> where) throws SQLException {
+        st.setString(1, field);
+        st.setString(2, where.get(0));
+        st.setString(3, where.get(1));
     }
 }

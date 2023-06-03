@@ -10,6 +10,7 @@ import com.baloot.IE.repository.Comment.CommentVoteRepository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class CommentManager {
@@ -73,7 +74,7 @@ public class CommentManager {
     }
 
     public void voteComment(String userEmail, int commentId, int vote) throws SQLException {
-        ArrayList<CommentVote> votes = commentVoteRepository.findAll("userEmail = \"" + userEmail + "\" and commentId = " + commentId);
+        CommentVote commentVote = commentVoteRepository.findByField(new ArrayList<>(Arrays.asList(userEmail, String.valueOf(commentId))), "");
         Comment comment = repository.findByField(String.valueOf(commentId), "id");
         if(comment == null)
             throw new IllegalArgumentException("Comment does not exist.");
@@ -81,12 +82,12 @@ public class CommentManager {
         int likes = comment.getLikes();
         int dislikes = comment.getDislikes();
 
-        if(votes.size() == 0)
+        if(commentVote == null)
             commentVoteRepository.insert(new CommentVote(userEmail, vote, commentId));
         else {
-            int previous_vote = votes.get(0).getVote();
+            int previous_vote = commentVote.getVote();
             commentVoteRepository.update("vote", String.valueOf(vote),
-                        "", "userEmail = \""+userEmail+"\" and commentId = "+commentId);
+                        "",new ArrayList<>(Arrays.asList(userEmail, String.valueOf(commentId))));
             if(previous_vote == 1)
                 likes -= 1;
             else if(previous_vote == -1)

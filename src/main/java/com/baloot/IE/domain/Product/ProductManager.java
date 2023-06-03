@@ -46,6 +46,12 @@ public class ProductManager {
             searchString = "p inner join CATEGORIES c on p.id = c.productId\nwhere c.category = \""+category+"\"";
         if (priceRange != null) {
             String[] priceRangeArray = priceRange.split("-");
+            try {
+                Integer.parseInt(priceRangeArray[0]);
+                Integer.parseInt(priceRangeArray[1]);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Bad values for price range for search in products");
+            }
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";
             searchString += "price < " + priceRangeArray[1] + " and " + "price > " + priceRangeArray[0];
         }
@@ -55,6 +61,11 @@ public class ProductManager {
         }
         if(id != null) {
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";
+            try {
+                Integer.parseInt(id);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Bad values for id for search in products");
+            }
             searchString += "id = " + id;
         }
         if(searchResults.size() == 0)
@@ -67,10 +78,9 @@ public class ProductManager {
             searchString += (searchString.equals("")) ? "\nwhere " : " and ";
             searchString += "inStock > 0";
         }
-        return repository.findAll(searchString);
+        return repository.search("",searchString);
     }
 
-    // TODO
     public List<Product> sortProducts(List<Product> products, String sort_param) {
         if(Objects.equals(sort_param, "price"))
             products.sort(Comparator.comparingDouble(Product::getPrice));
@@ -96,7 +106,7 @@ public class ProductManager {
             throw new RuntimeException(e);
         }
         if(p != null) {
-            p.setCategoriesObjects(categoryRepository.findAll("productId = " + id));
+            p.setCategoriesObjects(categoryRepository.search(String.valueOf(id), "productId"));
             return p;
         }
 

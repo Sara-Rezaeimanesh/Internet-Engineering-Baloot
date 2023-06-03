@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ProductRepository extends Repository<Product, String> {
     private static ProductRepository instance;
@@ -53,7 +54,23 @@ public class ProductRepository extends Repository<Product, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s p WHERE p.%s = ?;", TABLE_NAME, field_name);
+        return String.format("SELECT * FROM %s p WHERE p.id = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected String getSearchStatement(String field_name) {
+        return String.format("SELECT * FROM %s %s;", TABLE_NAME, field_name);
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+        st.setString(1, field);
+        st.setString(2, where);
     }
 
     @Override
@@ -78,8 +95,8 @@ public class ProductRepository extends Repository<Product, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s %s;", TABLE_NAME, searchString);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override
@@ -104,7 +121,9 @@ public class ProductRepository extends Repository<Product, String> {
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return  String.format("update %s set %s = %s where %s = %s;",
-                TABLE_NAME, varName, newValue, whereField, whereValue);
+        if(Objects.equals(varName, "rating") || Objects.equals(varName, "inStock"))
+            return  String.format("update %s set %s = ? where id = ?;", TABLE_NAME, varName);
+        else
+            throw new IllegalArgumentException("Bad parameter for update in products");
     }
 }
