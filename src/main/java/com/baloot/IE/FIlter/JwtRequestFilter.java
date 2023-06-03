@@ -41,8 +41,9 @@ public class JwtRequestFilter implements Filter {
         else {
             String token = request.getHeader("Authorization");
             System.out.println(token);
-            if(token == null)
+            if(token == null) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
             else {
                 String username = JwtUtils.verifyJWT(token);
                 if(username == null) {

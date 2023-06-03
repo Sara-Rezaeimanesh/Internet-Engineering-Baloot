@@ -40,10 +40,12 @@ public class JwtUtils {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(jwt).getBody();
+
         if(claims.getIssuedAt() == null ||
                 claims.getExpiration()== null ||
-                claims.getIssuer() == null)
+                claims.getIssuer() == null) {
             throw new UnauthorizedException("Authorization invalid");
+        }
         if (claims.getExpiration().getTime() < System.currentTimeMillis())
             return null;
         return claims.getAudience();

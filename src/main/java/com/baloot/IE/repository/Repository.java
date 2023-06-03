@@ -41,6 +41,7 @@ public abstract class Repository<T, I> {
                 return null;
             }
             T result = convertResultSetToDomainModel(resultSet);
+            resultSet.close();
             st.close();
             con.close();
             return result;
@@ -85,6 +86,7 @@ public abstract class Repository<T, I> {
                 return new ArrayList<>();
             }
             ArrayList<T> result = convertResultSetToDomainModelList(resultSet);
+            resultSet.close();
             st.close();
             con.close();
             return result;
@@ -109,6 +111,7 @@ public abstract class Repository<T, I> {
                 return new ArrayList<>();
             }
             ArrayList<T> result = convertResultSetToDomainModelList(resultSet);
+            resultSet.close();
             st.close();
             con.close();
             return result;
@@ -156,6 +159,7 @@ public abstract class Repository<T, I> {
                 return new ArrayList<>();
             }
             ArrayList<T> result = convertResultSetToDomainModelList(resultSet);
+            resultSet.close();
             st.close();
             con.close();
             return result;

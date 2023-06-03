@@ -128,14 +128,13 @@ public class ProductManager {
     }
 
     public void updateRating(String username, String quantity, int id) throws Exception {
-        System.out.println("hi hi");
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);
         ArrayList<Rating> r = ratingRepository.search(new ArrayList<>(Arrays.asList(username, String.valueOf(product.getId()))), "");
         if(r.size() == 0)
             ratingRepository.insert(rating);
         else
-            ratingRepository.update("rating", String.valueOf(quantity), "", new ArrayList<>(Arrays.asList(username, String.valueOf(product.getId()))));
+            ratingRepository.update("rating", quantity, "", new ArrayList<>(Arrays.asList(username, String.valueOf(product.getId()))));
         product.setRating(ratingRepository.calculateRating(id));
         System.out.println("rating is: " + ratingRepository.calculateRating(id));
         repository.update("rating", String.valueOf(rating.getScore()), "id", String.valueOf(id));

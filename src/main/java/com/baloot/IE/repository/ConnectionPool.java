@@ -20,6 +20,7 @@ public class ConnectionPool {
         ds.setMinIdle(1);
         ds.setMaxIdle(2000);
         ds.setMaxOpenPreparedStatements(2000);
+        ds.setMaxActive(2000);
         setEncoding();
     }
 
