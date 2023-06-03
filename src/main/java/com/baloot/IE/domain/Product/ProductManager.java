@@ -138,7 +138,7 @@ public class ProductManager {
     }
 
     public ArrayList<Comment> getProductComments(int id) {
-        return commentManager.getAllComments("commodityId = " + id);
+        return commentManager.searchComments(String.valueOf(id), "commodityId");
     }
 
     public ArrayList<Product> getProductsBySupplierId(int supplierId) {

@@ -63,6 +63,10 @@ public class BuyListRepository extends Repository<CartItem, ArrayList<String>> {
     }
 
     @Override
+    protected void fillUpdateValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+    }
+
+    @Override
     protected void fillFindByIdValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
         st.setString(1, fields.get(0));
         st.setString(2, fields.get(1));

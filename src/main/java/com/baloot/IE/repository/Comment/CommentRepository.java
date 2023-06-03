@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CommentRepository extends Repository<Comment, String> {
     private static CommentRepository instance;
@@ -39,7 +40,25 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
+        return String.format("SELECT * FROM %s u WHERE u.id = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected String getSearchStatement(String field_name) {
+        if(Objects.equals(field_name, "productId"))
+            return String.format("SELECT * FROM %s u WHERE u.productId = ?;", TABLE_NAME);
+        else
+            throw new IllegalArgumentException("Bad field name for search in Comments");
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+        st.setString(1, fields);
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String fields) throws SQLException {
+        st.setString(1, fields);
     }
 
     @Override
@@ -65,8 +84,8 @@ public class CommentRepository extends Repository<Comment, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s WHERE " + searchString + ";", TABLE_NAME);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override
@@ -88,7 +107,9 @@ public class CommentRepository extends Repository<Comment, String> {
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return String.format("update %s set %s = %s where %s = %s;",
-                TABLE_NAME, varName, newValue, whereField, whereValue);
+        if(Objects.equals(varName, "likes") || Objects.equals(varName, "dislikes"))
+            return String.format("update %s set %s = ? where id = ?;", TABLE_NAME, varName);
+        else
+            throw new IllegalArgumentException("Bad field name for update in Comments");
     }
 }

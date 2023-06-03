@@ -59,9 +59,9 @@ public class CommentManager {
         return comment != null;
     }
 
-    public ArrayList<Comment> getAllComments(String search_string) {
+    public ArrayList<Comment> searchComments(String field, String field_name) {
         try{
-            return repository.findAll(search_string);
+            return repository.search(field, field_name);
         }
         catch (Exception e){
             return new ArrayList<>();
