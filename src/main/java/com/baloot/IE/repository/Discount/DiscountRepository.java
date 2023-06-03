@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DiscountRepository extends Repository<Discount, String> {
     private static DiscountRepository instance;
@@ -43,7 +44,24 @@ public class DiscountRepository extends Repository<Discount, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s d WHERE d.%s = ?;", TABLE_NAME, field_name);
+        if(Objects.equals(field_name, "discountCode"))
+            return String.format("SELECT * FROM %s d WHERE d.%s = ?;", TABLE_NAME, field_name);
+        throw new IllegalArgumentException("Bad argument in discount repository");
+    }
+
+    @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+
     }
 
     @Override
@@ -63,7 +81,7 @@ public class DiscountRepository extends Repository<Discount, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
+    protected String getFindAllStatement() {
         return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
@@ -90,4 +108,5 @@ public class DiscountRepository extends Repository<Discount, String> {
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
         return null;
     }
+
 }

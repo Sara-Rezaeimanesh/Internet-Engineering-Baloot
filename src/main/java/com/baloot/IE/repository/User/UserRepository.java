@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class UserRepository extends Repository<User, String> {
     private static UserRepository instance;
@@ -43,7 +44,9 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM USERS u WHERE u.%s = ?;", field_name);
+        if(Objects.equals(field_name, "username") || Objects.equals(field_name, "email"))
+            return String.format("SELECT * FROM USERS u WHERE u.%s = ?;", field_name);
+        throw new IllegalArgumentException();
     }
 
     @Override
@@ -106,7 +109,15 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return String.format("update %s set %s = %s where %s = %s;",
-                "USERS", varName, newValue, whereField, whereValue);
+        if(Objects.equals(varName, "credit") && Objects.equals(whereField, "username"))
+            return String.format("update %s set %s = ? where %s = ?;",
+                "USERS", varName, whereField);
+        throw new IllegalArgumentException("Bad argument in user repository");
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+        st.setString(1, field);
+        st.setString(2, where);
     }
 }

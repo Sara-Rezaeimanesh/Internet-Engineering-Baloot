@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SupplierRepository extends Repository<Supplier, String> {
     private static SupplierRepository instance;
@@ -43,7 +44,9 @@ public class SupplierRepository extends Repository<Supplier, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
+        if(Objects.equals(field_name, "id") || Objects.equals(field_name, "name"))
+            return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
+        throw new IllegalArgumentException("Bad argument in Supplier repository");
     }
 
     @Override
@@ -104,7 +107,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
     }
 
     @Override
-    public String getFindByNameStatement() {
-        return String.format("SELECT * FROM %s s WHERE s.name = ?;", TABLE_NAME);
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+
     }
 }

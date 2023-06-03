@@ -56,6 +56,10 @@ public class UsedDiscountRepository extends Repository<UsedDiscount, ArrayList<S
     protected void fillSearchValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
         st.setString(1, fields.get(0));
         st.setString(2, fields.get(1));
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, ArrayList<String> where) throws SQLException {
 
     }
 
@@ -101,7 +105,7 @@ public class UsedDiscountRepository extends Repository<UsedDiscount, ArrayList<S
     }
 
     @Override
-    protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
+    protected String getUpdateStatement(String varName, String newValue, String whereField, ArrayList<String> whereValue) {
         return null;
     }
 }

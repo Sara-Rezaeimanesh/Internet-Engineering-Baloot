@@ -38,7 +38,7 @@ public class Cart {
     public void applyDiscount(String discount) {
         this.discount = Integer.parseInt(discount);
         total = calcTotal();
-        cartRepository.update("discount", discount, "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("discount", discount, "username", username);
         cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
     }
 
@@ -60,14 +60,14 @@ public class Cart {
         if(!p.isInStock())
             throw new Exception("Product is not in stock!");
         total += p.getPrice();
-        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("total", String.valueOf(total), "username", username);
         no_items += 1;
-        cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("no_items", String.valueOf(no_items), "username", username);
         CartItem cartItem = buyListRepository.findByField(new ArrayList<>(Arrays.asList(String.valueOf(p.getId()), String.valueOf(cartId))), "productId");
         if(cartItem == null)
             buyListRepository.insert(new CartItem(cartId, p, 1));
         else
-            buyListRepository.update("quantity", "quantity + 1", String.valueOf(cartItem.getProduct().getId()), String.valueOf(cartItem.getCartId()));
+            buyListRepository.update("quantity", "quantity + 1", String.valueOf(cartItem.getProduct().getId()), new ArrayList<>(Arrays.asList(String.valueOf(cartItem.getCartId()))));
     }
 
     public void remove(Product p) throws SQLException {
@@ -77,11 +77,11 @@ public class Cart {
             if(ci.isOut())
                 buyListRepository.delete(String.valueOf(cartId), String.valueOf(ci.getProduct().getId()));
             else
-                buyListRepository.update("quantity", String.valueOf(ci.getQuantity()), String.valueOf(ci.getProduct().getId()), String.valueOf(ci.getCartId()));
+                buyListRepository.update("quantity", String.valueOf(ci.getQuantity()), String.valueOf(ci.getProduct().getId()), new ArrayList<>(Arrays.asList(String.valueOf(ci.getCartId()))));
             total -= p.getPrice();
-            cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
+            cartRepository.update("total", String.valueOf(total), "username", username);
             no_items -= 1;
-            cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+            cartRepository.update("no_items", String.valueOf(no_items), "username", username);
             return;
         }
         throw new IllegalArgumentException("Item not available in cart!");
@@ -103,7 +103,7 @@ public class Cart {
         cartRepository.insert(new Cart(this.username));
         total = 0;
         no_items = 0;
-        cartRepository.update("total", String.valueOf(total), "username", StringUtility.quoteWrapper(username));
-        cartRepository.update("no_items", String.valueOf(no_items), "username", StringUtility.quoteWrapper(username));
+        cartRepository.update("total", String.valueOf(total), "username", username);
+        cartRepository.update("no_items", String.valueOf(no_items), "username", username);
     }
 }

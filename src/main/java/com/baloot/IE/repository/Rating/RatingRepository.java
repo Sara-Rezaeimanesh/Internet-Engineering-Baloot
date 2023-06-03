@@ -3,9 +3,11 @@ package com.baloot.IE.repository.Rating;
 import com.baloot.IE.domain.Rating.Rating;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
+import com.baloot.IE.utitlity.StringUtility;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class RatingRepository extends Repository<Rating, String> {
     private static RatingRepository instance;
@@ -104,6 +106,10 @@ public class RatingRepository extends Repository<Rating, String> {
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
         return null;
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
     }
 
     public float calculateRating(int id) {
