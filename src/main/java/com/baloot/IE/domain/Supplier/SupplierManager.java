@@ -28,7 +28,7 @@ public class SupplierManager {
 
     public ArrayList<Supplier> getAll() {
         try {
-            return repository.findAll("");
+            return repository.findAll();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

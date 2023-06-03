@@ -46,6 +46,6 @@ public class DiscountManager {
     }
 
     public ArrayList<Discount> getAll() throws SQLException {
-        return discountRepository.findAll("");
+        return discountRepository.findAll();
     }
 }

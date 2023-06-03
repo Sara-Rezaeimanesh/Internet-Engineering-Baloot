@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class UsedDiscountRepository extends Repository<UsedDiscount, String> {
+public class UsedDiscountRepository extends Repository<UsedDiscount, ArrayList<String>> {
     private static UsedDiscountRepository instance;
 
     private static final String COLUMNS = " discountCode, username";
@@ -48,8 +48,20 @@ public class UsedDiscountRepository extends Repository<UsedDiscount, String> {
     }
 
     @Override
-    protected void fillFindByIdValues(PreparedStatement st, String username) throws SQLException {
-        st.setString(1, username);
+    protected String getSearchStatement(String field_name) {
+        return String.format("SELECT * FROM %s where username =  ? and discountCode = ?;", TABLE_NAME);
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, ArrayList<String> fields) throws SQLException {
+        st.setString(1, fields.get(0));
+        st.setString(2, fields.get(1));
+
+    }
+
+    @Override
+    protected void fillFindByIdValues(PreparedStatement st, ArrayList<String> username) throws SQLException {
+        st.setString(1, username.get(0));
     }
 
 
@@ -65,8 +77,8 @@ public class UsedDiscountRepository extends Repository<UsedDiscount, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
-        return String.format("SELECT * FROM %s where "+ searchString + ";", TABLE_NAME);
+    protected String getFindAllStatement() {
+        return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
     @Override

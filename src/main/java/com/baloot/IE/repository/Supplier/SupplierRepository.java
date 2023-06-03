@@ -41,14 +41,19 @@ public class SupplierRepository extends Repository<Supplier, String> {
         con.close();
     }
 
-//    @Override
-//    protected String getFindByIdStatement() {
-//        return String.format("SELECT * FROM %s s WHERE s.%s = ?;", TABLE_NAME, name);
-//    }
-
     @Override
     protected String getFindByIdStatement(String field_name) {
         return String.format("SELECT * FROM %s u WHERE u.%s = ?;", TABLE_NAME, field_name);
+    }
+
+    @Override
+    protected String getSearchStatement(String field_name) {
+        return null;
+    }
+
+    @Override
+    protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
+
     }
 
     @Override
@@ -70,7 +75,7 @@ public class SupplierRepository extends Repository<Supplier, String> {
     }
 
     @Override
-    protected String getFindAllStatement(String searchString) {
+    protected String getFindAllStatement() {
         return String.format("SELECT * FROM %s;", TABLE_NAME);
     }
 
