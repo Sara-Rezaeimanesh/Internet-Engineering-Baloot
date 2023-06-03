@@ -67,11 +67,7 @@ public class ProductRepository extends Repository<Product, String> {
 
     }
 
-    @Override
-    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
-        st.setString(1, field);
-        st.setString(2, where);
-    }
+
 
     @Override
     protected void fillFindByIdValues(PreparedStatement st, String id) throws SQLException {
@@ -125,5 +121,11 @@ public class ProductRepository extends Repository<Product, String> {
             return  String.format("update %s set %s = ? where id = ?;", TABLE_NAME, varName);
         else
             throw new IllegalArgumentException("Bad parameter for update in products");
+    }
+
+    @Override
+    protected void fillUpdateValues(PreparedStatement st, String field, String where) throws SQLException {
+        st.setString(1, field);
+        st.setString(2, where);
     }
 }

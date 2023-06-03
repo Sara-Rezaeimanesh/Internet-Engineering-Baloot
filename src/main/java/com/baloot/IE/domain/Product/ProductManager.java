@@ -127,10 +127,12 @@ public class ProductManager {
     }
 
     public void updateRating(String username, String quantity, int id) throws Exception {
+
         Rating rating = new Rating(username, id, Integer.parseInt(quantity));
         Product product = findProductsById(id);
         ratingRepository.insert(rating);
         product.setRating(ratingRepository.calculateRating(id));
+        System.out.println("rating is: " + ratingRepository.calculateRating(id));
         repository.update("rating", String.valueOf(rating.getScore()), "id", String.valueOf(id));
     }
 
