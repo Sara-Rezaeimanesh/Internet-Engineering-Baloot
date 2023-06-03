@@ -3,7 +3,11 @@ package com.baloot.IE.repository.User;
 import com.baloot.IE.domain.User.User;
 import com.baloot.IE.repository.ConnectionPool;
 import com.baloot.IE.repository.Repository;
+import com.baloot.IE.utitlity.StringUtility;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,7 +43,7 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getFindByIdStatement(String field_name) {
-        return "SELECT * FROM USERS u WHERE u.? = ?;";
+        return String.format("SELECT * FROM USERS u WHERE u.%s = ?;", field_name);
     }
 
     @Override
@@ -52,10 +56,12 @@ public class UserRepository extends Repository<User, String> {
         return "INSERT IGNORE INTO USERS (username, password, email, birthDate, address, credit) VALUES(?,?,?,?,?,?)";
     }
 
+
+
     @Override
     protected void fillInsertValues(PreparedStatement st, User data) throws SQLException {
         st.setString(1, data.getUsername());
-        st.setString(2, data.getPassword());
+        st.setString(2, StringUtility.hashPassword(data.getPassword()));
         st.setString(3, data.getEmail());
         st.setString(4, data.getBirthDate());
         st.setString(5, data.getAddress());
@@ -90,6 +96,7 @@ public class UserRepository extends Repository<User, String> {
 
     @Override
     protected String getUpdateStatement(String varName, String newValue, String whereField, String whereValue) {
-        return null;
+        return String.format("update %s set %s = %s where %s = %s;",
+                "USERS", varName, newValue, whereField, whereValue);
     }
 }

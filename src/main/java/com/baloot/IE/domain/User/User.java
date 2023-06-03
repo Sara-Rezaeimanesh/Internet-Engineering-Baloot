@@ -66,16 +66,21 @@ public class User {
                 @JsonProperty("birthDate") String birthDate_,
                 @JsonProperty("address") String address_,
                 @JsonProperty("credit")  int credit_) throws Exception {
-        if(!Pattern.matches("^[._a-zA-Z0-9]+$", username_))
+        if(!Pattern.matches("^[-._a-zA-Z0-9]+$", username_))
             throw new Exception("Username cannot contain especial characters.\n");
+        System.out.println("hi " + username_);
         this.username = username_;
-        this.password = hashPassword(password_);
+        this.password = password_;
         this.email = email_;
         this.address = address_;
         this.credit = credit_;
         this.birthDate = birthDate_;
         cartRepository = CartRepository.getInstance();
         this.cart = cartRepository.findByField(this.username,"username");
+        if(this.cart == null) {
+            cartRepository.insert(new Cart(username_));
+            this.cart = cartRepository.findByField(this.username, "username");
+        }
     }
 
     public boolean userNameEquals(String username) {
@@ -92,8 +97,8 @@ public class User {
         credit += newCredit;
         repository.update("credit" ,String.valueOf(credit), "username" , StringUtility.quoteWrapper(this.username));
     }
-    public boolean isPassEqual(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String hashPass = hashPassword(password);
+    public boolean isPassEqual(String password)  {
+        String hashPass = StringUtility.hashPassword(password);
         return Objects.equals(this.password, hashPass);
     }
 
@@ -102,6 +107,7 @@ public class User {
             throw new Exception("Credit is not enough");
         credit -= calculateCurrBuyListPrice();
         repository.update("credit" ,String.valueOf(credit),"username" , StringUtility.quoteWrapper(this.username));
+        System.out.println("here? ");
         cart.buy();
     }
 
@@ -125,15 +131,5 @@ public class User {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String hashPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hashBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : hashBytes) {
-            hexString.append(String.format("%02x", b));
-        }
-        return hexString.toString();
     }
 }

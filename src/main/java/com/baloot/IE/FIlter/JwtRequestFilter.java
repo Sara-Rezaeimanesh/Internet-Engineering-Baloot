@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 @Component
 public class JwtRequestFilter implements Filter {
@@ -26,7 +27,16 @@ public class JwtRequestFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String url = request.getRequestURI();
-        if(url.equals("/login") || url.equals("/signup"))
+        System.out.println(url);
+        Enumeration<String> headerNames = request.getHeaderNames();
+
+        // Iterate through the header names and log their values
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            System.out.println(headerName + ": " + headerValue);
+        }
+        if(url.equals("/login") || url.equals("/signup") || url.equals("/signup/github"))
             chain.doFilter(request, response);
         else {
             String token = request.getHeader("Authorization");

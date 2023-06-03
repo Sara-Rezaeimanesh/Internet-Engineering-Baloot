@@ -92,6 +92,7 @@ public class Cart {
 
     public void buy() throws SQLException {
         ArrayList<CartItem> buyList = buyListRepository.findAll("cartId = " + cartId);
+        System.out.println(buyList.toString());
         for(CartItem ci : buyList) {
             buyListRepository.delete(String.valueOf(ci.getCartId()), String.valueOf(ci.getProduct().getId()));
             purchaseListRepository.insert(ci);

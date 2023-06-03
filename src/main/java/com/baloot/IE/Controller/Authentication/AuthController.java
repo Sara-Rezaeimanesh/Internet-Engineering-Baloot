@@ -26,7 +26,6 @@ public class AuthController {
         UserManager userManager = UserManager.getInstance();
         if(userManager.userExists(body.get("username"), body.get("password"))) {
             String token = JwtUtils.createJWT(body.get("username"));
-            System.out.println(token);
             User user = userManager.findUserById(body.get("username"));
             user.setToken(token);
             return user;
@@ -81,16 +80,19 @@ public class AuthController {
     @PostMapping("/signup/github")
     public User signUp(HttpServletResponse response,
                        @RequestParam String code) throws Exception {
+
         String res = postRequest("https://github.com/login/oauth/access_token?client_id=98bc63aeaf3e8a4f802c&client_secret=a73eeb3f06113a45f16e84369b323b56112dd621&code="+code);
         String[] args = res.split("&");
         String[] token_args = args[0].split("=");
         String token = token_args[1];
-
+        System.out.println(res);
         res = getRequestForAuthorization("https://api.github.com/user", token);
+        System.out.println(res);
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> jsonMap = objectMapper.readValue(res, Map.class);
 
         UserManager userManager = UserManager.getInstance();
+        System.out.println(jsonMap);
         OffsetDateTime dateTime = OffsetDateTime.parse(jsonMap.get("created_at"));
         OffsetDateTime newDateTime = dateTime.minusYears(18);
 
@@ -98,7 +100,7 @@ public class AuthController {
         try{
             newUser = userManager.findUserByEmail(jsonMap.get("email"));
         } catch(Exception e) {
-            newUser = new User(jsonMap.get("login"), null, jsonMap.get("email"), String.valueOf(newDateTime), null, 0);
+            newUser = new User(jsonMap.get("login"), "1", jsonMap.get("email"), String.valueOf(newDateTime), null, 0);
         }
         userManager.addGithubUser(newUser);
         String JWTToken = JwtUtils.createJWT(jsonMap.get("login"));

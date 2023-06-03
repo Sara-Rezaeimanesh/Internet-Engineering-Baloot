@@ -46,6 +46,6 @@ public class JwtUtils {
             throw new UnauthorizedException("Authorization invalid");
         if (claims.getExpiration().getTime() < System.currentTimeMillis())
             return null;
-        return claims.getIssuer();
+        return claims.getAudience();
     }
 }
