@@ -46,12 +46,12 @@ public class CategoryRepository extends Repository<Category, String>  {
 
     @Override
     protected String getSearchStatement(String field_name) {
-        return null;
+        return String.format("SELECT * FROM %s WHERE productId = ?;", TABLE_NAME);
     }
 
     @Override
     protected void fillSearchValues(PreparedStatement st, String fields) throws SQLException {
-
+        st.setInt(1, Integer.parseInt(fields));
     }
 
     @Override

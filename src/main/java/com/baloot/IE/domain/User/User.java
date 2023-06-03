@@ -68,7 +68,6 @@ public class User {
                 @JsonProperty("credit")  int credit_) throws Exception {
         if(!Pattern.matches("^[-._a-zA-Z0-9]+$", username_))
             throw new Exception("Username cannot contain especial characters.\n");
-        System.out.println("hi " + username_);
         this.username = username_;
         this.password = password_;
         this.email = email_;
