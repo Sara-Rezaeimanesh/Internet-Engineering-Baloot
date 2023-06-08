@@ -16,8 +16,11 @@ public class SupplierManager {
         Initializer initializer = new Initializer();
         ArrayList<Supplier> suppliers = initializer.getProvidersFromAPI("providers");
 //        suppliers.forEach(Supplier::initialize);
-        for(Supplier s : suppliers)
+        System.out.println("supplier: " + suppliers.size());
+        for(Supplier s : suppliers) {
+            System.out.println(s.getName());
             repository.insert(s);
+        }
     }
 
     public static SupplierManager getInstance() throws Exception {

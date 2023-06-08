@@ -13,7 +13,7 @@ public class ConnectionPool {
 
     static {
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/balootDB?useUnicode=true&characterEncoding=UTF-8");
+        ds.setUrl("jdbc:mysql://host.docker.internal:3306/balootDB?useUnicode=true&characterEncoding=UTF-8");
         ds.setUsername("root");
         ds.setPassword("1234");
 //        ds.setPassword("sara.44094290");
