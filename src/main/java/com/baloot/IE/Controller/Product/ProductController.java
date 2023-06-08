@@ -60,8 +60,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product one(@PathVariable int id) throws SQLException {
-        Product p = productManager.findProductsById(id);
-        return p;
+        return productManager.findProductsById(id);
     }
 
     @PostMapping("/{id}/ratings")

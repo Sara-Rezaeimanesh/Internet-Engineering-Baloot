@@ -27,23 +27,13 @@ public class JwtRequestFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String url = request.getRequestURI();
-        System.out.println(url);
-//        Enumeration<String> headerNames = request.getHeaderNames();
-//
-//        // Iterate through the header names and log their values
-//        while (headerNames.hasMoreElements()) {
-//            String headerName = headerNames.nextElement();
-//            String headerValue = request.getHeader(headerName);
-//            System.out.println(headerName + ": " + headerValue);
-//        }
-        if(url.equals("/login") || url.equals("/signup") || url.equals("/signup/github"))
+        if(url.equals("/login") || url.equals("/signup") || url.equals("/signup/github")) {
             chain.doFilter(request, response);
+        }
         else {
             String token = request.getHeader("Authorization");
-            System.out.println(token);
-            if(token == null) {
+            if(token == null)
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
             else {
                 String username = JwtUtils.verifyJWT(token);
                 if(username == null) {
